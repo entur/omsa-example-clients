@@ -1,0 +1,272 @@
+import 'package:flutter/material.dart';
+import 'package:omsa_demo_app/services/omsa_api_service.dart';
+import 'offers_screen.dart';
+
+enum DepartureType { now, leaveAt, arriveBy }
+
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _fromZone;
+  String? _toZone;
+  DepartureType _departureType = DepartureType.now;
+  DateTime _selectedDateTime = DateTime.now().add(const Duration(minutes: 30));
+  int _travelerAge = 30;
+  bool _isLoading = false;
+
+  final List<Map<String, String>> _zones = [
+    {'id': 'KOL:FareZone:1', 'name': 'Haugalandet'},
+    {'id': 'KOL:FareZone:2', 'name': 'Nærsone Haugesund'},
+    {'id': 'KOL:FareZone:3', 'name': 'Ryfylke'},
+    {'id': 'KOL:FareZone:4', 'name': 'Nord-Jæren'},
+    {'id': 'KOL:FareZone:5', 'name': 'Jæren'},
+    {'id': 'KOL:FareZone:6', 'name': 'Dalane'},
+    {'id': 'KOL:FareZone:7', 'name': 'Nærsone Egersund'},
+  ];
+
+  Future<void> _searchOffers() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_fromZone == null || _toZone == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select both zones')));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      DateTime startTime, endTime;
+
+      switch (_departureType) {
+        case DepartureType.now:
+          startTime = DateTime.now();
+          endTime = DateTime.now().add(const Duration(hours: 2));
+          break;
+        case DepartureType.leaveAt:
+          startTime = _selectedDateTime;
+          endTime = _selectedDateTime.add(const Duration(hours: 2));
+          break;
+        case DepartureType.arriveBy:
+          endTime = _selectedDateTime;
+          startTime = _selectedDateTime.subtract(const Duration(hours: 2));
+          break;
+      }
+
+      final offerCollection = await OmsaApiService.searchOffers(
+        fromZoneId: _fromZone!,
+        toZoneId: _toZone!,
+        startTime: startTime,
+        endTime: endTime,
+        travelerAge: _travelerAge,
+      );
+
+      if (mounted) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => OffersScreen(offers: offerCollection),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _selectDateTime() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+    );
+
+    if (date == null) return;
+
+    if (mounted) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+      );
+
+      if (time != null) {
+        setState(() {
+          _selectedDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            time.hour,
+            time.minute,
+          );
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('OMSA Travel Search'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Search for travel offers',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+
+              // From Zone Dropdown
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'From Zone',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: _fromZone,
+                items: _zones.map((zone) {
+                  return DropdownMenuItem(
+                    value: zone['id'],
+                    child: Text(zone['name']!),
+                  );
+                }).toList(),
+                onChanged: (value) => setState(() => _fromZone = value),
+              ),
+              const SizedBox(height: 16),
+
+              // To Zone Dropdown
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'To Zone',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: _toZone,
+                items: _zones.map((zone) {
+                  return DropdownMenuItem(
+                    value: zone['id'],
+                    child: Text(zone['name']!),
+                  );
+                }).toList(),
+                onChanged: (value) => setState(() => _toZone = value),
+              ),
+              const SizedBox(height: 16),
+
+              // Departure Type Selection
+              const Text(
+                'Departure',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              SegmentedButton<DepartureType>(
+                segments: const [
+                  ButtonSegment(
+                    value: DepartureType.now,
+                    label: Text('Now'),
+                    icon: Icon(Icons.schedule),
+                  ),
+                  ButtonSegment(
+                    value: DepartureType.leaveAt,
+                    label: Text('Leave at'),
+                    icon: Icon(Icons.departure_board),
+                  ),
+                  ButtonSegment(
+                    value: DepartureType.arriveBy,
+                    label: Text('Arrive by'),
+                    icon: Icon(Icons.flag),
+                  ),
+                ],
+                selected: {_departureType},
+                onSelectionChanged: (value) {
+                  setState(() {
+                    _departureType = value.first;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Conditional Date/Time Picker
+              if (_departureType != DepartureType.now) ...[
+                ListTile(
+                  title: Text(
+                    _departureType == DepartureType.leaveAt
+                        ? 'Departure Time'
+                        : 'Arrival Time',
+                  ),
+                  subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
+                  trailing: const Icon(Icons.access_time),
+                  onTap: _selectDateTime,
+                  tileColor: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Traveler Age
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Traveler Age',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                initialValue: _travelerAge.toString(),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Required';
+                  final age = int.tryParse(value);
+                  if (age == null || age < 0 || age > 120) {
+                    return 'Enter valid age';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  final age = int.tryParse(value);
+                  if (age != null) _travelerAge = age;
+                },
+              ),
+              const SizedBox(height: 32),
+
+              // Search Button
+              ElevatedButton(
+                onPressed: _isLoading ? null : _searchOffers,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Search Offers'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
