@@ -10,6 +10,9 @@ export 'src/theme/app_colors.dart';
 export 'src/theme/app_typography.dart';
 export 'src/theme/app_spacing.dart';
 export 'src/theme/app_dimensions.dart';
+export 'src/theme/app_shadows.dart';
+export 'src/theme/app_timings.dart';
+export 'src/theme/app_decorations.dart';
 
 // Component exports
 export 'src/components/buttons/omsa_button.dart';
