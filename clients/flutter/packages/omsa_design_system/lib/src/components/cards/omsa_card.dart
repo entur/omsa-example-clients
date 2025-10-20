@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/src/theme/app_spacing.dart';
+import 'package:omsa_design_system/src/theme/app_dimensions.dart';
+import 'package:omsa_design_system/src/theme/app_decorations.dart';
 
 /// Card variant types for the OMSA Design System
 enum OmsaCardVariant {
@@ -28,62 +30,69 @@ class OmsaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultPadding = const EdgeInsets.all(AppSpacing.spacing16);
-    final defaultMargin = const EdgeInsets.symmetric(
-      horizontal: AppSpacing.spacing16,
-      vertical: AppSpacing.spacing8,
+    const defaultPadding = EdgeInsets.all(AppSpacing.spaceMedium);
+    const defaultMargin = EdgeInsets.symmetric(
+      horizontal: AppSpacing.spaceMedium,
+      vertical: AppSpacing.spaceExtraSmall,
     );
 
     Widget card;
 
     switch (variant) {
       case OmsaCardVariant.elevated:
-        card = Card(
+        card = Container(
           margin: margin ?? defaultMargin,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: padding ?? defaultPadding,
-              child: child,
+          decoration: AppDecorations.card(),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: AppDimensions.borderRadiusMedium,
+              child: Padding(
+                padding: padding ?? defaultPadding,
+                child: child,
+              ),
             ),
           ),
         );
         break;
 
       case OmsaCardVariant.filled:
-        card = Card(
+        card = Container(
           margin: margin ?? defaultMargin,
-          color: theme.colorScheme.surfaceContainerHighest,
-          elevation: 0,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: padding ?? defaultPadding,
-              child: child,
+          decoration: AppDecorations.roundedMedium(
+            color: theme.colorScheme.surfaceContainerHighest,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: AppDimensions.borderRadiusMedium,
+              child: Padding(
+                padding: padding ?? defaultPadding,
+                child: child,
+              ),
             ),
           ),
         );
         break;
 
       case OmsaCardVariant.outlined:
-        card = Card(
+        card = Container(
           margin: margin ?? defaultMargin,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: theme.colorScheme.outline,
-              width: 1,
-            ),
+          decoration: AppDecorations.outlined(
+            borderColor: theme.colorScheme.outline,
+            borderWidth: AppDimensions.borderWidthsSmall,
           ),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: padding ?? defaultPadding,
-              child: child,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: AppDimensions.borderRadiusLarge,
+              child: Padding(
+                padding: padding ?? defaultPadding,
+                child: child,
+              ),
             ),
           ),
         );
