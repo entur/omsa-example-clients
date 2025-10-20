@@ -170,7 +170,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         children: [
           Text(
             summary.name,
-            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -178,33 +178,24 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             children: [
               Text(
                 '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
-                style: AppTypography.textLarge.copyWith(
+                style: const TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  OmsaChip(
-                    label: Text(
-                      summary.isRefundable ? 'Refundable' : 'Non-refundable',
-                    ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isRefundable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
+                  _buildPill(
+                    summary.isRefundable ? 'Refundable' : 'Non-refundable',
+                    summary.isRefundable ? Colors.green : Colors.orange,
                   ),
                   const SizedBox(height: 4),
-                  OmsaChip(
-                    label: Text(
-                      summary.isExchangeable
-                          ? 'Exchangeable'
-                          : 'Non-exchangeable',
-                    ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isExchangeable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
+                  _buildPill(
+                    summary.isExchangeable
+                        ? 'Exchangeable'
+                        : 'Non-exchangeable',
+                    summary.isExchangeable ? Colors.green : Colors.orange,
                   ),
                 ],
               ),
@@ -214,11 +205,19 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             const SizedBox(height: 12),
             Text(
               summary.description.replaceAll('\\n', '\n'),
-              style: TextStyle(color: context.semanticColors.textSubdued),
+              style: TextStyle(color: Colors.grey[700]),
             ),
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildPill(String label, Color color) {
+    return OmsaChip(
+      label: Text(label),
+      variant: OmsaChipVariant.filled,
+      customBackgroundColor: color,
     );
   }
 
@@ -228,28 +227,21 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     required bool completed,
     bool isActive = false,
   }) {
-    return Builder(
-      builder: (context) {
-        final theme = Theme.of(context);
-        final semanticColors = context.semanticColors;
+    final icon = completed
+        ? Icons.check_circle
+        : isActive
+        ? Icons.timelapse
+        : Icons.radio_button_unchecked;
+    final color = completed
+        ? Colors.green
+        : isActive
+        ? Colors.blue
+        : Colors.grey;
 
-        final icon = completed
-            ? Icons.check_circle
-            : isActive
-                ? Icons.timelapse
-                : Icons.radio_button_unchecked;
-        final color = completed
-            ? Colors.green // Success color for completed
-            : isActive
-                ? theme.colorScheme.primary
-                : semanticColors.shapeDisabled;
-
-        return ListTile(
-          leading: Icon(icon, color: color),
-          title: Text(title),
-          subtitle: Text(subtitle),
-        );
-      },
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(title),
+      subtitle: Text(subtitle),
     );
   }
 
@@ -258,7 +250,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -273,11 +265,12 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
+                  const Padding(
+                    padding: EdgeInsets.all(16),
                     child: Text(
                       'Progress',
-                      style: AppTypography.textLarge.copyWith(
+                      style: TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -345,7 +338,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Text(
                         _error!,
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                 ],

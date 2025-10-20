@@ -18,4 +18,6 @@ export 'src/theme/app_decorations.dart';
 // Component exports
 export 'src/components/buttons/omsa_button.dart';
 export 'src/components/inputs/omsa_text_field.dart';
+export 'src/components/inputs/omsa_dropdown.dart';
 export 'src/components/cards/omsa_card.dart';
+export 'src/components/display/omsa_chip.dart';

@@ -122,18 +122,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final semanticColors = context.semanticColors;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'OMSA',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        centerTitle: false,
+        title: const Text('OMSA Travel Search'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -142,14 +134,13 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Where are you going?',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+              const Text(
+                'Search for travel offers',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
 
+              // From Zone Dropdown
               OmsaDropdown<String>(
                 label: 'From Zone',
                 value: _fromZone,
@@ -163,6 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 16),
 
+              // To Zone Dropdown
               OmsaDropdown<String>(
                 label: 'To Zone',
                 value: _toZone,
@@ -176,11 +168,10 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 16),
 
-              Text(
+              // Departure Type Selection
+              const Text(
                 'Departure',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               SegmentedButton<DepartureType>(
@@ -210,6 +201,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 16),
 
+              // Conditional Date/Time Picker
               if (_departureType != DepartureType.now) ...[
                 ListTile(
                   title: Text(
@@ -220,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
                   trailing: const Icon(Icons.access_time),
                   onTap: _selectDateTime,
-                  tileColor: semanticColors.frameElevatedAlt,
+                  tileColor: Colors.grey[100],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
@@ -228,6 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 const SizedBox(height: 16),
               ],
 
+              // Traveler Age
               OmsaTextField(
                 label: 'Traveler Age',
                 keyboardType: TextInputType.number,
@@ -247,6 +240,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 32),
 
+              // Search Button
               OmsaButton(
                 onPressed: _isLoading ? null : _searchOffers,
                 isLoading: _isLoading,

@@ -6,14 +6,22 @@ class AppShadows {
   AppShadows._();
 
   // CSS string values (for reference/web compatibility)
-  static const String shadowsFocusCss = "0 0 0 0.125rem #ffffff, 0 0 0 0.25rem #181c56";
-  static const String shadowsFocusContrastCss = "0 0 0 0.125rem #181c56, 0 0 0 0.25rem #ffffff";
-  static const String shadowsCardShadowCss = "0 0.0625rem 0.1875rem 0 rgba(0,0,0, 0.12)";
-  static const String shadowsCardShadowHoverCss = "0 0.125rem 1rem 0 rgba(0,0,0, 0.1)";
-  static const String shadowsCardShadowContrastCss = "0 0.0625rem 0.1875rem 0 rgba(57,61,121, 1)";
-  static const String shadowsCardShadowHoverContrastCss = "0 0.125rem 1rem 0 rgba(57,61,121, 1)";
-  static const String shadowsBoxShadowCss = "0 0.0625rem 0.1875rem rgba(0,0,0, 0.25)";
-  static const String shadowsBoxShadowContrastCss = "0 0.0625rem 0.1875rem rgba(57,61,121, 1)";
+  static const String shadowsFocusCss =
+      "0 0 0 0.125rem #ffffff, 0 0 0 0.25rem #181c56";
+  static const String shadowsFocusContrastCss =
+      "0 0 0 0.125rem #181c56, 0 0 0 0.25rem #ffffff";
+  static const String shadowsCardShadowCss =
+      "0 0.0625rem 0.1875rem 0 rgba(0,0,0, 0.12)";
+  static const String shadowsCardShadowHoverCss =
+      "0 0.125rem 1rem 0 rgba(0,0,0, 0.1)";
+  static const String shadowsCardShadowContrastCss =
+      "0 0.0625rem 0.1875rem 0 rgba(57,61,121, 1)";
+  static const String shadowsCardShadowHoverContrastCss =
+      "0 0.125rem 1rem 0 rgba(57,61,121, 1)";
+  static const String shadowsBoxShadowCss =
+      "0 0.0625rem 0.1875rem rgba(0,0,0, 0.25)";
+  static const String shadowsBoxShadowContrastCss =
+      "0 0.0625rem 0.1875rem rgba(57,61,121, 1)";
 
   // Flutter BoxShadow objects
   /// Focus shadow - White inner ring (2px) + primary color outer ring (4px)
@@ -49,14 +57,29 @@ class AppShadows {
     ),
   ];
 
-  /// Card shadow - Subtle elevation shadow
-  /// 0 1px 3px 0 rgba(0,0,0, 0.12)
+  /// Card shadow - Multi-layer shadow for elevation effect
+  /// Matches the React BaseCard implementation with three shadow layers
+  /// Layer 1: 1px 1px 2px 0px
+  /// Layer 2: 3px 3px 6px 0px
+  /// Layer 3: 6px 6px 10px 0px
   static const List<BoxShadow> shadowsCardShadow = [
     BoxShadow(
-      offset: Offset(0, 1), // 0.0625rem = 1px
-      blurRadius: 3, // 0.1875rem = 3px
+      offset: Offset(6, 6),
+      blurRadius: 10,
       spreadRadius: 0,
-      color: Color(0x1F000000), // rgba(0,0,0, 0.12)
+      color: Color(0x14000000), // shadowlayer3 - subtle
+    ),
+    BoxShadow(
+      offset: Offset(3, 3),
+      blurRadius: 6,
+      spreadRadius: 0,
+      color: Color(0x1A000000), // shadowlayer2 - medium
+    ),
+    BoxShadow(
+      offset: Offset(1, 1),
+      blurRadius: 2,
+      spreadRadius: 0,
+      color: Color(0x1F000000), // shadowlayer1 - strongest
     ),
   ];
 

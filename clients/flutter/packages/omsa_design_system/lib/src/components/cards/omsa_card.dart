@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/src/theme/app_spacing.dart';
 import 'package:omsa_design_system/src/theme/app_dimensions.dart';
 import 'package:omsa_design_system/src/theme/app_decorations.dart';
+import 'package:omsa_design_system/src/theme/app_shadows.dart';
 
 /// Card variant types for the OMSA Design System
-enum OmsaCardVariant {
-  elevated,
-  filled,
-  outlined,
-}
+enum OmsaCardVariant { elevated, filled, outlined }
 
 /// A customizable card component following OMSA Design System guidelines
 class OmsaCard extends StatelessWidget {
@@ -42,16 +39,21 @@ class OmsaCard extends StatelessWidget {
       case OmsaCardVariant.elevated:
         card = Container(
           margin: margin ?? defaultMargin,
-          decoration: AppDecorations.card(),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: AppDimensions.borderRadiusMedium,
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant,
+              width: AppDimensions.borderWidthsSmall,
+            ),
+            boxShadow: AppShadows.shadowsCardShadow,
+          ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: onTap,
               borderRadius: AppDimensions.borderRadiusMedium,
-              child: Padding(
-                padding: padding ?? defaultPadding,
-                child: child,
-              ),
+              child: Padding(padding: padding ?? defaultPadding, child: child),
             ),
           ),
         );
@@ -68,10 +70,7 @@ class OmsaCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: AppDimensions.borderRadiusMedium,
-              child: Padding(
-                padding: padding ?? defaultPadding,
-                child: child,
-              ),
+              child: Padding(padding: padding ?? defaultPadding, child: child),
             ),
           ),
         );
@@ -89,10 +88,7 @@ class OmsaCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: AppDimensions.borderRadiusLarge,
-              child: Padding(
-                padding: padding ?? defaultPadding,
-                child: child,
-              ),
+              child: Padding(padding: padding ?? defaultPadding, child: child),
             ),
           ),
         );

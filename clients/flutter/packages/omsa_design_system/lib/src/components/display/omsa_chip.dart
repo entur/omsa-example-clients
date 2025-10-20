@@ -74,7 +74,6 @@ class OmsaChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final semanticColor = customBackgroundColor ?? _getSemanticColor(context);
-    final iconColor = customTextColor ?? semanticColor;
     final theme = Theme.of(context);
 
     Widget chip;
@@ -85,10 +84,9 @@ class OmsaChip extends StatelessWidget {
           context,
           backgroundColor: semanticColor.withValues(alpha: 0.12),
           labelStyle: TextStyle(
-            color: iconColor,
+            color: customTextColor ?? semanticColor,
             fontWeight: FontWeight.w500,
           ),
-          iconColor: iconColor,
           side: BorderSide.none,
         );
         break;
@@ -98,10 +96,9 @@ class OmsaChip extends StatelessWidget {
           context,
           backgroundColor: Colors.transparent,
           labelStyle: TextStyle(
-            color: iconColor,
+            color: customTextColor ?? semanticColor,
             fontWeight: FontWeight.w500,
           ),
-          iconColor: iconColor,
           side: BorderSide(
             color: customBorderColor ?? semanticColor.withValues(alpha: 0.3),
             width: 1,
@@ -114,10 +111,9 @@ class OmsaChip extends StatelessWidget {
           context,
           backgroundColor: theme.colorScheme.surface,
           labelStyle: TextStyle(
-            color: iconColor,
+            color: customTextColor ?? semanticColor,
             fontWeight: FontWeight.w500,
           ),
-          iconColor: iconColor,
           side: BorderSide.none,
           elevation: 2,
         );
@@ -131,23 +127,14 @@ class OmsaChip extends StatelessWidget {
     BuildContext context, {
     required Color backgroundColor,
     required TextStyle labelStyle,
-    required Color iconColor,
     required BorderSide side,
     double elevation = 0,
   }) {
-    // Apply icon color to the icon if provided
-    final coloredIcon = icon != null
-        ? IconTheme(
-            data: IconThemeData(color: iconColor),
-            child: icon!,
-          )
-        : null;
-
     if (onPressed != null) {
       return ActionChip(
         label: label,
         onPressed: onPressed,
-        avatar: avatar ?? (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
+        avatar: avatar,
         backgroundColor: backgroundColor,
         labelStyle: labelStyle,
         side: side,
@@ -158,7 +145,7 @@ class OmsaChip extends StatelessWidget {
 
     return Chip(
       label: label,
-      avatar: avatar ?? (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
+      avatar: avatar ?? (icon != null ? _IconAvatar(icon: icon!) : null),
       backgroundColor: backgroundColor,
       labelStyle: labelStyle,
       side: side,

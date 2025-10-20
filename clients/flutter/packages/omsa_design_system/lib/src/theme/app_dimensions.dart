@@ -49,16 +49,16 @@ class AppDimensions {
       BorderRadius.circular(borderRadiusesLarge);
 
   /// Rounded borders (large radius) for top-left and top-right only
-  static BorderRadius get borderRadiusLargeTop => BorderRadius.only(
-        topLeft: Radius.circular(borderRadiusesLarge),
-        topRight: Radius.circular(borderRadiusesLarge),
-      );
+  static BorderRadius get borderRadiusLargeTop => const BorderRadius.only(
+    topLeft: Radius.circular(borderRadiusesLarge),
+    topRight: Radius.circular(borderRadiusesLarge),
+  );
 
   /// Rounded borders (large radius) for bottom-left and bottom-right only
-  static BorderRadius get borderRadiusLargeBottom => BorderRadius.only(
-        bottomLeft: Radius.circular(borderRadiusesLarge),
-        bottomRight: Radius.circular(borderRadiusesLarge),
-      );
+  static BorderRadius get borderRadiusLargeBottom => const BorderRadius.only(
+    bottomLeft: Radius.circular(borderRadiusesLarge),
+    bottomRight: Radius.circular(borderRadiusesLarge),
+  );
 
   // Z-Indexes (for stacking order)
   /// Behind content
