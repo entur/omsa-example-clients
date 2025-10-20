@@ -1,91 +1,76 @@
-import 'package:flutter/material.dart';
-
 /// Dimension constants for the OMSA Design System
-/// Includes border widths, border radiuses, z-indexes, and breakpoints
+/// Includes border radius, elevation, and other size tokens
 class AppDimensions {
   AppDimensions._();
 
-  // Border Widths
-  /// 1px - Small border width
-  static const double borderWidthsSmall = 1.0;
+  // Border Radius
+  /// 4px - Extra small radius
+  static const double radiusXS = 4.0;
 
-  /// 2px - Default/Medium border width
-  static const double borderWidthsDefault = 2.0;
+  /// 8px - Small radius
+  static const double radiusS = 8.0;
 
-  /// 2px - Medium border width (alias)
-  static const double borderWidthsMedium = 2.0;
+  /// 12px - Medium radius
+  static const double radiusM = 12.0;
 
-  /// 4px - Large border width
-  static const double borderWidthsLarge = 4.0;
+  /// 16px - Large radius
+  static const double radiusL = 16.0;
 
-  // Border Radii (raw values)
-  /// 1px - Small border radius
-  static const double borderRadiusesSmall = 1.0;
+  /// 24px - Extra large radius
+  static const double radiusXL = 24.0;
 
-  /// 1px - Default border radius
-  static const double borderRadiusesDefault = 1.0;
+  /// Full circle/pill shape
+  static const double radiusFull = 9999.0;
 
-  /// 4px - Medium border radius
-  static const double borderRadiusesMedium = 4.0;
+  // Elevation
+  /// Level 0 - No elevation
+  static const double elevation0 = 0.0;
 
-  /// 8px - Large border radius
-  static const double borderRadiusesLarge = 8.0;
+  /// Level 1 - Subtle elevation
+  static const double elevation1 = 1.0;
 
-  // Flutter BorderRadius helpers
-  /// BorderRadius with small radius (1px)
-  static BorderRadius get borderRadiusSmall =>
-      BorderRadius.circular(borderRadiusesSmall);
+  /// Level 2 - Standard elevation
+  static const double elevation2 = 2.0;
 
-  /// BorderRadius with default radius (1px)
-  static BorderRadius get borderRadiusDefault =>
-      BorderRadius.circular(borderRadiusesDefault);
+  /// Level 3 - Medium elevation
+  static const double elevation3 = 3.0;
 
-  /// BorderRadius with medium radius (4px)
-  static BorderRadius get borderRadiusMedium =>
-      BorderRadius.circular(borderRadiusesMedium);
+  /// Level 4 - High elevation
+  static const double elevation4 = 4.0;
 
-  /// BorderRadius with large radius (8px)
-  static BorderRadius get borderRadiusLarge =>
-      BorderRadius.circular(borderRadiusesLarge);
+  /// Level 5 - Very high elevation
+  static const double elevation5 = 8.0;
 
-  /// Rounded borders (large radius) for top-left and top-right only
-  static BorderRadius get borderRadiusLargeTop => const BorderRadius.only(
-    topLeft: Radius.circular(borderRadiusesLarge),
-    topRight: Radius.circular(borderRadiusesLarge),
-  );
+  // Icon Sizes
+  /// 16px - Small icon
+  static const double iconS = 16.0;
 
-  /// Rounded borders (large radius) for bottom-left and bottom-right only
-  static BorderRadius get borderRadiusLargeBottom => const BorderRadius.only(
-    bottomLeft: Radius.circular(borderRadiusesLarge),
-    bottomRight: Radius.circular(borderRadiusesLarge),
-  );
+  /// 24px - Medium icon (default)
+  static const double iconM = 24.0;
 
-  // Z-Indexes (for stacking order)
-  /// Behind content
-  static const int zIndexesBehind = -1;
+  /// 32px - Large icon
+  static const double iconL = 32.0;
 
-  /// Default layer
-  static const int zIndexesDefault = 0;
+  /// 48px - Extra large icon
+  static const double iconXL = 48.0;
 
-  /// Sticky elements
-  static const int zIndexesSticky = 10;
+  // Button Heights
+  /// 32px - Small button
+  static const double buttonHeightS = 32.0;
 
-  /// Popovers and tooltips
-  static const int zIndexesPopover = 20;
+  /// 40px - Medium button
+  static const double buttonHeightM = 40.0;
 
-  /// Overlays
-  static const int zIndexesOverlay = 30;
+  /// 48px - Large button
+  static const double buttonHeightL = 48.0;
 
-  /// Modals and dialogs
-  static const int zIndexesModal = 40;
+  // Input Heights
+  /// 40px - Small input
+  static const double inputHeightS = 40.0;
 
-  /// Toasts and notifications
-  static const int zIndexesToast = 50;
+  /// 48px - Medium input
+  static const double inputHeightM = 48.0;
 
-  // Breakpoints
-  /// 800px - Large screen breakpoint
-  static const double breakpointsLarge = 800.0;
-
-  /// 1200px - Extra large screen breakpoint
-  static const double breakpointsExtraLarge = 1200.0;
+  /// 56px - Large input
+  static const double inputHeightL = 56.0;
 }

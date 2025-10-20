@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/src/theme/app_spacing.dart';
-import 'package:omsa_design_system/src/theme/app_dimensions.dart';
-import 'package:omsa_design_system/src/theme/app_decorations.dart';
-import 'package:omsa_design_system/src/theme/app_shadows.dart';
+import '../../theme/app_spacing.dart';
 
 /// Card variant types for the OMSA Design System
-enum OmsaCardVariant { elevated, filled, outlined }
+enum OmsaCardVariant {
+  elevated,
+  filled,
+  outlined,
+}
 
 /// A customizable card component following OMSA Design System guidelines
 class OmsaCard extends StatelessWidget {
@@ -27,68 +28,62 @@ class OmsaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const defaultPadding = EdgeInsets.all(AppSpacing.spaceMedium);
-    const defaultMargin = EdgeInsets.symmetric(
-      horizontal: AppSpacing.spaceMedium,
-      vertical: AppSpacing.spaceExtraSmall,
+    final defaultPadding = const EdgeInsets.all(AppSpacing.spacing16);
+    final defaultMargin = const EdgeInsets.symmetric(
+      horizontal: AppSpacing.spacing16,
+      vertical: AppSpacing.spacing8,
     );
 
     Widget card;
 
     switch (variant) {
       case OmsaCardVariant.elevated:
-        card = Container(
+        card = Card(
           margin: margin ?? defaultMargin,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: AppDimensions.borderRadiusMedium,
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant,
-              width: AppDimensions.borderWidthsSmall,
-            ),
-            boxShadow: AppShadows.shadowsCardShadow,
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: AppDimensions.borderRadiusMedium,
-              child: Padding(padding: padding ?? defaultPadding, child: child),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: padding ?? defaultPadding,
+              child: child,
             ),
           ),
         );
         break;
 
       case OmsaCardVariant.filled:
-        card = Container(
+        card = Card(
           margin: margin ?? defaultMargin,
-          decoration: AppDecorations.roundedMedium(
-            color: theme.colorScheme.surfaceContainerHighest,
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: AppDimensions.borderRadiusMedium,
-              child: Padding(padding: padding ?? defaultPadding, child: child),
+          color: theme.colorScheme.surfaceContainerHighest,
+          elevation: 0,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: padding ?? defaultPadding,
+              child: child,
             ),
           ),
         );
         break;
 
       case OmsaCardVariant.outlined:
-        card = Container(
+        card = Card(
           margin: margin ?? defaultMargin,
-          decoration: AppDecorations.outlined(
-            borderColor: theme.colorScheme.outline,
-            borderWidth: AppDimensions.borderWidthsSmall,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.colorScheme.outline,
+              width: 1,
+            ),
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: AppDimensions.borderRadiusLarge,
-              child: Padding(padding: padding ?? defaultPadding, child: child),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: padding ?? defaultPadding,
+              child: child,
             ),
           ),
         );

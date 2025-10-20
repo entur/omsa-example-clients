@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
 /// Button variant types for the OMSA Design System
-enum OmsaButtonVariant { primary, secondary, outlined, text }
+enum OmsaButtonVariant {
+  primary,
+  secondary,
+  outlined,
+  text,
+}
 
 /// Button size options
-enum OmsaButtonSize { small, medium, large }
+enum OmsaButtonSize {
+  small,
+  medium,
+  large,
+}
 
 /// A customizable button component following OMSA Design System guidelines
 class OmsaButton extends StatelessWidget {
@@ -68,11 +77,15 @@ class OmsaButton extends StatelessWidget {
             child: const CircularProgressIndicator(strokeWidth: 2),
           )
         : icon != null
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [icon!, const SizedBox(width: 8), child],
-          )
-        : child;
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  icon!,
+                  const SizedBox(width: 8),
+                  child,
+                ],
+              )
+            : child;
 
     final buttonStyle = ButtonStyle(
       minimumSize: WidgetStateProperty.all(
