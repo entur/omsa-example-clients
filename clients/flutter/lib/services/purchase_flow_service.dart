@@ -108,8 +108,9 @@ class PurchaseFlowService {
   static Future<List<TravelDocument>> fetchTravelDocuments({
     required String packageId,
   }) async {
-    final response =
-        await OmsaApiService.fetchTravelDocuments(packageId: packageId);
+    final response = await OmsaApiService.fetchTravelDocuments(
+      packageId: packageId,
+    );
 
     if (response is Map<String, dynamic>) {
       final documents = response['travelDocuments'] as List<dynamic>? ?? [];

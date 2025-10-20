@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
 
@@ -140,12 +141,9 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 24),
 
               // From Zone Dropdown
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'From Zone',
-                  border: OutlineInputBorder(),
-                ),
-                initialValue: _fromZone,
+              OmsaDropdown<String>(
+                label: 'From Zone',
+                value: _fromZone,
                 items: _zones.map((zone) {
                   return DropdownMenuItem(
                     value: zone['id'],
@@ -157,12 +155,9 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 16),
 
               // To Zone Dropdown
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'To Zone',
-                  border: OutlineInputBorder(),
-                ),
-                initialValue: _toZone,
+              OmsaDropdown<String>(
+                label: 'To Zone',
+                value: _toZone,
                 items: _zones.map((zone) {
                   return DropdownMenuItem(
                     value: zone['id'],
@@ -226,11 +221,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
 
               // Traveler Age
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Traveler Age',
-                  border: OutlineInputBorder(),
-                ),
+              OmsaTextField(
+                label: 'Traveler Age',
                 keyboardType: TextInputType.number,
                 initialValue: _travelerAge.toString(),
                 validator: (value) {
@@ -249,19 +241,12 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 32),
 
               // Search Button
-              ElevatedButton(
+              OmsaButton(
                 onPressed: _isLoading ? null : _searchOffers,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                  textStyle: const TextStyle(fontSize: 18),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Search Offers'),
+                isLoading: _isLoading,
+                isFullWidth: true,
+                size: OmsaButtonSize.large,
+                child: const Text('Search Offers'),
               ),
             ],
           ),

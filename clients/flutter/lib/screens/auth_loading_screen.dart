@@ -229,7 +229,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                        'Powered by Entur',
+                            'Powered by Entur',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[600],

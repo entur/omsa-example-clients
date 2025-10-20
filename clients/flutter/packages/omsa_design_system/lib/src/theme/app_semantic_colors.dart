@@ -442,80 +442,164 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
     if (other is! AppSemanticColors) return this;
     return AppSemanticColors(
       frameContrast: Color.lerp(frameContrast, other.frameContrast, t)!,
-      frameContrastAlt:
-          Color.lerp(frameContrastAlt, other.frameContrastAlt, t)!,
-      frameContrastAlt2:
-          Color.lerp(frameContrastAlt2, other.frameContrastAlt2, t)!,
+      frameContrastAlt: Color.lerp(
+        frameContrastAlt,
+        other.frameContrastAlt,
+        t,
+      )!,
+      frameContrastAlt2: Color.lerp(
+        frameContrastAlt2,
+        other.frameContrastAlt2,
+        t,
+      )!,
       frameDefault: Color.lerp(frameDefault, other.frameDefault, t)!,
       frameElevated: Color.lerp(frameElevated, other.frameElevated, t)!,
-      frameElevatedAlt:
-          Color.lerp(frameElevatedAlt, other.frameElevatedAlt, t)!,
+      frameElevatedAlt: Color.lerp(
+        frameElevatedAlt,
+        other.frameElevatedAlt,
+        t,
+      )!,
       frameSubdued: Color.lerp(frameSubdued, other.frameSubdued, t)!,
       frameTint: Color.lerp(frameTint, other.frameTint, t)!,
       shapeAccent: Color.lerp(shapeAccent, other.shapeAccent, t)!,
       shapeDisabled: Color.lerp(shapeDisabled, other.shapeDisabled, t)!,
-      shapeDisabledAlt:
-          Color.lerp(shapeDisabledAlt, other.shapeDisabledAlt, t)!,
+      shapeDisabledAlt: Color.lerp(
+        shapeDisabledAlt,
+        other.shapeDisabledAlt,
+        t,
+      )!,
       shapeHighlight: Color.lerp(shapeHighlight, other.shapeHighlight, t)!,
       shapeLight: Color.lerp(shapeLight, other.shapeLight, t)!,
       shapeMask: Color.lerp(shapeMask, other.shapeMask, t)!,
       shapeMaskAlt: Color.lerp(shapeMaskAlt, other.shapeMaskAlt, t)!,
       shapeSubdued: Color.lerp(shapeSubdued, other.shapeSubdued, t)!,
       shapeSubduedAlt: Color.lerp(shapeSubduedAlt, other.shapeSubduedAlt, t)!,
-      shapeBicycleContrast:
-          Color.lerp(shapeBicycleContrast, other.shapeBicycleContrast, t)!,
-      shapeBicycleDefault:
-          Color.lerp(shapeBicycleDefault, other.shapeBicycleDefault, t)!,
-      shapeBusContrast:
-          Color.lerp(shapeBusContrast, other.shapeBusContrast, t)!,
+      shapeBicycleContrast: Color.lerp(
+        shapeBicycleContrast,
+        other.shapeBicycleContrast,
+        t,
+      )!,
+      shapeBicycleDefault: Color.lerp(
+        shapeBicycleDefault,
+        other.shapeBicycleDefault,
+        t,
+      )!,
+      shapeBusContrast: Color.lerp(
+        shapeBusContrast,
+        other.shapeBusContrast,
+        t,
+      )!,
       shapeBusDefault: Color.lerp(shapeBusDefault, other.shapeBusDefault, t)!,
-      shapeCablewayContrast:
-          Color.lerp(shapeCablewayContrast, other.shapeCablewayContrast, t)!,
-      shapeCablewayDefault:
-          Color.lerp(shapeCablewayDefault, other.shapeCablewayDefault, t)!,
-      shapeFerryContrast:
-          Color.lerp(shapeFerryContrast, other.shapeFerryContrast, t)!,
-      shapeFerryDefault:
-          Color.lerp(shapeFerryDefault, other.shapeFerryDefault, t)!,
-      shapeFunicularContrast:
-          Color.lerp(shapeFunicularContrast, other.shapeFunicularContrast, t)!,
-      shapeFunicularDefault:
-          Color.lerp(shapeFunicularDefault, other.shapeFunicularDefault, t)!,
+      shapeCablewayContrast: Color.lerp(
+        shapeCablewayContrast,
+        other.shapeCablewayContrast,
+        t,
+      )!,
+      shapeCablewayDefault: Color.lerp(
+        shapeCablewayDefault,
+        other.shapeCablewayDefault,
+        t,
+      )!,
+      shapeFerryContrast: Color.lerp(
+        shapeFerryContrast,
+        other.shapeFerryContrast,
+        t,
+      )!,
+      shapeFerryDefault: Color.lerp(
+        shapeFerryDefault,
+        other.shapeFerryDefault,
+        t,
+      )!,
+      shapeFunicularContrast: Color.lerp(
+        shapeFunicularContrast,
+        other.shapeFunicularContrast,
+        t,
+      )!,
+      shapeFunicularDefault: Color.lerp(
+        shapeFunicularDefault,
+        other.shapeFunicularDefault,
+        t,
+      )!,
       shapeHelicopterContrast: Color.lerp(
         shapeHelicopterContrast,
         other.shapeHelicopterContrast,
         t,
       )!,
-      shapeHelicopterDefault:
-          Color.lerp(shapeHelicopterDefault, other.shapeHelicopterDefault, t)!,
-      shapeMetroContrast:
-          Color.lerp(shapeMetroContrast, other.shapeMetroContrast, t)!,
-      shapeMetroDefault:
-          Color.lerp(shapeMetroDefault, other.shapeMetroDefault, t)!,
-      shapeMobilityContrast:
-          Color.lerp(shapeMobilityContrast, other.shapeMobilityContrast, t)!,
-      shapeMobilityDefault:
-          Color.lerp(shapeMobilityDefault, other.shapeMobilityDefault, t)!,
-      shapePlaneContrast:
-          Color.lerp(shapePlaneContrast, other.shapePlaneContrast, t)!,
-      shapePlaneDefault:
-          Color.lerp(shapePlaneDefault, other.shapePlaneDefault, t)!,
-      shapeTaxiContrast:
-          Color.lerp(shapeTaxiContrast, other.shapeTaxiContrast, t)!,
-      shapeTaxiDefault:
-          Color.lerp(shapeTaxiDefault, other.shapeTaxiDefault, t)!,
-      shapeTrainContrast:
-          Color.lerp(shapeTrainContrast, other.shapeTrainContrast, t)!,
-      shapeTrainDefault:
-          Color.lerp(shapeTrainDefault, other.shapeTrainDefault, t)!,
-      shapeTramContrast:
-          Color.lerp(shapeTramContrast, other.shapeTramContrast, t)!,
-      shapeTramDefault:
-          Color.lerp(shapeTramDefault, other.shapeTramDefault, t)!,
-      shapeWalkContrast:
-          Color.lerp(shapeWalkContrast, other.shapeWalkContrast, t)!,
-      shapeWalkDefault:
-          Color.lerp(shapeWalkDefault, other.shapeWalkDefault, t)!,
+      shapeHelicopterDefault: Color.lerp(
+        shapeHelicopterDefault,
+        other.shapeHelicopterDefault,
+        t,
+      )!,
+      shapeMetroContrast: Color.lerp(
+        shapeMetroContrast,
+        other.shapeMetroContrast,
+        t,
+      )!,
+      shapeMetroDefault: Color.lerp(
+        shapeMetroDefault,
+        other.shapeMetroDefault,
+        t,
+      )!,
+      shapeMobilityContrast: Color.lerp(
+        shapeMobilityContrast,
+        other.shapeMobilityContrast,
+        t,
+      )!,
+      shapeMobilityDefault: Color.lerp(
+        shapeMobilityDefault,
+        other.shapeMobilityDefault,
+        t,
+      )!,
+      shapePlaneContrast: Color.lerp(
+        shapePlaneContrast,
+        other.shapePlaneContrast,
+        t,
+      )!,
+      shapePlaneDefault: Color.lerp(
+        shapePlaneDefault,
+        other.shapePlaneDefault,
+        t,
+      )!,
+      shapeTaxiContrast: Color.lerp(
+        shapeTaxiContrast,
+        other.shapeTaxiContrast,
+        t,
+      )!,
+      shapeTaxiDefault: Color.lerp(
+        shapeTaxiDefault,
+        other.shapeTaxiDefault,
+        t,
+      )!,
+      shapeTrainContrast: Color.lerp(
+        shapeTrainContrast,
+        other.shapeTrainContrast,
+        t,
+      )!,
+      shapeTrainDefault: Color.lerp(
+        shapeTrainDefault,
+        other.shapeTrainDefault,
+        t,
+      )!,
+      shapeTramContrast: Color.lerp(
+        shapeTramContrast,
+        other.shapeTramContrast,
+        t,
+      )!,
+      shapeTramDefault: Color.lerp(
+        shapeTramDefault,
+        other.shapeTramDefault,
+        t,
+      )!,
+      shapeWalkContrast: Color.lerp(
+        shapeWalkContrast,
+        other.shapeWalkContrast,
+        t,
+      )!,
+      shapeWalkDefault: Color.lerp(
+        shapeWalkDefault,
+        other.shapeWalkDefault,
+        t,
+      )!,
       shapeAirportLinkBusContrast: Color.lerp(
         shapeAirportLinkBusContrast,
         other.shapeAirportLinkBusContrast,
@@ -539,15 +623,24 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
       strokeContrast: Color.lerp(strokeContrast, other.strokeContrast, t)!,
       strokeDefault: Color.lerp(strokeDefault, other.strokeDefault, t)!,
       strokeDisabled: Color.lerp(strokeDisabled, other.strokeDisabled, t)!,
-      strokeFocusContrast:
-          Color.lerp(strokeFocusContrast, other.strokeFocusContrast, t)!,
-      strokeFocusStandard:
-          Color.lerp(strokeFocusStandard, other.strokeFocusStandard, t)!,
+      strokeFocusContrast: Color.lerp(
+        strokeFocusContrast,
+        other.strokeFocusContrast,
+        t,
+      )!,
+      strokeFocusStandard: Color.lerp(
+        strokeFocusStandard,
+        other.strokeFocusStandard,
+        t,
+      )!,
       strokeHighlight: Color.lerp(strokeHighlight, other.strokeHighlight, t)!,
       strokeLight: Color.lerp(strokeLight, other.strokeLight, t)!,
       strokeSubdued: Color.lerp(strokeSubdued, other.strokeSubdued, t)!,
-      strokeSubduedAlt:
-          Color.lerp(strokeSubduedAlt, other.strokeSubduedAlt, t)!,
+      strokeSubduedAlt: Color.lerp(
+        strokeSubduedAlt,
+        other.strokeSubduedAlt,
+        t,
+      )!,
       textAccent: Color.lerp(textAccent, other.textAccent, t)!,
       textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
       textDisabledAlt: Color.lerp(textDisabledAlt, other.textDisabledAlt, t)!,

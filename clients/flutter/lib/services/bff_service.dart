@@ -34,9 +34,10 @@ class BffService {
     _logger.i('Checking BFF health at $url');
 
     try {
-      final response = await http.get(url, headers: {
-        'Accept': 'application/json',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Accept': 'application/json'},
+      );
 
       if (response.statusCode != 200) {
         _logger.e('BFF health check failed: ${response.statusCode}');

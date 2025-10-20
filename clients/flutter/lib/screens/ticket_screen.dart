@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:omsa_design_system/omsa_design_system.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 
@@ -15,7 +16,8 @@ class TicketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayTicket = primaryTicket ?? (documents.isNotEmpty ? documents.first : null);
+    final displayTicket =
+        primaryTicket ?? (documents.isNotEmpty ? documents.first : null);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,106 +27,100 @@ class TicketScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: documents.isEmpty
-            ? const Center(
-                child: Text('No travel documents available'),
-              )
+            ? const Center(child: Text('No travel documents available'))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Card(
-                    elevation: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          _TicketVisual(
-                            document: displayTicket,
-                            fallbackTypeLabel:
-                                displayTicket?.travelDocumentType ?? 'Unknown',
+                  OmsaCard(
+                    variant: OmsaCardVariant.elevated,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        _TicketVisual(
+                          document: displayTicket,
+                          fallbackTypeLabel:
+                              displayTicket?.travelDocumentType ?? 'Unknown',
+                        ),
+                        if (displayTicket?.startValidity != null ||
+                            displayTicket?.endValidity != null) ...[
+                          const SizedBox(height: 16),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              if (displayTicket?.startValidity != null)
+                                _buildValidityChip(
+                                  'Valid from',
+                                  displayTicket!.startValidity!,
+                                ),
+                              if (displayTicket?.endValidity != null)
+                                _buildValidityChip(
+                                  'Valid until',
+                                  displayTicket!.endValidity!,
+                                ),
+                            ],
                           ),
-                          if (displayTicket?.startValidity != null ||
-                              displayTicket?.endValidity != null) ...[
-                            const SizedBox(height: 16),
-                            Wrap(
-                              spacing: 12,
-                              runSpacing: 12,
-                              children: [
-                                if (displayTicket?.startValidity != null)
-                                  _buildValidityChip(
-                                    context,
-                                    'Valid from',
-                                    displayTicket!.startValidity!,
-                                  ),
-                                if (displayTicket?.endValidity != null)
-                                  _buildValidityChip(
-                                    context,
-                                    'Valid until',
-                                    displayTicket!.endValidity!,
-                                  ),
-                              ],
-                            ),
-                          ],
                         ],
-                      ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Travel documents',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    child: OmsaCard(
+                      variant: OmsaCardVariant.elevated,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Travel documents',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: ListView.separated(
-                                itemCount: documents.length,
-                                separatorBuilder: (context, _) =>
-                                    const Divider(),
-                                itemBuilder: (context, index) {
-                                  final doc = documents[index];
-                                  return ListTile(
-                                    leading: Icon(
-                                      doc.isQrCode
-                                          ? Icons.qr_code
-                                          : doc.hasAnimationDetails
-                                              ? Icons.movie
-                                              : Icons.description,
-                                    ),
-                                    title: Text(doc.travelDocumentType),
-                                    subtitle: Text(
-                                      'Content: ${doc.contentType}',
-                                      maxLines: 2,
-                                    ),
-                                    trailing: doc == displayTicket
-                                        ? const Chip(
-                                            label: Text('Primary'),
-                                          )
-                                        : null,
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => TicketScreen(
-                                            documents: documents,
-                                            primaryTicket: doc,
-                                          ),
+                          ),
+                          const SizedBox(height: 12),
+                          Expanded(
+                            child: ListView.separated(
+                              itemCount: documents.length,
+                              separatorBuilder: (context, _) => const Divider(),
+                              itemBuilder: (context, index) {
+                                final doc = documents[index];
+                                return ListTile(
+                                  leading: Icon(
+                                    doc.isQrCode
+                                        ? Icons.qr_code
+                                        : doc.hasAnimationDetails
+                                        ? Icons.movie
+                                        : Icons.description,
+                                  ),
+                                  title: Text(doc.travelDocumentType),
+                                  subtitle: Text(
+                                    'Content: ${doc.contentType}',
+                                    maxLines: 2,
+                                  ),
+                                  trailing: doc == displayTicket
+                                      ? const OmsaChip(
+                                          label: Text('Primary'),
+                                          variant: OmsaChipVariant.filled,
+                                          color: OmsaChipColor.primary,
+                                        )
+                                      : null,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => TicketScreen(
+                                          documents: documents,
+                                          primaryTicket: doc,
                                         ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -132,34 +128,22 @@ class TicketScreen extends StatelessWidget {
               ),
       ),
     );
-}
+  }
 
-Widget _buildValidityChip(
-  BuildContext context,
-  String label,
-    DateTime value,
-  ) {
-    return Chip(
+  Widget _buildValidityChip(String label, DateTime value) {
+    return OmsaChip(
       label: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(160),
-              fontSize: 12,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12)),
           Text(
             value.toLocal().toString().substring(0, 16),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ],
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(20),
+      variant: OmsaChipVariant.filled,
+      color: OmsaChipColor.info,
     );
   }
 }
@@ -184,10 +168,7 @@ class _TicketVisual extends StatelessWidget {
         children: [
           const Text(
             'Scan to travel',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Container(
@@ -220,19 +201,12 @@ class _TicketVisual extends StatelessWidget {
         children: [
           const Text(
             'Travel token',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.memory(
-              bytes,
-              fit: BoxFit.contain,
-              height: 240,
-            ),
+            child: Image.memory(bytes, fit: BoxFit.contain, height: 240),
           ),
           if (document!.hasAnimationDetails && document!.animation != null)
             Padding(
@@ -242,17 +216,24 @@ class _TicketVisual extends StatelessWidget {
                 runSpacing: 4,
                 children: [
                   if (document!.animation!.keyVersion != null)
-                    Chip(
+                    OmsaChip(
                       label: Text('Key ${document!.animation!.keyVersion}'),
+                      variant: OmsaChipVariant.outlined,
+                      color: OmsaChipColor.neutral,
                     ),
                   if (document!.animation!.color != null)
-                    Chip(
+                    OmsaChip(
                       label: Text('Color ${document!.animation!.color}'),
+                      variant: OmsaChipVariant.outlined,
+                      color: OmsaChipColor.neutral,
                     ),
                   if (document!.animation!.speed != null)
-                    Chip(
-                      label:
-                          Text('Speed ${document!.animation!.speed?.toString()}'),
+                    OmsaChip(
+                      label: Text(
+                        'Speed ${document!.animation!.speed?.toString()}',
+                      ),
+                      variant: OmsaChipVariant.outlined,
+                      color: OmsaChipColor.neutral,
                     ),
                 ],
               ),
@@ -267,16 +248,9 @@ class _TicketVisual extends StatelessWidget {
   Widget _placeholder(String label) {
     return Column(
       children: [
-        const Icon(
-          Icons.qr_code_2,
-          size: 96,
-          color: Colors.grey,
-        ),
+        const Icon(Icons.qr_code_2, size: 96, color: Colors.grey),
         const SizedBox(height: 12),
-        Text(
-          'Ticket type: $label',
-          textAlign: TextAlign.center,
-        ),
+        Text('Ticket type: $label', textAlign: TextAlign.center),
       ],
     );
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
-import 'app_semantic_colors.dart';
-import 'app_typography.dart';
-import 'app_dimensions.dart';
+import 'package:omsa_design_system/src/theme/app_colors.dart';
+import 'package:omsa_design_system/src/theme/app_semantic_colors.dart';
+import 'package:omsa_design_system/src/theme/app_typography.dart';
+import 'package:omsa_design_system/src/theme/app_dimensions.dart';
 
 /// OMSA Design System Theme Factory
 /// Provides light and dark theme configurations
@@ -48,7 +48,7 @@ class AppTheme {
       ),
 
       // Typography
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: AppTypography.displayLarge,
         displayMedium: AppTypography.displayMedium,
         displaySmall: AppTypography.displaySmall,
@@ -96,9 +96,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppDimensions.borderRadiusLarge,
           ),
-          side: BorderSide(
-            width: AppDimensions.borderWidthsDefault,
-          ),
+          side: const BorderSide(width: AppDimensions.borderWidthsDefault),
           textStyle: AppTypography.labelLarge,
         ),
       ),
@@ -123,7 +121,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: AppDimensions.borderRadiusLarge,
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             width: AppDimensions.borderWidthsDefault,
           ),
         ),
@@ -201,7 +199,7 @@ class AppTheme {
       ),
 
       // Typography
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: AppTypography.displayLarge,
         displayMedium: AppTypography.displayMedium,
         displaySmall: AppTypography.displaySmall,
@@ -249,9 +247,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppDimensions.borderRadiusLarge,
           ),
-          side: BorderSide(
-            width: AppDimensions.borderWidthsDefault,
-          ),
+          side: const BorderSide(width: AppDimensions.borderWidthsDefault),
           textStyle: AppTypography.labelLarge,
         ),
       ),
@@ -276,7 +272,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: AppDimensions.borderRadiusLarge,
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             width: AppDimensions.borderWidthsDefault,
           ),
         ),
