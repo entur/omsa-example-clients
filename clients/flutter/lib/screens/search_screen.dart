@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
-import 'offers_screen.dart';
+import 'package:omsa_demo_app/screens/offers_screen.dart';
 
 enum DepartureType { now, leaveAt, arriveBy }
 

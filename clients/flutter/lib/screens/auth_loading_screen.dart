@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_demo_app/services/bff_service.dart';
-import 'search_screen.dart';
+import 'package:omsa_demo_app/screens/search_screen.dart';
 
 class AuthLoadingScreen extends StatefulWidget {
   const AuthLoadingScreen({super.key});

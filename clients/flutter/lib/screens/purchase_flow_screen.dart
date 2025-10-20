@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
-import 'ticket_screen.dart';
+import 'package:omsa_demo_app/screens/ticket_screen.dart';
 
 class PurchaseFlowScreen extends StatefulWidget {
   final Offer offer;

@@ -2,8 +2,8 @@ import 'package:logger/logger.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
-import 'omsa_api_service.dart';
-import 'payment_service.dart';
+import 'package:omsa_demo_app/services/omsa_api_service.dart';
+import 'package:omsa_demo_app/services/payment_service.dart';
 
 class PurchaseFlowService {
   PurchaseFlowService._();

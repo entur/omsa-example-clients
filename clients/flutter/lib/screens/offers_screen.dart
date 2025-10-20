@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
-import 'purchase_flow_screen.dart';
+import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
 
 class OffersScreen extends StatelessWidget {
   final OfferCollection offers;

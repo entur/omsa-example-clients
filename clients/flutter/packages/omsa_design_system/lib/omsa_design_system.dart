@@ -2,7 +2,7 @@
 ///
 /// A comprehensive design system package for OMSA applications
 /// providing theme configuration, reusable components, and design tokens.
-library omsa_design_system;
+library;
 
 // Theme exports
 export 'src/theme/app_theme.dart';

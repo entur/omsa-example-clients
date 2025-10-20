@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_spacing.dart';
+import 'package:omsa_design_system/src/theme/app_spacing.dart';
 
 /// Card variant types for the OMSA Design System
 enum OmsaCardVariant {

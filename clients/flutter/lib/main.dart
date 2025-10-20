@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
-import 'screens/auth_loading_screen.dart';
+import 'package:omsa_demo_app/screens/auth_loading_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
