@@ -10,4 +10,3 @@ linter:
     - prefer_final_fields
     - prefer_final_locals
     - use_super_parameters
-    - always_use_package_imports
