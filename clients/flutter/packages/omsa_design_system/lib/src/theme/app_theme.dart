@@ -70,10 +70,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           foregroundColor: colors.onPrimary,
           backgroundColor: colors.primary,
-          elevation: AppDimensions.elevation2,
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          elevation: 2.0,
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -81,9 +81,9 @@ class AppTheme {
 
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -91,9 +91,12 @@ class AppTheme {
 
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
+          ),
+          side: BorderSide(
+            width: AppDimensions.borderWidthsDefault,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -101,36 +104,48 @@ class AppTheme {
 
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
       ),
 
       cardTheme: CardThemeData(
-        elevation: AppDimensions.elevation2,
+        elevation: 2.0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+          borderRadius: AppDimensions.borderRadiusMedium,
         ),
       ),
 
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            width: AppDimensions.borderWidthsDefault,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.primary, width: 2),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.primary,
+            width: AppDimensions.borderWidthsMedium,
+          ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.error),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.error,
+            width: AppDimensions.borderWidthsDefault,
+          ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.error, width: 2),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.error,
+            width: AppDimensions.borderWidthsMedium,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -207,10 +222,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           foregroundColor: colors.onPrimary,
           backgroundColor: colors.primary,
-          elevation: AppDimensions.elevation2,
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          elevation: 2.0,
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -218,9 +233,9 @@ class AppTheme {
 
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -228,9 +243,12 @@ class AppTheme {
 
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
+          ),
+          side: BorderSide(
+            width: AppDimensions.borderWidthsDefault,
           ),
           textStyle: AppTypography.labelLarge,
         ),
@@ -238,36 +256,48 @@ class AppTheme {
 
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppDimensions.buttonHeightL),
+          minimumSize: const Size.fromHeight(48.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+            borderRadius: AppDimensions.borderRadiusLarge,
           ),
           textStyle: AppTypography.labelLarge,
         ),
       ),
 
       cardTheme: CardThemeData(
-        elevation: AppDimensions.elevation2,
+        elevation: 2.0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+          borderRadius: AppDimensions.borderRadiusMedium,
         ),
       ),
 
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            width: AppDimensions.borderWidthsDefault,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.primary, width: 2),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.primary,
+            width: AppDimensions.borderWidthsMedium,
+          ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.error),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.error,
+            width: AppDimensions.borderWidthsDefault,
+          ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          borderSide: BorderSide(color: colors.error, width: 2),
+          borderRadius: AppDimensions.borderRadiusLarge,
+          borderSide: BorderSide(
+            color: colors.error,
+            width: AppDimensions.borderWidthsMedium,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
