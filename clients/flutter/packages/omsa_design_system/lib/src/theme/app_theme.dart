@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'app_semantic_colors.dart';
 import 'app_typography.dart';
 import 'app_dimensions.dart';
 
@@ -156,6 +157,7 @@ class AppTheme {
       // Extensions for custom colors
       extensions: const <ThemeExtension<dynamic>>[
         colors,
+        AppSemanticColors.light,
       ],
     );
   }
@@ -308,6 +310,7 @@ class AppTheme {
       // Extensions for custom colors
       extensions: const <ThemeExtension<dynamic>>[
         colors,
+        AppSemanticColors.dark,
       ],
     );
   }
