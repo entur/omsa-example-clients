@@ -24,8 +24,9 @@ class TravelAnimation {
         json.decode(jsonString) as Map<String, dynamic>;
     final imageField = data['image']?.toString() ?? '';
     return TravelAnimation(
-      imageBytes:
-          imageField.isNotEmpty ? base64Decode(imageField) : Uint8List(0),
+      imageBytes: imageField.isNotEmpty
+          ? base64Decode(imageField)
+          : Uint8List(0),
       keyVersion: data['keyVersion']?.toString(),
       color: data['color']?.toString(),
       speed: data['speed'] is num ? (data['speed'] as num).toInt() : null,
@@ -61,13 +62,12 @@ class PurchaseInitiation {
     final derivedIdCandidate = orderObject is Map<String, dynamic>
         ? orderObject['id']
         : null;
-    final packageId = (map['id'] ??
-            map['packageId'] ??
-            map['orderId'] ??
-            derivedIdCandidate)
-        ?.toString() ??
+    final packageId =
+        (map['id'] ?? map['packageId'] ?? map['orderId'] ?? derivedIdCandidate)
+            ?.toString() ??
         '';
-    final orderVersionCandidate = map['orderVersion'] ??
+    final orderVersionCandidate =
+        map['orderVersion'] ??
         (orderObject is Map<String, dynamic>
             ? (orderObject['version'] ?? orderObject['orderVersion'])
             : null);
@@ -101,7 +101,9 @@ class PaymentSession {
 
   factory PaymentSession.fromMap(Map<String, dynamic> map) {
     final history = map['transactionHistory'] as List<dynamic>? ?? [];
-    final primary = history.isNotEmpty ? history.first as Map<String, dynamic> : {};
+    final primary = history.isNotEmpty
+        ? history.first as Map<String, dynamic>
+        : {};
     final transactionId = primary['transactionId'] is num
         ? (primary['transactionId'] as num).toInt()
         : int.tryParse(primary['transactionId']?.toString() ?? '') ?? 0;
@@ -111,7 +113,8 @@ class PaymentSession {
           ? (map['paymentId'] as num).toInt()
           : int.tryParse(map['paymentId']?.toString() ?? '0') ?? 0,
       transactionId: transactionId,
-      totalAmount: (map['totalAmount'] ?? primary['amount'] ?? '0.00').toString(),
+      totalAmount: (map['totalAmount'] ?? primary['amount'] ?? '0.00')
+          .toString(),
       currency: (map['currency'] ?? primary['currency'] ?? 'NOK').toString(),
       status: (primary['status'] ?? map['status'] ?? 'UNKNOWN').toString(),
     );
@@ -149,7 +152,9 @@ class PaymentCaptureResult {
 
   factory PaymentCaptureResult.fromMap(Map<String, dynamic> map) {
     final history = map['transactionHistory'] as List<dynamic>? ?? [];
-    final primary = history.isNotEmpty ? history.first as Map<String, dynamic> : {};
+    final primary = history.isNotEmpty
+        ? history.first as Map<String, dynamic>
+        : {};
     return PaymentCaptureResult(
       status: (primary['status'] ?? map['status'] ?? 'UNKNOWN').toString(),
     );

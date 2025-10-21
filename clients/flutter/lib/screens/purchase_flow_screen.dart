@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:omsa_design_system/omsa_design_system.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
-import 'ticket_screen.dart';
+import 'package:omsa_demo_app/screens/ticket_screen.dart';
 
 class PurchaseFlowScreen extends StatefulWidget {
   final Offer offer;
@@ -161,75 +162,62 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     final price = widget.offer.properties.price;
     final summary = widget.offer.properties.summary;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              summary.name,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return OmsaCard(
+      variant: OmsaCardVariant.elevated,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            summary.name,
+            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
+                style: AppTypography.textLarge.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _buildPill(
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  OmsaChip(
+                    label: Text(
                       summary.isRefundable ? 'Refundable' : 'Non-refundable',
-                      summary.isRefundable ? Colors.green : Colors.orange,
                     ),
-                    const SizedBox(height: 4),
-                    _buildPill(
+                    variant: OmsaChipVariant.filled,
+                    color: summary.isRefundable
+                        ? OmsaChipColor.success
+                        : OmsaChipColor.warning,
+                  ),
+                  const SizedBox(height: 4),
+                  OmsaChip(
+                    label: Text(
                       summary.isExchangeable
                           ? 'Exchangeable'
                           : 'Non-exchangeable',
-                      summary.isExchangeable ? Colors.green : Colors.orange,
                     ),
-                  ],
-                ),
-              ],
-            ),
-            if (summary.description.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text(
-                summary.description.replaceAll('\\n', '\n'),
-                style: TextStyle(color: Colors.grey[700]),
+                    variant: OmsaChipVariant.filled,
+                    color: summary.isExchangeable
+                        ? OmsaChipColor.success
+                        : OmsaChipColor.warning,
+                  ),
+                ],
               ),
             ],
+          ),
+          if (summary.description.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              summary.description.replaceAll('\\n', '\n'),
+              style: TextStyle(color: context.semanticColors.textSubdued),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPill(String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
-        ),
+        ],
       ),
     );
   }
@@ -240,21 +228,28 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     required bool completed,
     bool isActive = false,
   }) {
-    final icon = completed
-        ? Icons.check_circle
-        : isActive
-            ? Icons.timelapse
-            : Icons.radio_button_unchecked;
-    final color = completed
-        ? Colors.green
-        : isActive
-            ? Colors.blue
-            : Colors.grey;
+    return Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        final semanticColors = context.semanticColors;
 
-    return ListTile(
-      leading: Icon(icon, color: color),
-      title: Text(title),
-      subtitle: Text(subtitle),
+        final icon = completed
+            ? Icons.check_circle
+            : isActive
+                ? Icons.timelapse
+                : Icons.radio_button_unchecked;
+        final color = completed
+            ? Colors.green // Success color for completed
+            : isActive
+                ? theme.colorScheme.primary
+                : semanticColors.shapeDisabled;
+
+        return ListTile(
+          leading: Icon(icon, color: color),
+          title: Text(title),
+          subtitle: Text(subtitle),
+        );
+      },
     );
   }
 
@@ -263,7 +258,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -272,16 +267,17 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
           children: [
             _buildOfferSummary(),
             const SizedBox(height: 16),
-            Card(
+            OmsaCard(
+              variant: OmsaCardVariant.elevated,
+              padding: EdgeInsets.zero,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Text(
                       'Progress',
-                      style: TextStyle(
-                        fontSize: 18,
+                      style: AppTypography.textLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -292,7 +288,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                         ? 'Package ID: ${_purchase!.packageId}'
                         : 'Create OMSA order',
                     completed: _purchase != null,
-                    isActive: _phase == FlowPhase.purchasing && _purchase == null,
+                    isActive:
+                        _phase == FlowPhase.purchasing && _purchase == null,
                   ),
                   _buildStatusTile(
                     title: 'Create payment',
@@ -300,14 +297,16 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                         ? 'Payment ID: ${_payment!.paymentId}'
                         : 'Prepare payment request',
                     completed: _payment != null,
-                    isActive: _phase == FlowPhase.purchasing && _payment == null,
+                    isActive:
+                        _phase == FlowPhase.purchasing && _payment == null,
                   ),
                   _buildStatusTile(
                     title: 'Open payment terminal',
                     subtitle: _terminal != null
                         ? 'Transaction ID: ${_terminal!.transactionId}'
                         : 'Awaiting terminal URL',
-                    completed: _terminal != null &&
+                    completed:
+                        _terminal != null &&
                         (_phase == FlowPhase.awaitingCapture ||
                             _phase == FlowPhase.finished),
                     isActive: _phase == FlowPhase.terminalReady,
@@ -318,8 +317,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                         ? 'Status: ${_capture!.status}'
                         : 'Confirm payment capture',
                     completed: _capture != null,
-                    isActive: _phase == FlowPhase.awaitingCapture &&
-                        _capture == null,
+                    isActive:
+                        _phase == FlowPhase.awaitingCapture && _capture == null,
                   ),
                   _buildStatusTile(
                     title: 'Confirm package',
@@ -327,7 +326,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                         ? 'Package ID: ${_confirmation!.packageId}'
                         : 'Finalize OMSA package',
                     completed: _confirmation != null,
-                    isActive: _phase == FlowPhase.awaitingCapture &&
+                    isActive:
+                        _phase == FlowPhase.awaitingCapture &&
                         _confirmation == null,
                   ),
                   _buildStatusTile(
@@ -336,7 +336,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                         ? 'Received ${_documents.length} document(s)'
                         : 'Fetch travel documents',
                     completed: _documents.isNotEmpty,
-                    isActive: _phase == FlowPhase.awaitingCapture &&
+                    isActive:
+                        _phase == FlowPhase.awaitingCapture &&
                         _documents.isEmpty,
                   ),
                   if (_error != null)
@@ -344,7 +345,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Text(
                         _error!,
-                        style: const TextStyle(color: Colors.red),
+                        style: TextStyle(color: Theme.of(context).colorScheme.error),
                       ),
                     ),
                 ],
@@ -352,34 +353,28 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             ),
             const SizedBox(height: 24),
             if (_phase == FlowPhase.idle || _phase == FlowPhase.failed)
-              ElevatedButton.icon(
+              OmsaButton(
                 onPressed: _isProcessing ? null : _startCheckout,
-                icon: _isProcessing
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.shopping_cart_checkout),
-                label: const Text('Purchase offer and prepare payment'),
+                isLoading: _isProcessing,
+                isFullWidth: true,
+                icon: const Icon(Icons.shopping_cart_checkout),
+                child: const Text('Purchase offer and prepare payment'),
               ),
             if (_phase == FlowPhase.terminalReady) ...[
-              ElevatedButton.icon(
+              OmsaButton(
                 onPressed: _isProcessing ? null : _openTerminal,
+                isFullWidth: true,
+                variant: OmsaButtonVariant.outlined,
                 icon: const Icon(Icons.open_in_new),
-                label: const Text('Open payment terminal'),
+                child: const Text('Open payment terminal'),
               ),
               const SizedBox(height: 12),
-              ElevatedButton.icon(
+              OmsaButton(
                 onPressed: _isProcessing ? null : _completePayment,
-                icon: _isProcessing
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.check),
-                label: const Text('Capture payment and fetch ticket'),
+                isLoading: _isProcessing,
+                isFullWidth: true,
+                icon: const Icon(Icons.check),
+                child: const Text('Capture payment and fetch ticket'),
               ),
               if (_terminal?.terminalUri.isNotEmpty ?? false) ...[
                 const SizedBox(height: 12),
@@ -393,7 +388,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               ],
             ],
             if (_phase == FlowPhase.finished)
-              ElevatedButton.icon(
+              OmsaButton(
                 onPressed: () {
                   if (_documents.isEmpty) return;
                   final doc = _selectPrimaryTicket(_documents);
@@ -406,8 +401,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                     ),
                   );
                 },
+                isFullWidth: true,
                 icon: const Icon(Icons.qr_code),
-                label: const Text('View ticket'),
+                child: const Text('View ticket'),
               ),
           ],
         ),

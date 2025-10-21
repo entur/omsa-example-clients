@@ -51,17 +51,13 @@ class OmsaApiService {
     }
   }
 
-  static Future<dynamic> _getJson({
-    required Uri url,
-  }) async {
+  static Future<dynamic> _getJson({required Uri url}) async {
     _logger.i('GET $url');
 
     try {
       final response = await http.get(
         url,
-        headers: const {
-          'Accept': 'application/json',
-        },
+        headers: const {'Accept': 'application/json'},
       );
 
       _logger.i('Response ${response.statusCode} from $url');
@@ -131,9 +127,7 @@ class OmsaApiService {
         if (timestamp != null) 'timestamp': timestamp.toUtc().toIso8601String(),
         'offerIds': [offerId],
       },
-      'subscriber': {
-        'successUri': resolvedSuccessUri,
-      },
+      'subscriber': {'successUri': resolvedSuccessUri},
     };
 
     return _postJson(url: url, body: payload);

@@ -53,17 +53,13 @@ class PaymentService {
     }
   }
 
-  static Future<Map<String, dynamic>> _put({
-    required Uri url,
-  }) async {
+  static Future<Map<String, dynamic>> _put({required Uri url}) async {
     _logger.i('PUT $url');
 
     try {
       final response = await http.put(
         url,
-        headers: const {
-          'Accept': 'application/json',
-        },
+        headers: const {'Accept': 'application/json'},
       );
 
       _logger.i('Response ${response.statusCode} from $url');

@@ -2,8 +2,8 @@ import 'package:logger/logger.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
-import 'omsa_api_service.dart';
-import 'payment_service.dart';
+import 'package:omsa_demo_app/services/omsa_api_service.dart';
+import 'package:omsa_demo_app/services/payment_service.dart';
 
 class PurchaseFlowService {
   PurchaseFlowService._();
@@ -108,8 +108,9 @@ class PurchaseFlowService {
   static Future<List<TravelDocument>> fetchTravelDocuments({
     required String packageId,
   }) async {
-    final response =
-        await OmsaApiService.fetchTravelDocuments(packageId: packageId);
+    final response = await OmsaApiService.fetchTravelDocuments(
+      packageId: packageId,
+    );
 
     if (response is Map<String, dynamic>) {
       final documents = response['travelDocuments'] as List<dynamic>? ?? [];
