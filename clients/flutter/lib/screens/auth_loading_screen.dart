@@ -130,15 +130,17 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 const SizedBox(height: 32),
 
                 // App Title
-                const Text(
+                Text(
                   'OMSA Travel Demo',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: AppTypography.headingExtraLarge3.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
                 const SizedBox(height: 8),
 
                 Text(
                   'Open Mobility Sales API',
-                  style: TextStyle(fontSize: 16, color: semanticColors.textSubdued),
+                  style: AppTypography.textLarge.copyWith(color: semanticColors.textSubdued),
                 ),
                 const SizedBox(height: 48),
 
@@ -155,7 +157,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                   Text(
                     _status,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: semanticColors.textSubdued),
+                    style: AppTypography.textLarge.copyWith(color: semanticColors.textSubdued),
                   ),
                 ] else ...[
                   // Error state
@@ -180,10 +182,9 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                             const SizedBox(width: 8),
                             Text(
                               'Configuration Error',
-                              style: TextStyle(
+                              style: AppTypography.textLarge.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.onErrorContainer,
-                                fontSize: 16,
                               ),
                             ),
                           ],
@@ -191,7 +192,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                         const SizedBox(height: 12),
                         Text(
                           _errorMessage,
-                          style: TextStyle(
+                          style: AppTypography.textMedium.copyWith(
                             color: theme.colorScheme.onErrorContainer,
                             height: 1.4,
                           ),
@@ -221,7 +222,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: semanticColors.frameElevated.withValues(alpha: 0.7),
+                    color: semanticColors.frameElevated,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -232,14 +233,13 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                           Icon(
                             Icons.info_outline,
                             size: 16,
-                            color: semanticColors.textSubdued,
+                            color: theme.colorScheme.primary,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Powered by Entur',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: semanticColors.textSubdued,
+                            style: AppTypography.textSmall.copyWith(
+                              color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -248,9 +248,8 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                       const SizedBox(height: 4),
                       Text(
                         'Connecting through the OMSA BFF',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: semanticColors.textSubduedAlt,
+                        style: AppTypography.textExtraSmall.copyWith(
+                          color: semanticColors.textSubdued,
                         ),
                       ),
                     ],

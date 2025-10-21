@@ -72,10 +72,9 @@ class TicketScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Travel documents',
-                            style: TextStyle(
-                              fontSize: 18,
+                            style: AppTypography.textLarge.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -135,10 +134,10 @@ class TicketScreen extends StatelessWidget {
       label: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12)),
+          Text(label, style: AppTypography.textSmall),
           Text(
             value.toLocal().toString().substring(0, 16),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: AppTypography.textSmall.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -169,9 +168,9 @@ class _TicketVisual extends StatelessWidget {
     if (document!.isQrCode && document!.qrPayloadString != null) {
       return Column(
         children: [
-          const Text(
+          Text(
             'Scan to travel',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Container(
@@ -202,9 +201,9 @@ class _TicketVisual extends StatelessWidget {
     if (bytes != null && bytes.isNotEmpty) {
       return Column(
         children: [
-          const Text(
+          Text(
             'Travel token',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           ClipRRect(

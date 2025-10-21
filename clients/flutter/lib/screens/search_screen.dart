@@ -136,9 +136,9 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
+              Text(
                 'Search for travel offers',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: AppTypography.headingExtraLarge2,
               ),
               const SizedBox(height: 24),
 
@@ -171,9 +171,9 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 16),
 
               // Departure Type Selection
-              const Text(
+              Text(
                 'Departure',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               SegmentedButton<DepartureType>(
