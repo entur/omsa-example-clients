@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/bff_service.dart';
 import 'package:omsa_demo_app/screens/search_screen.dart';
 
@@ -80,6 +81,9 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final semanticColors = context.semanticColors;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -89,8 +93,8 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).primaryColor.withValues(alpha: 0.1),
-              Theme.of(context).primaryColor.withValues(alpha: 0.05),
+              theme.colorScheme.primary.withValues(alpha: 0.1),
+              theme.colorScheme.primary.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -105,11 +109,11 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: semanticColors.frameElevated,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: theme.colorScheme.shadow.withValues(alpha: 0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -119,8 +123,8 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                     _hasError ? Icons.error_outline : Icons.train,
                     size: 60,
                     color: _hasError
-                        ? Colors.red
-                        : Theme.of(context).primaryColor,
+                        ? theme.colorScheme.error
+                        : theme.colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -134,7 +138,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
 
                 Text(
                   'Open Mobility Sales API',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 16, color: semanticColors.textSubdued),
                 ),
                 const SizedBox(height: 48),
 
@@ -151,17 +155,17 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                   Text(
                     _status,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 16, color: semanticColors.textSubdued),
                   ),
                 ] else ...[
                   // Error state
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.1),
+                      color: theme.colorScheme.errorContainer,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.red.withValues(alpha: 0.3),
+                        color: theme.colorScheme.error.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Column(
@@ -170,7 +174,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                           children: [
                             Icon(
                               Icons.warning_amber_rounded,
-                              color: Colors.red[700],
+                              color: theme.colorScheme.onErrorContainer,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -178,7 +182,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                               'Configuration Error',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red[700],
+                                color: theme.colorScheme.onErrorContainer,
                                 fontSize: 16,
                               ),
                             ),
@@ -187,7 +191,10 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                         const SizedBox(height: 12),
                         Text(
                           _errorMessage,
-                          style: TextStyle(color: Colors.red[700], height: 1.4),
+                          style: TextStyle(
+                            color: theme.colorScheme.onErrorContainer,
+                            height: 1.4,
+                          ),
                         ),
                       ],
                     ),
@@ -214,7 +221,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: semanticColors.frameElevated.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -225,14 +232,14 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                           Icon(
                             Icons.info_outline,
                             size: 16,
-                            color: Colors.grey[600],
+                            color: semanticColors.textSubdued,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Powered by Entur',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[600],
+                              color: semanticColors.textSubdued,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -241,7 +248,10 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                       const SizedBox(height: 4),
                       Text(
                         'Connecting through the OMSA BFF',
-                        style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: semanticColors.textSubduedAlt,
+                        ),
                       ),
                     ],
                   ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OffersScreen extends ConsumerWidget {
   final OfferCollection offers;
@@ -30,59 +32,95 @@ class OffersScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Travel Offers'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: offers.offers.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 'No offers found',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: context.semanticColors.textSubdued,
+                ),
               ),
             )
-          : Column(
+          : Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.confirmation_number,
-                        color: Theme.of(context).primaryColor,
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.confirmation_number,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${offers.numberReturned} offers found',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${offers.numberReturned} offers found',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16)
+                            .copyWith(bottom: selectedOffer != null ? 112 : 16),
+                        itemCount: offers.offers.length,
+                        itemBuilder: (context, index) {
+                          final offer = offers.offers[index];
+                          return OfferCard(
+                            offer: offer,
+                            isSelected: selectedOffer == offer,
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16)
-                        .copyWith(bottom: 80),
-                    itemCount: offers.offers.length,
-                    itemBuilder: (context, index) {
-                      final offer = offers.offers[index];
-                      return OfferCard(
-                        offer: offer,
-                        isSelected: selectedOffer == offer,
-                      );
-                    },
+                // Bottom floating button
+                if (selectedOffer != null)
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 24,
+                    child: OmsaButton(
+                      onPressed: () => _handleNext(context, ref),
+                      isFullWidth: true,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${selectedOffer.properties.price.amount.toInt()} ${selectedOffer.properties.price.currencyCode}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Row(
+                            children: [
+                              Text(
+                                'Next',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward, size: 20),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
-      floatingActionButton: selectedOffer != null
-          ? FloatingActionButton.extended(
-              onPressed: () => _handleNext(context, ref),
-              icon: const Icon(Icons.arrow_forward),
-              label: const Text('Next'),
-            )
-          : null,
     );
   }
 }
@@ -106,9 +144,9 @@ class OfferCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final semanticColors = context.semanticColors;
     final price = offer.properties.price;
     final summary = offer.properties.summary;
-    final products = offer.properties.products;
 
     return GestureDetector(
       onTap: () => _handleTap(ref),
@@ -123,7 +161,7 @@ class OfferCard extends ConsumerWidget {
             color: isSelected
                 ? theme.colorScheme.primary
                 : theme.colorScheme.outlineVariant,
-            width: isSelected ? 2.0 : AppDimensions.borderWidthsSmall,
+            width: 2.0,
           ),
           boxShadow: isSelected
               ? [
@@ -142,6 +180,7 @@ class OfferCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Header (always visible) - Title, Price, Radio
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,127 +194,132 @@ class OfferCard extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
+                  // Price and radio button
                   Row(
                     children: [
-                      if (isSelected)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Icon(
-                            Icons.check_circle,
-                            color: theme.colorScheme.primary,
-                            size: 24,
-                          ),
+                      Text(
+                        '${price.amount.toInt()} ${price.currencyCode}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
                         ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Radio button indicator
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
+                        width: 24,
+                        height: 24,
                         decoration: BoxDecoration(
-                          color: theme.primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          '${price.amount.toInt()} ${price.currencyCode}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: theme.primaryColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.outline,
+                            width: 2,
                           ),
                         ),
+                        child: isSelected
+                            ? Center(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  width: 12,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
                     ],
                   ),
                 ],
               ),
 
-              if (summary.description.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  summary.description.replaceAll('\\n', '\n'),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                    height: 1.3,
-                  ),
-                ),
-              ],
-
-              if (products.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Text(
-                  'Product Details:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                ...products.map(
-                  (product) => Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 4),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 4,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: theme.primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            product.productName,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[700],
+              // Expandable content (description and chips)
+              ClipRect(
+                child: AnimatedAlign(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  heightFactor: isSelected ? 1.0 : 0.0,
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (summary.description.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        MarkdownBody(
+                          data: summary.description.replaceAll('\\n', '\n'),
+                          styleSheet: MarkdownStyleSheet(
+                            p: TextStyle(
+                              fontSize: 14,
+                              color: semanticColors.textSubdued,
+                              height: 1.3,
+                            ),
+                            a: TextStyle(
+                              fontSize: 14,
+                              color: theme.colorScheme.primary,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
+                          onTapLink: (text, href, title) {
+                            if (href != null) {
+                              launchUrl(Uri.parse(href));
+                            }
+                          },
                         ),
                       ],
-                    ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          OmsaChip(
+                            label: Text(
+                              summary.isRefundable ? 'Refundable' : 'Non-refundable',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            variant: OmsaChipVariant.filled,
+                            color: summary.isRefundable
+                                ? OmsaChipColor.success
+                                : OmsaChipColor.warning,
+                            icon: Icon(
+                              summary.isRefundable ? Icons.check_circle : Icons.cancel,
+                              size: 12,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                          ),
+                          OmsaChip(
+                            label: Text(
+                              summary.isExchangeable
+                                  ? 'Exchangeable'
+                                  : 'Non-exchangeable',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            variant: OmsaChipVariant.filled,
+                            color: summary.isExchangeable
+                                ? OmsaChipColor.success
+                                : OmsaChipColor.warning,
+                            icon: Icon(
+                              summary.isExchangeable ? Icons.swap_horiz : Icons.block,
+                              size: 12,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  OmsaChip(
-                    label: Text(
-                      summary.isRefundable ? 'Refundable' : 'Non-refundable',
-                    ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isRefundable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
-                    icon: Icon(
-                      summary.isRefundable ? Icons.check_circle : Icons.cancel,
-                      size: 14,
-                    ),
-                  ),
-                  OmsaChip(
-                    label: Text(
-                      summary.isExchangeable
-                          ? 'Exchangeable'
-                          : 'Non-exchangeable',
-                    ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isExchangeable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
-                    icon: Icon(
-                      summary.isExchangeable ? Icons.swap_horiz : Icons.block,
-                      size: 14,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
