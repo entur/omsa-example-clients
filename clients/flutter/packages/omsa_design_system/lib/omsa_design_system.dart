@@ -14,6 +14,7 @@ export 'src/theme/app_dimensions.dart';
 export 'src/theme/app_shadows.dart';
 export 'src/theme/app_timings.dart';
 export 'src/theme/app_decorations.dart';
+export 'src/theme/theme_extensions.dart';
 
 // Component exports
 export 'src/components/buttons/omsa_button.dart';

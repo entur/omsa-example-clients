@@ -22,7 +22,7 @@ class TicketScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Travel Ticket'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -159,8 +159,11 @@ class _TicketVisual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final semanticColors = context.semanticColors;
+
     if (document == null) {
-      return _placeholder(fallbackTypeLabel);
+      return _placeholder(context, fallbackTypeLabel);
     }
 
     if (document!.isQrCode && document!.qrPayloadString != null) {
@@ -174,11 +177,11 @@ class _TicketVisual extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: semanticColors.frameElevated,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -188,7 +191,7 @@ class _TicketVisual extends StatelessWidget {
               data: document!.qrPayloadString!,
               version: QrVersions.auto,
               size: 220,
-              backgroundColor: Colors.white,
+              backgroundColor: semanticColors.frameElevated,
             ),
           ),
         ],
@@ -242,13 +245,17 @@ class _TicketVisual extends StatelessWidget {
       );
     }
 
-    return _placeholder(fallbackTypeLabel);
+    return _placeholder(context, fallbackTypeLabel);
   }
 
-  Widget _placeholder(String label) {
+  Widget _placeholder(BuildContext context, String label) {
     return Column(
       children: [
-        const Icon(Icons.qr_code_2, size: 96, color: Colors.grey),
+        Icon(
+          Icons.qr_code_2,
+          size: 96,
+          color: context.semanticColors.shapeDisabled,
+        ),
         const SizedBox(height: 12),
         Text('Ticket type: $label', textAlign: TextAlign.center),
       ],

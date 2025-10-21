@@ -122,10 +122,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final semanticColors = context.semanticColors;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('OMSA Travel Search'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -212,7 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
                   trailing: const Icon(Icons.access_time),
                   onTap: _selectDateTime,
-                  tileColor: Colors.grey[100],
+                  tileColor: semanticColors.frameElevatedAlt,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
