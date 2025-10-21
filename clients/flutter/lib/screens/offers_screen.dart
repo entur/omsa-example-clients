@@ -31,8 +31,14 @@ class OffersScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Travel Offers'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        title: Text(
+          'Select ticket',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        centerTitle: false,
       ),
       body: offers.offers.isEmpty
           ? Center(
@@ -45,43 +51,18 @@ class OffersScreen extends ConsumerWidget {
             )
           : Stack(
               children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.confirmation_number,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${offers.numberReturned} offers found',
-                            style: AppTypography.textLarge.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16)
-                            .copyWith(bottom: selectedOffer != null ? 112 : 16),
-                        itemCount: offers.offers.length,
-                        itemBuilder: (context, index) {
-                          final offer = offers.offers[index];
-                          return OfferCard(
-                            offer: offer,
-                            isSelected: selectedOffer == offer,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16)
+                      .copyWith(top: 16, bottom: selectedOffer != null ? 112 : 16),
+                  itemCount: offers.offers.length,
+                  itemBuilder: (context, index) {
+                    final offer = offers.offers[index];
+                    return OfferCard(
+                      offer: offer,
+                      isSelected: selectedOffer == offer,
+                    );
+                  },
                 ),
-                // Bottom floating button
                 if (selectedOffer != null)
                   Positioned(
                     left: 16,
@@ -159,24 +140,12 @@ class OfferCard extends ConsumerWidget {
                 : theme.colorScheme.outlineVariant,
             width: 2.0,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    offset: const Offset(0, 4),
-                    blurRadius: 12,
-                    spreadRadius: 0,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                  ),
-                  ...AppShadows.shadowsCardShadow,
-                ]
-              : AppShadows.shadowsCardShadow,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header (always visible) - Title, Price, Radio
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +159,6 @@ class OfferCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Price and radio button
                   Row(
                     children: [
                       Text(
@@ -201,7 +169,6 @@ class OfferCard extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Radio button indicator
                       Container(
                         width: 24,
                         height: 24,
@@ -233,7 +200,6 @@ class OfferCard extends ConsumerWidget {
                 ],
               ),
 
-              // Expandable content (description and chips)
               ClipRect(
                 child: AnimatedAlign(
                   duration: const Duration(milliseconds: 250),

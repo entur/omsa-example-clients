@@ -48,7 +48,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
           _status = 'Backend ready!';
         });
 
-        // Small delay to show success message
         await Future.delayed(const Duration(milliseconds: 500));
 
         if (mounted) {
@@ -105,7 +104,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo/Icon
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -129,7 +127,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // App Title
                 Text(
                   'OMSA Travel Demo',
                   style: AppTypography.headingExtraLarge3.copyWith(
@@ -145,7 +142,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 const SizedBox(height: 48),
 
                 if (!_hasError) ...[
-                  // Loading indicator
                   const SizedBox(
                     width: 40,
                     height: 40,
@@ -153,14 +149,12 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Status text
                   Text(
                     _status,
                     textAlign: TextAlign.center,
                     style: AppTypography.textLarge.copyWith(color: semanticColors.textSubdued),
                   ),
                 ] else ...[
-                  // Error state
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -202,7 +196,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Retry button
                   ElevatedButton.icon(
                     onPressed: _retry,
                     icon: const Icon(Icons.refresh),
@@ -218,7 +211,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
 
                 const Spacer(),
 
-                // Footer info
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
