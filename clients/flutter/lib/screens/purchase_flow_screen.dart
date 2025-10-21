@@ -170,7 +170,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         children: [
           Text(
             summary.name,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -178,8 +178,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             children: [
               Text(
                 '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
-                style: const TextStyle(
-                  fontSize: 18,
+                style: AppTypography.textLarge.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -274,12 +273,11 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Text(
                       'Progress',
-                      style: TextStyle(
-                        fontSize: 18,
+                      style: AppTypography.textLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),

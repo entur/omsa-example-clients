@@ -38,8 +38,7 @@ class OffersScreen extends ConsumerWidget {
           ? Center(
               child: Text(
                 'No offers found',
-                style: TextStyle(
-                  fontSize: 18,
+                style: AppTypography.textLarge.copyWith(
                   color: context.semanticColors.textSubdued,
                 ),
               ),
@@ -59,8 +58,7 @@ class OffersScreen extends ConsumerWidget {
                           const SizedBox(width: 8),
                           Text(
                             '${offers.numberReturned} offers found',
-                            style: const TextStyle(
-                              fontSize: 18,
+                            style: AppTypography.textLarge.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -97,22 +95,20 @@ class OffersScreen extends ConsumerWidget {
                         children: [
                           Text(
                             '${selectedOffer.properties.price.amount.toInt()} ${selectedOffer.properties.price.currencyCode}',
-                            style: const TextStyle(
-                              fontSize: 18,
+                            style: AppTypography.textLarge.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Row(
+                          Row(
                             children: [
                               Text(
                                 'Next',
-                                style: TextStyle(
-                                  fontSize: 18,
+                                style: AppTypography.textLarge.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, size: 20),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward, size: 20),
                             ],
                           ),
                         ],
@@ -188,8 +184,7 @@ class OfferCard extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       summary.name,
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: AppTypography.textLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -200,8 +195,7 @@ class OfferCard extends ConsumerWidget {
                     children: [
                       Text(
                         '${price.amount.toInt()} ${price.currencyCode}',
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: AppTypography.textLarge.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.primary,
                         ),
@@ -254,13 +248,11 @@ class OfferCard extends ConsumerWidget {
                         MarkdownBody(
                           data: summary.description.replaceAll('\\n', '\n'),
                           styleSheet: MarkdownStyleSheet(
-                            p: TextStyle(
-                              fontSize: 14,
+                            p: AppTypography.textMedium.copyWith(
                               color: semanticColors.textSubdued,
                               height: 1.3,
                             ),
-                            a: TextStyle(
-                              fontSize: 14,
+                            a: AppTypography.textMedium.copyWith(
                               color: theme.colorScheme.primary,
                               decoration: TextDecoration.underline,
                             ),
@@ -280,7 +272,7 @@ class OfferCard extends ConsumerWidget {
                           OmsaChip(
                             label: Text(
                               summary.isRefundable ? 'Refundable' : 'Non-refundable',
-                              style: const TextStyle(fontSize: 12),
+                              style: AppTypography.textSmall,
                             ),
                             variant: OmsaChipVariant.filled,
                             color: summary.isRefundable
@@ -300,7 +292,7 @@ class OfferCard extends ConsumerWidget {
                               summary.isExchangeable
                                   ? 'Exchangeable'
                                   : 'Non-exchangeable',
-                              style: const TextStyle(fontSize: 12),
+                              style: AppTypography.textSmall,
                             ),
                             variant: OmsaChipVariant.filled,
                             color: summary.isExchangeable
