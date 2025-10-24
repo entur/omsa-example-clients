@@ -23,3 +23,11 @@ class PaymentTerminalRequest(BaseModel):
     terminal_language: str = Field(alias="terminalLanguage")
 
     model_config = {"populate_by_name": True, "extra": "allow"}
+
+
+class PaymentAppClaimRequest(BaseModel):
+    description: str
+    phone_number: str = Field(alias="phoneNumber")
+    redirect_url: str = Field(alias="redirectUrl")
+
+    model_config = {"populate_by_name": True, "extra": "allow"}

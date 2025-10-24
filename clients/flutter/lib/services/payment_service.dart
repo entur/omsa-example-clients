@@ -120,6 +120,25 @@ class PaymentService {
     return _postJson(url: url, body: payload);
   }
 
+  static Future<Map<String, dynamic>> startAppClaimSession({
+    required String paymentId,
+    required String transactionId,
+    required String description,
+    required String phoneNumber,
+    required String redirectUrl,
+  }) {
+    final url = _resolve(
+      '/payments/$paymentId/transactions/$transactionId/app-claim',
+    );
+    final payload = {
+      'description': description,
+      'phoneNumber': phoneNumber,
+      'redirectUrl': redirectUrl,
+    };
+
+    return _postJson(url: url, body: payload);
+  }
+
   static Future<Map<String, dynamic>> captureTransaction({
     required String paymentId,
     required String transactionId,

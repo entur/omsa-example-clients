@@ -145,6 +145,30 @@ class PaymentTerminalSession {
   }
 }
 
+class PaymentAppClaimSession {
+  final int paymentId;
+  final int transactionId;
+  final String appClaimUri;
+
+  PaymentAppClaimSession({
+    required this.paymentId,
+    required this.transactionId,
+    required this.appClaimUri,
+  });
+
+  factory PaymentAppClaimSession.fromMap(Map<String, dynamic> map) {
+    return PaymentAppClaimSession(
+      paymentId: map['paymentId'] is num
+          ? (map['paymentId'] as num).toInt()
+          : int.tryParse(map['paymentId']?.toString() ?? '0') ?? 0,
+      transactionId: map['transactionId'] is num
+          ? (map['transactionId'] as num).toInt()
+          : int.tryParse(map['transactionId']?.toString() ?? '0') ?? 0,
+      appClaimUri: map['appClaimUrl']?.toString() ?? '',
+    );
+  }
+}
+
 class PaymentCaptureResult {
   final String status;
 
