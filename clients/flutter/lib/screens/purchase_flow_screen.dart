@@ -36,6 +36,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   bool _isProcessing = false;
   String? _error;
   PaymentMethod _selectedPaymentMethod = PaymentMethod.visa;
+  final TextEditingController _phoneController = TextEditingController();
+  String? _phoneError;
 
   PurchaseInitiation? _purchase;
   PaymentSession? _payment;
@@ -45,10 +47,44 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   ConfirmedPackage? _confirmation;
   List<TravelDocument> _documents = [];
 
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  bool _isValidNorwegianPhone(String phone) {
+    // Norwegian phone numbers are 8 digits
+    final phoneRegex = RegExp(r'^\d{8}$');
+    return phoneRegex.hasMatch(phone);
+  }
+
+  String? _validatePhoneNumber() {
+    if (_selectedPaymentMethod == PaymentMethod.vipps) {
+      final phone = _phoneController.text.trim();
+      if (phone.isEmpty) {
+        return 'Phone number is required for Vipps payments';
+      }
+      if (!_isValidNorwegianPhone(phone)) {
+        return 'Please enter a valid 8-digit Norwegian phone number';
+      }
+    }
+    return null;
+  }
+
   Future<void> _startCheckout() async {
+    final phoneValidationError = _validatePhoneNumber();
+    if (phoneValidationError != null) {
+      setState(() {
+        _phoneError = phoneValidationError;
+      });
+      return;
+    }
+
     setState(() {
       _isProcessing = true;
       _error = null;
+      _phoneError = null;
       _phase = FlowPhase.purchasing;
       _purchase = null;
       _payment = null;
@@ -95,7 +131,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         final appClaim = await PurchaseFlowService.startAppClaim(
           session: payment,
           description: offerName,
-          phoneNumber: '98032908',
+          phoneNumber: _phoneController.text.trim(),
           redirectUrl: 'https://entur.no',
         );
 
@@ -225,44 +261,72 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: RadioListTile<PaymentMethod>(
-                  title: const Text('Card (VISA)'),
-                  value: PaymentMethod.visa,
-                  groupValue: _selectedPaymentMethod,
-                  onChanged: _phase == FlowPhase.idle || _phase == FlowPhase.failed
-                      ? (PaymentMethod? value) {
-                          if (value != null) {
-                            setState(() {
-                              _selectedPaymentMethod = value;
-                            });
-                          }
-                        }
-                      : null,
-                  contentPadding: EdgeInsets.zero,
+          RadioGroup<PaymentMethod>(
+            groupValue: _selectedPaymentMethod,
+            onChanged: _phase == FlowPhase.idle || _phase == FlowPhase.failed
+                ? (PaymentMethod? value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedPaymentMethod = value;
+                        _phoneError = null; // Clear error when switching
+                      });
+                    }
+                  }
+                : (PaymentMethod? value) {},
+            child: Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<PaymentMethod>(
+                    title: const Text('Card (VISA)'),
+                    value: PaymentMethod.visa,
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: RadioListTile<PaymentMethod>(
-                  title: const Text('Vipps'),
-                  value: PaymentMethod.vipps,
-                  groupValue: _selectedPaymentMethod,
-                  onChanged: _phase == FlowPhase.idle || _phase == FlowPhase.failed
-                      ? (PaymentMethod? value) {
-                          if (value != null) {
-                            setState(() {
-                              _selectedPaymentMethod = value;
-                            });
-                          }
-                        }
-                      : null,
-                  contentPadding: EdgeInsets.zero,
+                Expanded(
+                  child: RadioListTile<PaymentMethod>(
+                    title: const Text('Vipps'),
+                    value: PaymentMethod.vipps,
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          if (_selectedPaymentMethod == PaymentMethod.vipps) ...[
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
+            Text(
+              'Phone number',
+              style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            OmsaTextField(
+              controller: _phoneController,
+              label: 'Phone number',
+              hint: '12345678',
+              keyboardType: TextInputType.phone,
+              maxLength: 8,
+              enabled: _phase == FlowPhase.idle || _phase == FlowPhase.failed,
+              errorText: _phoneError,
+              onChanged: (value) {
+                // Clear error when user starts typing
+                if (_phoneError != null) {
+                  setState(() {
+                    _phoneError = null;
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Please enter the phone number you want to use for Vipps',
+              style: TextStyle(
+                color: context.semanticColors.textSubdued,
+                fontSize: 12,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -491,8 +555,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               OmsaButton(
                 onPressed: _isProcessing ? null : _startCheckout,
                 isLoading: _isProcessing,
-                isFullWidth: true,
-                icon: const Icon(Icons.shopping_cart_checkout),
+                width: OmsaButtonWidth.fluid,
+                leadingIcon: const Icon(Icons.shopping_cart_checkout),
                 child: const Text('Purchase offer and prepare payment'),
               ),
             if (_phase == FlowPhase.terminalReady) ...[
@@ -510,17 +574,17 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               const SizedBox(height: 8),
               OmsaButton(
                 onPressed: _isProcessing ? null : _openTerminal,
-                isFullWidth: true,
-                variant: OmsaButtonVariant.outlined,
-                icon: const Icon(Icons.open_in_new),
+                width: OmsaButtonWidth.fluid,
+                variant: OmsaButtonVariant.secondary,
+                leadingIcon: const Icon(Icons.open_in_new),
                 child: const Text('Open payment terminal'),
               ),
               const SizedBox(height: 12),
               OmsaButton(
                 onPressed: _isProcessing ? null : _completePayment,
                 isLoading: _isProcessing,
-                isFullWidth: true,
-                icon: const Icon(Icons.check),
+                width: OmsaButtonWidth.fluid,
+                leadingIcon: const Icon(Icons.check),
                 child: const Text('Capture payment and fetch ticket'),
               ),
               if (_terminal?.terminalUri.isNotEmpty ?? false) ...[
@@ -549,17 +613,17 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               const SizedBox(height: 8),
               OmsaButton(
                 onPressed: _isProcessing ? null : _openAppClaim,
-                isFullWidth: true,
-                variant: OmsaButtonVariant.outlined,
-                icon: const Icon(Icons.open_in_new),
+                width: OmsaButtonWidth.fluid,
+                variant: OmsaButtonVariant.secondary,
+                leadingIcon: const Icon(Icons.open_in_new),
                 child: const Text('Open Vipps payment'),
               ),
               const SizedBox(height: 12),
               OmsaButton(
                 onPressed: _isProcessing ? null : _completePayment,
                 isLoading: _isProcessing,
-                isFullWidth: true,
-                icon: const Icon(Icons.check),
+                width: OmsaButtonWidth.fluid,
+                leadingIcon: const Icon(Icons.check),
                 child: const Text('Confirm order and fetch ticket'),
               ),
               if (_appClaim?.appClaimUri.isNotEmpty ?? false) ...[
@@ -587,8 +651,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                     ),
                   );
                 },
-                isFullWidth: true,
-                icon: const Icon(Icons.qr_code),
+                width: OmsaButtonWidth.fluid,
+                leadingIcon: const Icon(Icons.qr_code),
                 child: const Text('View ticket'),
               ),
           ],

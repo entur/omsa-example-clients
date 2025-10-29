@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
+import 'package:omsa_demo_app/screens/widget_design_screen.dart';
 
 enum DepartureType { now, leaveAt, arriveBy }
 
@@ -134,6 +135,19 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.palette),
+            tooltip: 'Widget Design Lab',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const WidgetDesignScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -250,7 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
               OmsaButton(
                 onPressed: _isLoading ? null : _searchOffers,
                 isLoading: _isLoading,
-                isFullWidth: true,
+                width: OmsaButtonWidth.fluid,
                 size: OmsaButtonSize.large,
                 child: const Text('Search Offers'),
               ),
