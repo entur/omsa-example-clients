@@ -70,7 +70,7 @@ class OffersScreen extends ConsumerWidget {
                     bottom: 24,
                     child: OmsaButton(
                       onPressed: () => _handleNext(context, ref),
-                      isFullWidth: true,
+                      width: OmsaButtonWidth.fluid,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
