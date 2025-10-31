@@ -81,7 +81,6 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final semanticColors = context.semanticColors;
 
     return Scaffold(
       body: Container(
@@ -107,7 +106,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: semanticColors.frameElevated,
+                    color: SemanticColorTokens.fillBackgroundStandardLight,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -137,7 +136,9 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
 
                 Text(
                   'Open Mobility Sales API',
-                  style: AppTypography.textLarge.copyWith(color: semanticColors.textSubdued),
+                  style: AppTypography.textLarge.copyWith(
+                    color: SemanticColorTokens.textSubdued,
+                  ),
                 ),
                 const SizedBox(height: 48),
 
@@ -152,7 +153,9 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                   Text(
                     _status,
                     textAlign: TextAlign.center,
-                    style: AppTypography.textLarge.copyWith(color: semanticColors.textSubdued),
+                    style: AppTypography.textLarge.copyWith(
+                      color: SemanticColorTokens.textSubdued,
+                    ),
                   ),
                 ] else ...[
                   Container(
@@ -214,7 +217,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: semanticColors.frameElevated,
+                    color: BaseLightTokens.frameElevated,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -241,7 +244,7 @@ class _AuthLoadingScreenState extends State<AuthLoadingScreen> {
                       Text(
                         'Connecting through the OMSA BFF',
                         style: AppTypography.textExtraSmall.copyWith(
-                          color: semanticColors.textSubdued,
+                          color: SemanticColorTokens.textSubdued,
                         ),
                       ),
                     ],

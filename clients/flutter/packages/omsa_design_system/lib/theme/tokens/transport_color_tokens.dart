@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 /// Transport mode color tokens from design system
 /// These are specialized colors for different transport modes
 abstract class TransportColorTokens {
-
   // Contrast
   static const Color contrastBicycle = Color(0xFF00db9b);
   static const Color contrastBus = Color(0xFFff6392);

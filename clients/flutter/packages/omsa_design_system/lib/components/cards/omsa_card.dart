@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/src/theme/app_spacing.dart';
-import 'package:omsa_design_system/src/theme/app_dimensions.dart';
-import 'package:omsa_design_system/src/theme/app_decorations.dart';
-import 'package:omsa_design_system/src/theme/app_shadows.dart';
+import 'package:omsa_design_system/theme/app_spacing.dart';
+import 'package:omsa_design_system/theme/app_dimensions.dart';
+import 'package:omsa_design_system/theme/app_decorations.dart';
+import 'package:omsa_design_system/theme/app_shadows.dart';
 
 /// Card variant types for the OMSA Design System
 enum OmsaCardVariant { elevated, filled, outlined }

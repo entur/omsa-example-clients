@@ -137,7 +137,9 @@ class TicketScreen extends StatelessWidget {
           Text(label, style: AppTypography.textSmall),
           Text(
             value.toLocal().toString().substring(0, 16),
-            style: AppTypography.textSmall.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.textSmall.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -159,7 +161,6 @@ class _TicketVisual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final semanticColors = context.semanticColors;
 
     if (document == null) {
       return _placeholder(context, fallbackTypeLabel);
@@ -170,13 +171,15 @@ class _TicketVisual extends StatelessWidget {
         children: [
           Text(
             'Scan to travel',
-            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: semanticColors.frameElevated,
+              color: BaseLightTokens.frameElevated,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -190,7 +193,7 @@ class _TicketVisual extends StatelessWidget {
               data: document!.qrPayloadString!,
               version: QrVersions.auto,
               size: 220,
-              backgroundColor: semanticColors.frameElevated,
+              backgroundColor: BaseLightTokens.frameElevated,
             ),
           ),
         ],
@@ -203,7 +206,9 @@ class _TicketVisual extends StatelessWidget {
         children: [
           Text(
             'Travel token',
-            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 12),
           ClipRRect(
@@ -250,11 +255,7 @@ class _TicketVisual extends StatelessWidget {
   Widget _placeholder(BuildContext context, String label) {
     return Column(
       children: [
-        Icon(
-          Icons.qr_code_2,
-          size: 96,
-          color: context.semanticColors.shapeDisabled,
-        ),
+        Icon(Icons.qr_code_2, size: 96, color: BaseLightTokens.shapeDisabled),
         const SizedBox(height: 12),
         Text('Ticket type: $label', textAlign: TextAlign.center),
       ],

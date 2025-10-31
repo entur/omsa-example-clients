@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/src/theme/app_dimensions.dart';
-import 'package:omsa_design_system/src/theme/app_shadows.dart';
+import 'package:omsa_design_system/theme/app_dimensions.dart';
+import 'package:omsa_design_system/theme/app_shadows.dart';
 
 /// Pre-configured BoxDecoration helpers for common UI patterns
 /// Combines border radii, shadows, and other styling from the design system

@@ -123,8 +123,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final semanticColors = context.semanticColors;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -234,7 +232,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
                   trailing: const Icon(Icons.access_time),
                   onTap: _selectDateTime,
-                  tileColor: semanticColors.frameElevatedAlt,
+                  tileColor: BaseLightTokens.frameElevatedAlt,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),

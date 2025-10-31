@@ -8,9 +8,11 @@ import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) {
-  final String tokenSourcePath = args.isNotEmpty ? args[0] : throw ArgumentError(
-    'Please provide the path to a copy of the Linje token directory as an argument.',
-  );
+  final String tokenSourcePath = args.isNotEmpty
+      ? args[0]
+      : throw ArgumentError(
+          'Please provide the path to a copy of the Linje token directory as an argument.',
+        );
 
   print('🎨 Generating OMSA Design System tokens from: $tokenSourcePath');
 
@@ -24,11 +26,8 @@ class TokenGenerator {
   final String sourcePath;
   final String outputPath;
 
-  TokenGenerator(
-    this.sourcePath, [
-    String? outputPath,
-  ]) : outputPath = outputPath ??
-            '${Directory.current.path}/lib/theme/tokens';
+  TokenGenerator(this.sourcePath, [String? outputPath])
+    : outputPath = outputPath ?? '${Directory.current.path}/lib/theme/tokens';
 
   void generateAll() {
     // Ensure output directory exists
@@ -67,7 +66,9 @@ class TokenGenerator {
     buffer.writeln("import 'package:flutter/material.dart';");
     buffer.writeln();
     buffer.writeln("/// Primitive color tokens from design system");
-    buffer.writeln("/// These are the base colors that all other tokens reference");
+    buffer.writeln(
+      "/// These are the base colors that all other tokens reference",
+    );
     buffer.writeln("abstract class PrimitiveColorTokens {");
 
     // Group tokens by color family
@@ -84,7 +85,8 @@ class TokenGenerator {
       for (final token in entry.value) {
         final varName = _toVariableName(token.name);
         buffer.writeln(
-            "  static const Color $varName = Color(${_hexToColorInt(token.value)});");
+          "  static const Color $varName = Color(${_hexToColorInt(token.value)});",
+        );
       }
     }
 
@@ -104,13 +106,16 @@ class TokenGenerator {
     buffer.writeln("import 'package:flutter/material.dart';");
     buffer.writeln();
     buffer.writeln("/// Data visualization color tokens from design system");
-    buffer.writeln("/// These are specialized colors for charts, graphs, and data viz");
+    buffer.writeln(
+      "/// These are specialized colors for charts, graphs, and data viz",
+    );
     buffer.writeln("abstract class DataColorTokens {");
 
     for (final token in tokens) {
       final varName = _toVariableName(token.name);
       buffer.writeln(
-          "  static const Color $varName = Color(${_hexToColorInt(token.value)});");
+        "  static const Color $varName = Color(${_hexToColorInt(token.value)});",
+      );
     }
 
     buffer.writeln("}");
@@ -129,7 +134,9 @@ class TokenGenerator {
     buffer.writeln("import 'package:flutter/material.dart';");
     buffer.writeln();
     buffer.writeln("/// Transport mode color tokens from design system");
-    buffer.writeln("/// These are specialized colors for different transport modes");
+    buffer.writeln(
+      "/// These are specialized colors for different transport modes",
+    );
     buffer.writeln("abstract class TransportColorTokens {");
 
     // Group by transport mode
@@ -146,7 +153,8 @@ class TokenGenerator {
       for (final token in entry.value) {
         final varName = _toVariableName(token.name);
         buffer.writeln(
-            "  static const Color $varName = Color(${_hexToColorInt(token.value)});");
+          "  static const Color $varName = Color(${_hexToColorInt(token.value)});",
+        );
       }
     }
 
@@ -166,11 +174,14 @@ class TokenGenerator {
     buffer.writeln("// ignore_for_file: constant_identifier_names");
     buffer.writeln();
     buffer.writeln("import 'package:flutter/material.dart';");
-    buffer.writeln("import 'primitive_color_tokens.dart';");
+    buffer.writeln(
+      "import 'package:omsa_design_system/theme/tokens/primitive_color_tokens.dart';",
+    );
     buffer.writeln();
     buffer.writeln("/// Semantic color tokens from design system");
     buffer.writeln(
-        "/// These tokens reference primitive colors and provide semantic meaning");
+      "/// These tokens reference primitive colors and provide semantic meaning",
+    );
     buffer.writeln("abstract class SemanticColorTokens {");
 
     // Group by top-level category
@@ -191,9 +202,11 @@ class TokenGenerator {
         // Fall back to hardcoded value if neither exists
         String reference;
         if (token.varReference.isNotEmpty) {
-              reference = 'PrimitiveColorTokens.${_toVariableName(token.varReference)}';
+          reference =
+              'PrimitiveColorTokens.${_toVariableName(token.varReference)}';
         } else if (token.rootAlias.isNotEmpty) {
-          reference = 'PrimitiveColorTokens.${_toVariableName(token.rootAlias)}';
+          reference =
+              'PrimitiveColorTokens.${_toVariableName(token.rootAlias)}';
         } else {
           reference = 'Color(${_hexToColorInt(token.value)})';
         }
@@ -218,12 +231,17 @@ class TokenGenerator {
     buffer.writeln("// ignore_for_file: constant_identifier_names");
     buffer.writeln();
     buffer.writeln("import 'package:flutter/material.dart';");
-    buffer.writeln("import 'semantic_color_tokens.dart';");
-    buffer.writeln("import 'transport_color_tokens.dart';");
+    buffer.writeln(
+      "import 'package:omsa_design_system/theme/tokens/semantic_color_tokens.dart';",
+    );
+    buffer.writeln(
+      "import 'package:omsa_design_system/theme/tokens/transport_color_tokens.dart';",
+    );
     buffer.writeln();
     buffer.writeln("/// Base element color tokens from design system");
     buffer.writeln(
-        "/// These tokens reference semantic and transport colors for common UI elements");
+      "/// These tokens reference semantic and transport colors for common UI elements",
+    );
 
     for (final modeData in values) {
       final mode = modeData['mode'] as Map<String, dynamic>;
@@ -238,10 +256,11 @@ class TokenGenerator {
       final grouped = <String, List<ColorToken>>{};
       for (final token in tokens) {
         // Remove "Base colors/" prefix
-        final cleanName =
-            token.name.replaceFirst('Base colors/', '');
+        final cleanName = token.name.replaceFirst('Base colors/', '');
         final category = cleanName.split('/').first;
-        grouped.putIfAbsent(category, () => []).add(token.copyWith(name: cleanName));
+        grouped
+            .putIfAbsent(category, () => [])
+            .add(token.copyWith(name: cleanName));
       }
 
       for (final entry in grouped.entries) {
@@ -254,15 +273,35 @@ class TokenGenerator {
           // Check if it references transport tokens
           String reference;
           if (token.varReference.isNotEmpty) {
-            final transportModes = ['Bicycle', 'Bus', 'Ferry', 'Funicular', 'Helicopter',
-                                   'Metro', 'Mobility', 'Plane', 'Taxi', 'Train', 'Tram',
-                                   'Walk', 'Cableway', 'AirportLinkBus', 'AirportLinkRail',
-                                   'Carferry', 'Citybike'];
-            final isTransport = transportModes.any((mode) => token.varReference.toLowerCase().contains(mode.toLowerCase()));
+            final transportModes = [
+              'Bicycle',
+              'Bus',
+              'Ferry',
+              'Funicular',
+              'Helicopter',
+              'Metro',
+              'Mobility',
+              'Plane',
+              'Taxi',
+              'Train',
+              'Tram',
+              'Walk',
+              'Cableway',
+              'AirportLinkBus',
+              'AirportLinkRail',
+              'Carferry',
+              'Citybike',
+            ];
+            final isTransport = transportModes.any(
+              (mode) =>
+                  token.varReference.toLowerCase().contains(mode.toLowerCase()),
+            );
             if (isTransport) {
-              reference = 'TransportColorTokens.${_toVariableName(token.varReference)}';
+              reference =
+                  'TransportColorTokens.${_toVariableName(token.varReference)}';
             } else {
-              reference = 'SemanticColorTokens.${_toVariableName(token.varReference)}';
+              reference =
+                  'SemanticColorTokens.${_toVariableName(token.varReference)}';
             }
           } else {
             reference = 'Color(${_hexToColorInt(token.value)})';
@@ -289,12 +328,17 @@ class TokenGenerator {
     buffer.writeln("// ignore_for_file: constant_identifier_names");
     buffer.writeln();
     buffer.writeln("import 'package:flutter/material.dart';");
-    buffer.writeln("import 'base_color_tokens.dart';");
-    buffer.writeln("import 'semantic_color_tokens.dart';");
-    buffer.writeln("import 'transport_color_tokens.dart';");
+    buffer.writeln(
+      "import 'package:omsa_design_system/theme/tokens/semantic_color_tokens.dart';",
+    );
+    buffer.writeln(
+      "import 'package:omsa_design_system/theme/tokens/transport_color_tokens.dart';",
+    );
     buffer.writeln();
     buffer.writeln("/// Component-specific color tokens from design system");
-    buffer.writeln("/// These tokens reference base, semantic, and transport colors for specific components");
+    buffer.writeln(
+      "/// These tokens reference base, semantic, and transport colors for specific components",
+    );
 
     for (final modeData in values) {
       final mode = modeData['mode'] as Map<String, dynamic>;
@@ -311,8 +355,12 @@ class TokenGenerator {
         // Remove "Components/" prefix and get component type
         final cleanName = token.name.replaceFirst('Components/', '');
         final parts = cleanName.split('/');
-        final componentType = parts.length > 1 ? '${parts[0]}/${parts[1]}' : parts[0];
-        grouped.putIfAbsent(componentType, () => []).add(token.copyWith(name: cleanName));
+        final componentType = parts.length > 1
+            ? '${parts[0]}/${parts[1]}'
+            : parts[0];
+        grouped
+            .putIfAbsent(componentType, () => [])
+            .add(token.copyWith(name: cleanName));
       }
 
       for (final entry in grouped.entries) {
@@ -328,20 +376,45 @@ class TokenGenerator {
           if (token.varReference.isNotEmpty) {
             // Check if it's a base token reference (starts with "Base colors/")
             if (token.varReference.startsWith('Base colors/')) {
-              final baseTokenName = token.varReference.replaceFirst('Base colors/', '');
-              reference = 'Base${modeName}Tokens.${_toVariableName(baseTokenName)}';
+              final baseTokenName = token.varReference.replaceFirst(
+                'Base colors/',
+                '',
+              );
+              reference =
+                  'Base${modeName}Tokens.${_toVariableName(baseTokenName)}';
             } else {
               // Check if it's a transport token
-              final transportModes = ['Bicycle', 'Bus', 'Ferry', 'Funicular', 'Helicopter',
-                                     'Metro', 'Mobility', 'Plane', 'Taxi', 'Train', 'Tram',
-                                     'Walk', 'Cableway', 'AirportLinkBus', 'AirportLinkRail',
-                                     'Carferry', 'Citybike'];
-              final isTransport = transportModes.any((mode) => token.varReference.toLowerCase().contains(mode.toLowerCase()));
+              final transportModes = [
+                'Bicycle',
+                'Bus',
+                'Ferry',
+                'Funicular',
+                'Helicopter',
+                'Metro',
+                'Mobility',
+                'Plane',
+                'Taxi',
+                'Train',
+                'Tram',
+                'Walk',
+                'Cableway',
+                'AirportLinkBus',
+                'AirportLinkRail',
+                'Carferry',
+                'Citybike',
+              ];
+              final isTransport = transportModes.any(
+                (mode) => token.varReference.toLowerCase().contains(
+                  mode.toLowerCase(),
+                ),
+              );
               if (isTransport) {
-                reference = 'TransportColorTokens.${_toVariableName(token.varReference)}';
+                reference =
+                    'TransportColorTokens.${_toVariableName(token.varReference)}';
               } else {
                 // It's a semantic token reference
-                reference = 'SemanticColorTokens.${_toVariableName(token.varReference)}';
+                reference =
+                    'SemanticColorTokens.${_toVariableName(token.varReference)}';
               }
             }
           } else {
@@ -416,9 +489,7 @@ class TokenGenerator {
     final result = StringBuffer();
 
     for (var i = 0; i < parts.length; i++) {
-      final part = parts[i]
-          .replaceAll('-', '_')
-          .replaceAll(' ', '_');
+      final part = parts[i].replaceAll('-', '_').replaceAll(' ', '_');
 
       if (i == 0) {
         result.write(part[0].toLowerCase() + part.substring(1));

@@ -6,11 +6,7 @@ import 'package:omsa_demo_app/screens/auth_loading_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(
-    const ProviderScope(
-      child: OmsaDemoApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: OmsaDemoApp()));
 }
 
 class OmsaDemoApp extends StatelessWidget {

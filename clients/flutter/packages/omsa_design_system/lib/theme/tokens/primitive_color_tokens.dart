@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 /// Primitive color tokens from design system
 /// These are the base colors that all other tokens reference
 abstract class PrimitiveColorTokens {
-
   // Blue family
   static const Color blue10 = Color(0xFFf6f6f9);
   static const Color blue100 = Color(0xFF292b6a);

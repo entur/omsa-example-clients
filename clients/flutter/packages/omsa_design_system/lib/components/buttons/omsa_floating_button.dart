@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Floating button size: standard = 48px, small = 32px
-enum OmsaFloatingButtonSize {
-  standard,
-  small,
-}
+enum OmsaFloatingButtonSize { standard, small }
 
 /// Floating action button component following EDS design system.
 /// Supports icon-only or extended mode with text labels.
@@ -213,7 +210,9 @@ class _OmsaFloatingButtonState extends State<OmsaFloatingButton> {
                 ],
               ),
               child: InkWell(
-                onTap: widget.isLoading || _isDisabled ? null : widget.onPressed,
+                onTap: widget.isLoading || _isDisabled
+                    ? null
+                    : widget.onPressed,
                 borderRadius: BorderRadius.circular(_borderRadius),
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,

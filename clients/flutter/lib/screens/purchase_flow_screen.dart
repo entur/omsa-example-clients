@@ -26,10 +26,7 @@ enum FlowPhase {
   failed,
 }
 
-enum PaymentMethod {
-  visa,
-  vipps,
-}
+enum PaymentMethod { visa, vipps }
 
 class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   FlowPhase _phase = FlowPhase.idle;
@@ -100,7 +97,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         offer: widget.offer,
       );
 
-      final paymentType = _selectedPaymentMethod == PaymentMethod.visa ? 'VISA' : 'VIPPS';
+      final paymentType = _selectedPaymentMethod == PaymentMethod.visa
+          ? 'VISA'
+          : 'VIPPS';
       final payment = await PurchaseFlowService.createPayment(
         purchase: purchase,
         paymentType: paymentType,
@@ -193,9 +192,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
       // Only capture for VISA payments - VIPPS payments are auto-captured
       PaymentCaptureResult? capture;
       if (_selectedPaymentMethod == PaymentMethod.visa) {
-        capture = await PurchaseFlowService.capturePayment(
-          session: _payment!,
-        );
+        capture = await PurchaseFlowService.capturePayment(session: _payment!);
       }
 
       final confirmation = await PurchaseFlowService.confirmPackage(
@@ -258,7 +255,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         children: [
           Text(
             'Payment method',
-            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 12),
           RadioGroup<PaymentMethod>(
@@ -298,7 +297,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             const SizedBox(height: 16),
             Text(
               'Phone number',
-              style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+              style: AppTypography.textLarge.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8),
             OmsaTextField(
@@ -322,7 +323,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             Text(
               'Please enter the phone number you want to use for Vipps',
               style: TextStyle(
-                color: context.semanticColors.textSubdued,
+                color: BaseLightTokens.textSubdued,
                 fontSize: 12,
               ),
             ),
@@ -344,7 +345,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         children: [
           Text(
             summary.name,
-            style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.textLarge.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Row(
@@ -388,7 +391,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             const SizedBox(height: 12),
             Text(
               summary.description.replaceAll('\\n', '\n'),
-              style: TextStyle(color: context.semanticColors.textSubdued),
+              style: TextStyle(color: BaseLightTokens.textSubdued),
             ),
           ],
         ],
@@ -405,18 +408,18 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     return Builder(
       builder: (context) {
         final theme = Theme.of(context);
-        final semanticColors = context.semanticColors;
 
         final icon = completed
             ? Icons.check_circle
             : isActive
-                ? Icons.timelapse
-                : Icons.radio_button_unchecked;
+            ? Icons.timelapse
+            : Icons.radio_button_unchecked;
         final color = completed
-            ? Colors.green // Success color for completed
+            ? Colors
+                  .green // Success color for completed
             : isActive
-                ? theme.colorScheme.primary
-                : semanticColors.shapeDisabled;
+            ? theme.colorScheme.primary
+            : BaseLightTokens.shapeDisabled;
 
         return ListTile(
           leading: Icon(icon, color: color),
@@ -508,15 +511,20 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                           : 'Confirm payment capture',
                       completed: _capture != null,
                       isActive:
-                          _phase == FlowPhase.awaitingCapture && _capture == null,
+                          _phase == FlowPhase.awaitingCapture &&
+                          _capture == null,
                     )
                   else
                     _buildStatusTile(
                       title: 'Payment confirmed',
-                      subtitle: _phase == FlowPhase.finished || _phase == FlowPhase.awaitingCapture
+                      subtitle:
+                          _phase == FlowPhase.finished ||
+                              _phase == FlowPhase.awaitingCapture
                           ? 'Auto-captured by Vipps'
                           : 'Waiting for Vipps confirmation',
-                      completed: _phase == FlowPhase.finished || _phase == FlowPhase.awaitingCapture,
+                      completed:
+                          _phase == FlowPhase.finished ||
+                          _phase == FlowPhase.awaitingCapture,
                       isActive: false,
                     ),
                   _buildStatusTile(
@@ -544,7 +552,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Text(
                         _error!,
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                 ],
@@ -565,7 +575,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                 child: Text(
                   'Complete the payment in the terminal, then manually switch back to this app to confirm your order.',
                   style: TextStyle(
-                    color: context.semanticColors.textSubdued,
+                    color: BaseLightTokens.textSubdued,
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.center,
@@ -604,7 +614,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                 child: Text(
                   'Complete the payment in Vipps, then manually switch back to this app to confirm your order.',
                   style: TextStyle(
-                    color: context.semanticColors.textSubdued,
+                    color: BaseLightTokens.textSubdued,
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.center,

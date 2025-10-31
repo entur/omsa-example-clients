@@ -45,15 +45,16 @@ class OffersScreen extends ConsumerWidget {
               child: Text(
                 'No offers found',
                 style: AppTypography.textLarge.copyWith(
-                  color: context.semanticColors.textSubdued,
+                  color: BaseLightTokens.textSubdued,
                 ),
               ),
             )
           : Stack(
               children: [
                 ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16)
-                      .copyWith(top: 16, bottom: selectedOffer != null ? 112 : 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ).copyWith(top: 16, bottom: selectedOffer != null ? 112 : 16),
                   itemCount: offers.offers.length,
                   itemBuilder: (context, index) {
                     final offer = offers.offers[index];
@@ -106,22 +107,18 @@ class OfferCard extends ConsumerWidget {
   final Offer offer;
   final bool isSelected;
 
-  const OfferCard({
-    super.key,
-    required this.offer,
-    required this.isSelected,
-  });
+  const OfferCard({super.key, required this.offer, required this.isSelected});
 
   void _handleTap(WidgetRef ref) {
     final currentSelection = ref.read(selectedOfferProvider);
-    ref.read(selectedOfferProvider.notifier).state =
-        currentSelection == offer ? null : offer;
+    ref.read(selectedOfferProvider.notifier).state = currentSelection == offer
+        ? null
+        : offer;
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final semanticColors = context.semanticColors;
     final price = offer.properties.price;
     final summary = offer.properties.summary;
 
@@ -215,7 +212,7 @@ class OfferCard extends ConsumerWidget {
                           data: summary.description.replaceAll('\\n', '\n'),
                           styleSheet: MarkdownStyleSheet(
                             p: AppTypography.textMedium.copyWith(
-                              color: semanticColors.textSubdued,
+                              color: BaseLightTokens.textSubdued,
                               height: 1.3,
                             ),
                             a: AppTypography.textMedium.copyWith(
@@ -237,7 +234,9 @@ class OfferCard extends ConsumerWidget {
                         children: [
                           OmsaChip(
                             label: Text(
-                              summary.isRefundable ? 'Refundable' : 'Non-refundable',
+                              summary.isRefundable
+                                  ? 'Refundable'
+                                  : 'Non-refundable',
                               style: AppTypography.textSmall,
                             ),
                             variant: OmsaChipVariant.filled,
@@ -245,7 +244,9 @@ class OfferCard extends ConsumerWidget {
                                 ? OmsaChipColor.success
                                 : OmsaChipColor.warning,
                             icon: Icon(
-                              summary.isRefundable ? Icons.check_circle : Icons.cancel,
+                              summary.isRefundable
+                                  ? Icons.check_circle
+                                  : Icons.cancel,
                               size: 12,
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -265,7 +266,9 @@ class OfferCard extends ConsumerWidget {
                                 ? OmsaChipColor.success
                                 : OmsaChipColor.warning,
                             icon: Icon(
-                              summary.isExchangeable ? Icons.swap_horiz : Icons.block,
+                              summary.isExchangeable
+                                  ? Icons.swap_horiz
+                                  : Icons.block,
                               size: 12,
                             ),
                             padding: const EdgeInsets.symmetric(

@@ -23,18 +23,16 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final semanticColors = context.semanticColors;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Widget Design Lab'),
-        backgroundColor: semanticColors.frameElevatedAlt,
+        backgroundColor: BaseLightTokens.frameElevatedAlt,
       ),
       body: Row(
         children: [
           Container(
             width: 200,
-            color: semanticColors.frameElevatedAlt,
+            color: BaseLightTokens.frameElevatedAlt,
             child: ListView.builder(
               itemCount: _categories.length,
               itemBuilder: (context, index) {
@@ -45,14 +43,16 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                   title: Text(
                     category,
                     style: AppTypography.textMedium.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : semanticColors.textAccent,
+                          ? Theme.of(context).colorScheme.primary
+                          : BaseLightTokens.textAccent,
                     ),
                   ),
                   selected: isSelected,
-                  selectedTileColor: semanticColors.frameElevated,
+                  selectedTileColor: BaseLightTokens.frameElevated,
                   onTap: () {
                     setState(() {
                       _selectedCategory = category;
@@ -107,11 +107,103 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
         const SizedBox(height: 24),
 
         _buildSection(
-          'Primary Buttons',
+          'Button Variants - Standard Mode (Light Background)',
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Large Size:'),
+              const Text('Primary:'),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                child: const Text('Primary Standard'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Secondary:'),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.secondary,
+                child: const Text('Secondary Standard'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Success:'),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.success,
+                child: const Text('Success Standard'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Negative:'),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.negative,
+                child: const Text('Negative Standard'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Button Variants - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Primary:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                mode: OmsaComponentMode.contrast,
+                child: const Text('Primary Contrast'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Secondary:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.secondary,
+                mode: OmsaComponentMode.contrast,
+                child: const Text('Secondary Contrast'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Success:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.success,
+                mode: OmsaComponentMode.contrast,
+                child: const Text('Success Contrast'),
+              ),
+              const SizedBox(height: 16),
+
+              const Text('Negative:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              OmsaButton(
+                onPressed: () {},
+                variant: OmsaButtonVariant.negative,
+                mode: OmsaComponentMode.contrast,
+                child: const Text('Negative Contrast'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Button Sizes - Standard Mode',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Large:'),
               const SizedBox(height: 8),
               OmsaButton(
                 onPressed: () {},
@@ -120,7 +212,7 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
               ),
               const SizedBox(height: 16),
 
-              const Text('Medium Size:'),
+              const Text('Medium:'),
               const SizedBox(height: 8),
               OmsaButton(
                 onPressed: () {},
@@ -129,21 +221,27 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
               ),
               const SizedBox(height: 16),
 
-              const Text('Small Size:'),
+              const Text('Small:'),
               const SizedBox(height: 8),
               OmsaButton(
                 onPressed: () {},
                 size: OmsaButtonSize.small,
                 child: const Text('Small Primary Button'),
               ),
-              const SizedBox(height: 16),
+            ],
+          ),
+        ),
 
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Button States - Standard Mode',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               const Text('Disabled:'),
               const SizedBox(height: 8),
-              OmsaButton(
-                onPressed: null,
-                child: const Text('Disabled Button'),
-              ),
+              OmsaButton(onPressed: null, child: const Text('Disabled Button')),
               const SizedBox(height: 16),
 
               const Text('Loading:'),
@@ -160,59 +258,13 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
         const SizedBox(height: 32),
 
         _buildSection(
-          'Secondary Buttons',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OmsaButton(
-                onPressed: () {},
-                variant: OmsaButtonVariant.secondary,
-                child: const Text('Secondary Button'),
-              ),
-              const SizedBox(height: 16),
-
-              OmsaButton(
-                onPressed: null,
-                variant: OmsaButtonVariant.secondary,
-                child: const Text('Disabled Secondary'),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 32),
-
-        _buildSection(
-          'Success & Negative Buttons',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OmsaButton(
-                onPressed: () {},
-                variant: OmsaButtonVariant.success,
-                child: const Text('Success Button'),
-              ),
-              const SizedBox(height: 16),
-
-              OmsaButton(
-                onPressed: () {},
-                variant: OmsaButtonVariant.negative,
-                child: const Text('Negative Button'),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 32),
-
-        _buildSection(
           'Full Width Buttons',
           Column(
             children: [
               OmsaButton(
                 onPressed: () {},
                 width: OmsaButtonWidth.fluid,
-                child: const Text('Full Width Button'),
+                child: const Text('Full Width Primary'),
               ),
               const SizedBox(height: 16),
 
@@ -229,105 +281,24 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
         const SizedBox(height: 32),
 
         _buildSection(
-          'Floating Action Buttons',
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          'Floating Action Buttons - Standard Mode',
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
             children: [
-              const Text('Standard Size:'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: [
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit),
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete),
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: null,
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+              OmsaFloatingButton(onPressed: () {}, icon: const Icon(Icons.add)),
+              OmsaFloatingButton(
+                onPressed: () {},
+                icon: const Icon(Icons.edit),
               ),
-              const SizedBox(height: 24),
-
-              const Text('Small Size:'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: [
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                    size: OmsaFloatingButtonSize.small,
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit),
-                    size: OmsaFloatingButtonSize.small,
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete),
-                    size: OmsaFloatingButtonSize.small,
-                  ),
-                ],
+              OmsaFloatingButton(
+                onPressed: () {},
+                icon: const Icon(Icons.delete),
               ),
-              const SizedBox(height: 24),
-
-              const Text('Extended with Labels:'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: [
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                    label: 'Add Item',
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit),
-                    label: 'Edit',
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.share),
-                    label: 'Share',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              const Text('Loading State:'),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: [
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.save),
-                    isLoading: true,
-                  ),
-                  OmsaFloatingButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.save),
-                    label: 'Saving...',
-                    isLoading: true,
-                    size: OmsaFloatingButtonSize.small,
-                  ),
-                ],
+              OmsaFloatingButton(
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                label: 'Add Item',
               ),
             ],
           ),
@@ -504,10 +475,7 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 8,
             runSpacing: 8,
             children: [
-              OmsaChip(
-                label: const Text('Default Chip'),
-                onDeleted: () {},
-              ),
+              OmsaChip(label: const Text('Default Chip'), onDeleted: () {}),
               OmsaChip(
                 label: const Text('Filled Chip'),
                 variant: OmsaChipVariant.filled,
@@ -615,8 +583,6 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   }
 
   Widget _buildColorsSection() {
-    final semanticColors = context.semanticColors;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -634,9 +600,18 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _buildColorSwatch('Primary', Theme.of(context).colorScheme.primary),
-              _buildColorSwatch('Primary Container', Theme.of(context).colorScheme.primaryContainer),
-              _buildColorSwatch('On Primary', Theme.of(context).colorScheme.onPrimary),
+              _buildColorSwatch(
+                'Primary',
+                Theme.of(context).colorScheme.primary,
+              ),
+              _buildColorSwatch(
+                'Primary Container',
+                Theme.of(context).colorScheme.primaryContainer,
+              ),
+              _buildColorSwatch(
+                'On Primary',
+                Theme.of(context).colorScheme.onPrimary,
+              ),
             ],
           ),
         ),
@@ -649,9 +624,18 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _buildColorSwatch('Secondary', Theme.of(context).colorScheme.secondary),
-              _buildColorSwatch('Secondary Container', Theme.of(context).colorScheme.secondaryContainer),
-              _buildColorSwatch('On Secondary', Theme.of(context).colorScheme.onSecondary),
+              _buildColorSwatch(
+                'Secondary',
+                Theme.of(context).colorScheme.secondary,
+              ),
+              _buildColorSwatch(
+                'Secondary Container',
+                Theme.of(context).colorScheme.secondaryContainer,
+              ),
+              _buildColorSwatch(
+                'On Secondary',
+                Theme.of(context).colorScheme.onSecondary,
+              ),
             ],
           ),
         ),
@@ -664,10 +648,10 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _buildColorSwatch('Accent', semanticColors.shapeAccent),
-              _buildColorSwatch('Highlight', semanticColors.shapeHighlight),
-              _buildColorSwatch('Light', semanticColors.shapeLight),
-              _buildColorSwatch('Disabled', semanticColors.shapeDisabled),
+              _buildColorSwatch('Accent', BaseLightTokens.shapeAccent),
+              _buildColorSwatch('Highlight', BaseLightTokens.shapeHighlight),
+              _buildColorSwatch('Light', BaseLightTokens.shapeLight),
+              _buildColorSwatch('Disabled', BaseLightTokens.shapeDisabled),
             ],
           ),
         ),
@@ -680,9 +664,9 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _buildColorSwatch('Text Accent', semanticColors.textAccent),
-              _buildColorSwatch('Text Subdued', semanticColors.textSubdued),
-              _buildColorSwatch('Text Disabled', semanticColors.textDisabled),
+              _buildColorSwatch('Text Accent', BaseLightTokens.textAccent),
+              _buildColorSwatch('Text Subdued', BaseLightTokens.textSubdued),
+              _buildColorSwatch('Text Disabled', BaseLightTokens.textDisabled),
             ],
           ),
         ),
@@ -695,9 +679,81 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _buildColorSwatch('Frame Default', semanticColors.frameDefault),
-              _buildColorSwatch('Frame Elevated', semanticColors.frameElevated),
-              _buildColorSwatch('Frame Elevated Alt', semanticColors.frameElevatedAlt),
+              _buildColorSwatch('Frame Default', BaseLightTokens.frameDefault),
+              _buildColorSwatch(
+                'Frame Contrast',
+                BaseLightTokens.frameContrast,
+              ),
+              _buildColorSwatch(
+                'Frame Elevated',
+                BaseLightTokens.frameElevated,
+              ),
+              _buildColorSwatch(
+                'Frame Elevated Alt',
+                BaseLightTokens.frameElevatedAlt,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 24),
+
+        _buildSection(
+          'Mode Comparison',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: BaseLightTokens.frameDefault,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Standard Mode (Frame Default - White)',
+                      style: AppTypography.textMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'This is the default background color for standard mode.',
+                      style: AppTypography.textSmall,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: BaseLightTokens.frameContrast,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Contrast Mode (Frame Contrast - Dark Blue)',
+                      style: AppTypography.textMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'This is the contrast background color, used to create visual hierarchy.',
+                      style: AppTypography.textSmall.copyWith(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -723,14 +779,29 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSpacingExample('None (0px)', AppSpacing.spaceNone),
-              _buildSpacingExample('Extra Small 2 (4px)', AppSpacing.spaceExtraSmall2),
-              _buildSpacingExample('Extra Small (8px)', AppSpacing.spaceExtraSmall),
+              _buildSpacingExample(
+                'Extra Small 2 (4px)',
+                AppSpacing.spaceExtraSmall2,
+              ),
+              _buildSpacingExample(
+                'Extra Small (8px)',
+                AppSpacing.spaceExtraSmall,
+              ),
               _buildSpacingExample('Small (12px)', AppSpacing.spaceSmall),
               _buildSpacingExample('Medium (16px)', AppSpacing.spaceMedium),
               _buildSpacingExample('Large (24px)', AppSpacing.spaceLarge),
-              _buildSpacingExample('Extra Large (32px)', AppSpacing.spaceExtraLarge),
-              _buildSpacingExample('Extra Large 2 (40px)', AppSpacing.spaceExtraLarge2),
-              _buildSpacingExample('Extra Large 3 (48px)', AppSpacing.spaceExtraLarge3),
+              _buildSpacingExample(
+                'Extra Large (32px)',
+                AppSpacing.spaceExtraLarge,
+              ),
+              _buildSpacingExample(
+                'Extra Large 2 (40px)',
+                AppSpacing.spaceExtraLarge2,
+              ),
+              _buildSpacingExample(
+                'Extra Large 3 (48px)',
+                AppSpacing.spaceExtraLarge3,
+              ),
             ],
           ),
         ),
@@ -739,12 +810,10 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   }
 
   Widget _buildSection(String title, Widget child) {
-    final semanticColors = context.semanticColors;
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: semanticColors.frameElevated,
+        color: BaseLightTokens.frameElevated,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -754,6 +823,36 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             title,
             style: AppTypography.headlineMedium.copyWith(
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    );
+  }
+
+  /// Build a section with contrast background color (for showcasing contrast mode components)
+  Widget _buildContrastSection(String title, Widget child) {
+    final brightness = Theme.of(context).brightness;
+    final backgroundColor = brightness == Brightness.light
+        ? BaseLightTokens.frameContrast
+        : BaseDarkTokens.frameContrast;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: AppTypography.headlineMedium.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 16),
@@ -795,10 +894,7 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
         children: [
           SizedBox(
             width: 180,
-            child: Text(
-              label,
-              style: AppTypography.textMedium,
-            ),
+            child: Text(label, style: AppTypography.textMedium),
           ),
           Container(
             width: spacing == 0 ? 1 : spacing,
