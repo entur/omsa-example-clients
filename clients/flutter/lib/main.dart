@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/screens/auth_loading_screen.dart';
+import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const ProviderScope(child: OmsaDemoApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => OfferSelectionProvider(),
+      child: const OmsaDemoApp(),
+    ),
+  );
 }
 
 class OmsaDemoApp extends StatelessWidget {

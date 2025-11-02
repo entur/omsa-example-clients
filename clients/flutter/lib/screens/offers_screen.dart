@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OffersScreen extends ConsumerWidget {
+class OffersScreen extends StatelessWidget {
   final OfferCollection offers;
 
   const OffersScreen({super.key, required this.offers});
 
-  void _handleNext(BuildContext context, WidgetRef ref) {
-    final selectedOffer = ref.read(selectedOfferProvider);
+  void _handleNext(BuildContext context) {
+    final provider = Provider.of<OfferSelectionProvider>(
+      context,
+      listen: false,
+    );
+    final selectedOffer = provider.selectedOffer;
     if (selectedOffer != null) {
-      ref.read(selectedOfferProvider.notifier).state = null;
+      provider.clearSelection();
 
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -26,8 +30,8 @@ class OffersScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedOffer = ref.watch(selectedOfferProvider);
+  Widget build(BuildContext context) {
+    final selectedOffer = context.watch<OfferSelectionProvider>().selectedOffer;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +74,7 @@ class OffersScreen extends ConsumerWidget {
                     right: 16,
                     bottom: 24,
                     child: OmsaButton(
-                      onPressed: () => _handleNext(context, ref),
+                      onPressed: () => _handleNext(context),
                       width: OmsaButtonWidth.fluid,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,27 +107,29 @@ class OffersScreen extends ConsumerWidget {
   }
 }
 
-class OfferCard extends ConsumerWidget {
+class OfferCard extends StatelessWidget {
   final Offer offer;
   final bool isSelected;
 
   const OfferCard({super.key, required this.offer, required this.isSelected});
 
-  void _handleTap(WidgetRef ref) {
-    final currentSelection = ref.read(selectedOfferProvider);
-    ref.read(selectedOfferProvider.notifier).state = currentSelection == offer
-        ? null
-        : offer;
+  void _handleTap(BuildContext context) {
+    final provider = Provider.of<OfferSelectionProvider>(
+      context,
+      listen: false,
+    );
+    final currentSelection = provider.selectedOffer;
+    provider.selectOffer(currentSelection == offer ? null : offer);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final price = offer.properties.price;
     final summary = offer.properties.summary;
 
     return GestureDetector(
-      onTap: () => _handleTap(ref),
+      onTap: () => _handleTap(context),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
