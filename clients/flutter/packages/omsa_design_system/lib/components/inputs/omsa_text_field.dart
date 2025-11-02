@@ -300,65 +300,64 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
             child: Stack(
               children: [
                 Positioned(
-                  left: AppSpacing.spaceDefault,
+                  left:
+                      AppSpacing.spaceDefault +
+                      (widget.prepend != null ? 24 + AppSpacing.spaceSmall : 0),
                   top: _shouldFloatLabel
                       ? (widget.size == OmsaTextFieldSize.medium ? 6.0 : 8.0)
-                      : (widget.size == OmsaTextFieldSize.medium ? 16.0 : 20.0),
-                  child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    style: TextStyle(
-                      color: colors.label,
-                      fontSize: _shouldFloatLabel
-                          ? AppTypography.fontSizesSmall
-                          : _fontSize,
-                      height: _shouldFloatLabel
-                          ? (AppTypography.lineHeightsSmall /
-                                AppTypography.fontSizesSmall)
-                          : (_lineHeight / _fontSize),
-                      fontWeight: AppTypography.fontWeightsBody,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(widget.label),
-                        if (widget.required) ...[
-                          const SizedBox(width: 4),
-                          const Text('*'),
+                      : (widget.size == OmsaTextFieldSize.medium ? 16.0 : 12.0),
+                  child: IgnorePointer(
+                    child: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      style: TextStyle(
+                        color: colors.label,
+                        fontSize: _shouldFloatLabel
+                            ? AppTypography.fontSizesSmall
+                            : _fontSize,
+                        height: _shouldFloatLabel
+                            ? 1.0
+                            : (_lineHeight / _fontSize),
+                        fontWeight: AppTypography.fontWeightsBody,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(widget.label),
+                          if (widget.required) ...[
+                            const SizedBox(width: 4),
+                            const Text('*'),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.spaceDefault,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (widget.prepend != null) ...[
-                        IconTheme(
-                          data: IconThemeData(color: colors.icon, size: 24),
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              color: colors.icon,
-                              fontSize: _fontSize,
-                              height: _lineHeight / _fontSize,
+                ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: _minHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.spaceDefault,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        if (widget.prepend != null) ...[
+                          IconTheme(
+                            data: IconThemeData(color: colors.icon, size: 24),
+                            child: DefaultTextStyle(
+                              style: TextStyle(
+                                color: colors.icon,
+                                fontSize: _fontSize,
+                                height: _lineHeight / _fontSize,
+                              ),
+                              child: widget.prepend!,
                             ),
-                            child: widget.prepend!,
                           ),
-                        ),
-                        const SizedBox(width: AppSpacing.spaceSmall),
-                      ],
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: widget.size == OmsaTextFieldSize.medium
-                                ? 20.0
-                                : 24.0,
-                            bottom: AppSpacing.spaceExtraSmall2,
-                          ),
+                          const SizedBox(width: AppSpacing.spaceSmall),
+                        ],
+                        Expanded(
                           child: TextField(
                             controller: _controller,
                             focusNode: _focusNode,
@@ -380,7 +379,12 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                             ),
                             decoration: InputDecoration(
                               isDense: true,
-                              contentPadding: EdgeInsets.zero,
+                              contentPadding: EdgeInsets.only(
+                                top: widget.size == OmsaTextFieldSize.medium
+                                    ? 20.0
+                                    : 24.0,
+                                bottom: AppSpacing.spaceExtraSmall2,
+                              ),
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -396,52 +400,52 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                             ),
                           ),
                         ),
-                      ),
-                      if (widget.clearable &&
-                          _hasValue &&
-                          !widget.disabled &&
-                          !widget.readOnly) ...[
-                        Container(
-                          width: 1,
-                          height: 24,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.spaceSmall,
+                        if (widget.clearable &&
+                            _hasValue &&
+                            !widget.disabled &&
+                            !widget.readOnly) ...[
+                          Container(
+                            width: 1,
+                            height: 24,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.spaceSmall,
+                            ),
+                            color: colors.icon,
                           ),
-                          color: colors.icon,
-                        ),
-                        Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(24),
-                          child: InkWell(
-                            onTap: _onClear,
+                          Material(
+                            color: Colors.transparent,
                             borderRadius: BorderRadius.circular(24),
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                AppSpacing.spaceExtraSmall,
+                            child: InkWell(
+                              onTap: _onClear,
+                              borderRadius: BorderRadius.circular(24),
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  AppSpacing.spaceExtraSmall,
+                                ),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: colors.icon,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.close,
-                                size: 16,
+                            ),
+                          ),
+                        ] else if (widget.append != null) ...[
+                          const SizedBox(width: AppSpacing.spaceSmall),
+                          IconTheme(
+                            data: IconThemeData(color: colors.icon, size: 24),
+                            child: DefaultTextStyle(
+                              style: TextStyle(
                                 color: colors.icon,
+                                fontSize: _fontSize,
+                                height: _lineHeight / _fontSize,
                               ),
+                              child: widget.append!,
                             ),
                           ),
-                        ),
-                      ] else if (widget.append != null) ...[
-                        const SizedBox(width: AppSpacing.spaceSmall),
-                        IconTheme(
-                          data: IconThemeData(color: colors.icon, size: 24),
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              color: colors.icon,
-                              fontSize: _fontSize,
-                              height: _lineHeight / _fontSize,
-                            ),
-                            child: widget.append!,
-                          ),
-                        ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ],
