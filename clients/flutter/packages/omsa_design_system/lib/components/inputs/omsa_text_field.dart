@@ -6,18 +6,9 @@ import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 
-enum OmsaTextFieldVariant {
-  none,
-  success,
-  negative,
-  information,
-  warning,
-}
+enum OmsaTextFieldVariant { none, success, negative, information, warning }
 
-enum OmsaTextFieldSize {
-  medium,
-  large,
-}
+enum OmsaTextFieldSize { medium, large }
 
 class OmsaTextField extends StatefulWidget {
   const OmsaTextField({
@@ -50,9 +41,9 @@ class OmsaTextField extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
   }) : assert(
-          controller == null || initialValue == null,
-          'Cannot provide both controller and initialValue',
-        );
+         controller == null || initialValue == null,
+         'Cannot provide both controller and initialValue',
+       );
 
   final TextEditingController? controller;
   final String label;
@@ -95,7 +86,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChange);
     _hasValue = _controller.text.isNotEmpty;
@@ -109,7 +101,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
       if (oldWidget.controller == null) {
         _controller.dispose();
       }
-      _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+      _controller =
+          widget.controller ?? TextEditingController(text: widget.initialValue);
       _controller.addListener(_onTextChange);
       _hasValue = _controller.text.isNotEmpty;
     }
@@ -194,9 +187,11 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
     if (isLight) {
       if (isStandard) {
         borderDefault = ComponentLightTokens.formBaseformStandardBorderDefault;
-        borderInteractive = ComponentLightTokens.formBaseformStandardBorderInteractive;
+        borderInteractive =
+            ComponentLightTokens.formBaseformStandardBorderInteractive;
         borderSuccess = ComponentLightTokens.formBaseformStandardBorderSuccess;
-        borderNegative = ComponentLightTokens.formBaseformStandardBorderNegative;
+        borderNegative =
+            ComponentLightTokens.formBaseformStandardBorderNegative;
         fillDefault = ComponentLightTokens.formBaseformStandardFillDefault;
         fillDisabled = ComponentLightTokens.formBaseformStandardFillDisabled;
         fillReadOnly = ComponentLightTokens.formBaseformStandardFillReadOnly;
@@ -206,9 +201,11 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
         icon = ComponentLightTokens.formBaseformStandardIcon;
       } else {
         borderDefault = ComponentLightTokens.formBaseformContrastBorderDefault;
-        borderInteractive = ComponentLightTokens.formBaseformContrastBorderInteractive;
+        borderInteractive =
+            ComponentLightTokens.formBaseformContrastBorderInteractive;
         borderSuccess = ComponentLightTokens.formBaseformContrastBorderSuccess;
-        borderNegative = ComponentLightTokens.formBaseformContrastBorderNegative;
+        borderNegative =
+            ComponentLightTokens.formBaseformContrastBorderNegative;
         fillDefault = ComponentLightTokens.formBaseformContrastFillDefault;
         fillDisabled = ComponentLightTokens.formBaseformContrastFillDisabled;
         fillReadOnly = ComponentLightTokens.formBaseformContrastFillReadOnly;
@@ -220,7 +217,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
     } else {
       if (isStandard) {
         borderDefault = ComponentDarkTokens.formBaseformStandardBorderDefault;
-        borderInteractive = ComponentDarkTokens.formBaseformStandardBorderInteractive;
+        borderInteractive =
+            ComponentDarkTokens.formBaseformStandardBorderInteractive;
         borderSuccess = ComponentDarkTokens.formBaseformStandardBorderSuccess;
         borderNegative = ComponentDarkTokens.formBaseformStandardBorderNegative;
         fillDefault = ComponentDarkTokens.formBaseformStandardFillDefault;
@@ -232,7 +230,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
         icon = ComponentDarkTokens.formBaseformStandardIcon;
       } else {
         borderDefault = ComponentDarkTokens.formBaseformContrastBorderDefault;
-        borderInteractive = ComponentDarkTokens.formBaseformContrastBorderInteractive;
+        borderInteractive =
+            ComponentDarkTokens.formBaseformContrastBorderInteractive;
         borderSuccess = ComponentDarkTokens.formBaseformContrastBorderSuccess;
         borderNegative = ComponentDarkTokens.formBaseformContrastBorderNegative;
         fillDefault = ComponentDarkTokens.formBaseformContrastFillDefault;
@@ -261,8 +260,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
     final fillColor = widget.disabled
         ? fillDisabled
         : widget.readOnly
-            ? fillReadOnly
-            : fillDefault;
+        ? fillReadOnly
+        : fillDefault;
 
     final textColor = widget.disabled ? textDisabled : textContent;
 
@@ -285,7 +284,9 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: widget.disabled || widget.readOnly ? null : () => _focusNode.requestFocus(),
+          onTap: widget.disabled || widget.readOnly
+              ? null
+              : () => _focusNode.requestFocus(),
           child: Container(
             constraints: BoxConstraints(minHeight: _minHeight),
             decoration: BoxDecoration(
@@ -312,7 +313,8 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                           ? AppTypography.fontSizesSmall
                           : _fontSize,
                       height: _shouldFloatLabel
-                          ? (AppTypography.lineHeightsSmall / AppTypography.fontSizesSmall)
+                          ? (AppTypography.lineHeightsSmall /
+                                AppTypography.fontSizesSmall)
                           : (_lineHeight / _fontSize),
                       fontWeight: AppTypography.fontWeightsBody,
                     ),
@@ -329,7 +331,9 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.spaceDefault),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.spaceDefault,
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -350,7 +354,9 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(
-                            top: widget.size == OmsaTextFieldSize.medium ? 20.0 : 24.0,
+                            top: widget.size == OmsaTextFieldSize.medium
+                                ? 20.0
+                                : 24.0,
                             bottom: AppSpacing.spaceExtraSmall2,
                           ),
                           child: TextField(
@@ -391,11 +397,16 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                           ),
                         ),
                       ),
-                      if (widget.clearable && _hasValue && !widget.disabled && !widget.readOnly) ...[
+                      if (widget.clearable &&
+                          _hasValue &&
+                          !widget.disabled &&
+                          !widget.readOnly) ...[
                         Container(
                           width: 1,
                           height: 24,
-                          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.spaceSmall),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.spaceSmall,
+                          ),
                           color: colors.icon,
                         ),
                         Material(
@@ -405,7 +416,9 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
                             onTap: _onClear,
                             borderRadius: BorderRadius.circular(24),
                             child: Padding(
-                              padding: const EdgeInsets.all(AppSpacing.spaceExtraSmall),
+                              padding: const EdgeInsets.all(
+                                AppSpacing.spaceExtraSmall,
+                              ),
                               child: Icon(
                                 Icons.close,
                                 size: 16,
@@ -437,10 +450,7 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
         ),
         if (widget.feedback != null) ...[
           const SizedBox(height: AppSpacing.spaceExtraSmall),
-          _FeedbackText(
-            text: widget.feedback!,
-            variant: widget.variant,
-          ),
+          _FeedbackText(text: widget.feedback!, variant: widget.variant),
         ],
       ],
     );
@@ -466,10 +476,7 @@ class _TextFieldColors {
 }
 
 class _FeedbackText extends StatelessWidget {
-  const _FeedbackText({
-    required this.text,
-    required this.variant,
-  });
+  const _FeedbackText({required this.text, required this.variant});
 
   final String text;
   final OmsaTextFieldVariant variant;
@@ -519,11 +526,7 @@ class _FeedbackText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (_icon != null) ...[
-          Icon(
-            _icon,
-            size: 16,
-            color: _getIconColor(context),
-          ),
+          Icon(_icon, size: 16, color: _getIconColor(context)),
           const SizedBox(width: 4),
         ],
         Expanded(
@@ -531,7 +534,8 @@ class _FeedbackText extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: AppTypography.fontSizesSmall,
-              height: AppTypography.lineHeightsSmall / AppTypography.fontSizesSmall,
+              height:
+                  AppTypography.lineHeightsSmall / AppTypography.fontSizesSmall,
               color: _getIconColor(context),
               fontWeight: AppTypography.fontWeightsBody,
             ),

@@ -310,7 +310,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               maxLength: 8,
               disabled: _phase != FlowPhase.idle && _phase != FlowPhase.failed,
               feedback: _phoneError,
-              variant: _phoneError != null ? OmsaTextFieldVariant.negative : OmsaTextFieldVariant.none,
+              variant: _phoneError != null
+                  ? OmsaTextFieldVariant.negative
+                  : OmsaTextFieldVariant.none,
               onChanged: (value) {
                 // Clear error when user starts typing
                 if (_phoneError != null) {
