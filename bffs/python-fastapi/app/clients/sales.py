@@ -68,6 +68,20 @@ class SalesClient:
         )
         return self._handle_response(response, "start terminal session")
 
+    async def start_app_claim_session(
+        self, payment_id: str, transaction_id: str, body: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        response = await self._client.post(
+            f"{self.base_url}/payments/{payment_id}/transactions/{transaction_id}/app-claim",
+            json=body,
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Content-Type": "application/json",
+            },
+        )
+        return self._handle_response(response, "start app-claim session")
+
     async def capture_transaction(
         self, payment_id: str, transaction_id: str
     ) -> Dict[str, Any]:

@@ -84,10 +84,7 @@ class OmsaChip extends StatelessWidget {
         chip = _buildActionableChip(
           context,
           backgroundColor: semanticColor.withValues(alpha: 0.12),
-          labelStyle: TextStyle(
-            color: iconColor,
-            fontWeight: FontWeight.w500,
-          ),
+          labelStyle: TextStyle(color: iconColor, fontWeight: FontWeight.w500),
           iconColor: iconColor,
           side: BorderSide.none,
         );
@@ -97,10 +94,7 @@ class OmsaChip extends StatelessWidget {
         chip = _buildActionableChip(
           context,
           backgroundColor: Colors.transparent,
-          labelStyle: TextStyle(
-            color: iconColor,
-            fontWeight: FontWeight.w500,
-          ),
+          labelStyle: TextStyle(color: iconColor, fontWeight: FontWeight.w500),
           iconColor: iconColor,
           side: BorderSide(
             color: customBorderColor ?? semanticColor.withValues(alpha: 0.3),
@@ -113,10 +107,7 @@ class OmsaChip extends StatelessWidget {
         chip = _buildActionableChip(
           context,
           backgroundColor: theme.colorScheme.surface,
-          labelStyle: TextStyle(
-            color: iconColor,
-            fontWeight: FontWeight.w500,
-          ),
+          labelStyle: TextStyle(color: iconColor, fontWeight: FontWeight.w500),
           iconColor: iconColor,
           side: BorderSide.none,
           elevation: 2,
@@ -147,7 +138,9 @@ class OmsaChip extends StatelessWidget {
       return ActionChip(
         label: label,
         onPressed: onPressed,
-        avatar: avatar ?? (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
+        avatar:
+            avatar ??
+            (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
         backgroundColor: backgroundColor,
         labelStyle: labelStyle,
         side: side,
@@ -158,7 +151,9 @@ class OmsaChip extends StatelessWidget {
 
     return Chip(
       label: label,
-      avatar: avatar ?? (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
+      avatar:
+          avatar ??
+          (coloredIcon != null ? _IconAvatar(icon: coloredIcon) : null),
       backgroundColor: backgroundColor,
       labelStyle: labelStyle,
       side: side,

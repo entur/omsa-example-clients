@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
+import 'package:omsa_demo_app/screens/widget_design_screen.dart';
 
 enum DepartureType { now, leaveAt, arriveBy }
 
@@ -122,8 +123,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final semanticColors = context.semanticColors;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -134,6 +133,19 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.palette),
+            tooltip: 'Widget Design Lab',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const WidgetDesignScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -220,7 +232,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
                   trailing: const Icon(Icons.access_time),
                   onTap: _selectDateTime,
-                  tileColor: semanticColors.frameElevatedAlt,
+                  tileColor: BaseLightTokens.frameElevatedAlt,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
@@ -250,7 +262,7 @@ class _SearchScreenState extends State<SearchScreen> {
               OmsaButton(
                 onPressed: _isLoading ? null : _searchOffers,
                 isLoading: _isLoading,
-                isFullWidth: true,
+                width: OmsaButtonWidth.fluid,
                 size: OmsaButtonSize.large,
                 child: const Text('Search Offers'),
               ),

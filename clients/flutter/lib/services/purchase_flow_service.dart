@@ -77,6 +77,29 @@ class PurchaseFlowService {
     return terminal;
   }
 
+  static Future<PaymentAppClaimSession> startAppClaim({
+    required PaymentSession session,
+    required String description,
+    required String phoneNumber,
+    required String redirectUrl,
+  }) async {
+    final response = await PaymentService.startAppClaimSession(
+      paymentId: session.paymentId.toString(),
+      transactionId: session.transactionId.toString(),
+      description: description,
+      phoneNumber: phoneNumber,
+      redirectUrl: redirectUrl,
+    );
+
+    final appClaim = PaymentAppClaimSession.fromMap(response);
+
+    if (appClaim.appClaimUri.isEmpty) {
+      throw Exception('App claim did not return a launch URL.');
+    }
+
+    return appClaim;
+  }
+
   static Future<PaymentCaptureResult> capturePayment({
     required PaymentSession session,
   }) async {
