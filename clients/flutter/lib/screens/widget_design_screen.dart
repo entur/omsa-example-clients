@@ -320,7 +320,7 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
         const SizedBox(height: 24),
 
         _buildSection(
-          'Text Fields',
+          'Text Fields - Basic',
           Column(
             children: [
               const OmsaTextField(
@@ -328,30 +328,167 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                 hint: 'Enter some text',
               ),
               const SizedBox(height: 16),
-
               const OmsaTextField(
                 label: 'Email Field',
                 hint: 'email@example.com',
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-
               const OmsaTextField(
-                label: 'Number Field',
-                hint: '123',
-                keyboardType: TextInputType.number,
+                label: 'Phone Number',
+                hint: '12345678',
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Text Fields - Variants (Standard Mode)',
+          Column(
+            children: [
+              const OmsaTextField(
+                label: 'Default',
+                hint: 'No variant',
+                variant: OmsaTextFieldVariant.none,
               ),
               const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Success',
+                hint: 'Valid input',
+                variant: OmsaTextFieldVariant.success,
+                feedback: 'This field is valid',
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Negative/Error',
+                hint: 'Invalid input',
+                variant: OmsaTextFieldVariant.negative,
+                feedback: 'This field has an error',
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Warning',
+                hint: 'Warning state',
+                variant: OmsaTextFieldVariant.warning,
+                feedback: 'This field has a warning',
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Information',
+                hint: 'Info state',
+                variant: OmsaTextFieldVariant.information,
+                feedback: 'Additional information about this field',
+              ),
+            ],
+          ),
+        ),
 
-              OmsaTextField(
-                label: 'With Validator',
-                hint: 'Required field',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                },
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Text Fields - Sizes',
+          Column(
+            children: [
+              const OmsaTextField(
+                label: 'Medium Size (48px)',
+                hint: 'Default size',
+                size: OmsaTextFieldSize.medium,
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Large Size (64px)',
+                hint: 'Large variant',
+                size: OmsaTextFieldSize.large,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Text Fields - States',
+          Column(
+            children: [
+              const OmsaTextField(
+                label: 'Disabled Field',
+                hint: 'Cannot edit',
+                disabled: true,
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Read-only Field',
+                hint: 'Cannot edit',
+                readOnly: true,
+                initialValue: 'Read-only value',
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Required Field',
+                hint: 'This field is required',
+                required: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Text Fields - With Icons',
+          Column(
+            children: [
+              const OmsaTextField(
+                label: 'With Prepend Icon',
+                hint: 'Search...',
+                prepend: Icon(Icons.search),
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'With Append Icon',
+                hint: 'Password',
+                append: Icon(Icons.visibility),
+                obscureText: true,
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Clearable Field',
+                hint: 'Type something',
+                clearable: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Text Fields - Contrast Mode (Dark Background)',
+          Column(
+            children: [
+              const OmsaTextField(
+                label: 'Contrast Mode',
+                hint: 'Enter text',
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Contrast with Success',
+                hint: 'Valid input',
+                mode: OmsaComponentMode.contrast,
+                variant: OmsaTextFieldVariant.success,
+                feedback: 'This field is valid',
+              ),
+              const SizedBox(height: 16),
+              const OmsaTextField(
+                label: 'Contrast with Error',
+                hint: 'Invalid input',
+                mode: OmsaComponentMode.contrast,
+                variant: OmsaTextFieldVariant.negative,
+                feedback: 'This field has an error',
               ),
             ],
           ),
@@ -373,7 +510,6 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                 onChanged: (value) {},
               ),
               const SizedBox(height: 16),
-
               OmsaDropdown<String>(
                 label: 'With Selected Value',
                 value: '2',
