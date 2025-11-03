@@ -1,6 +1,8 @@
 export './shared/component_enums.dart';
 export './buttons/omsa_button.dart';
 export './buttons/omsa_floating_button.dart';
+export './buttons/omsa_icon_button.dart';
+export './buttons/omsa_square_button.dart';
 export 'inputs/text_field/omsa_text_field.dart';
 export './inputs/omsa_dropdown.dart';
 export './cards/omsa_card.dart';

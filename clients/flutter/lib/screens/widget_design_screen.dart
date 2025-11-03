@@ -303,6 +303,280 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             ],
           ),
         ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Icon Buttons - Standard Mode',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Medium Size:'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.search),
+                    tooltip: 'Search',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.favorite),
+                    tooltip: 'Favorite',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.share),
+                    tooltip: 'Share',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings),
+                    tooltip: 'Settings',
+                  ),
+                  OmsaIconButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Disabled',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.refresh),
+                    isLoading: true,
+                    tooltip: 'Loading',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text('Small Size:'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit, size: 18),
+                    size: OmsaIconButtonSize.small,
+                    tooltip: 'Edit',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.delete, size: 18),
+                    size: OmsaIconButtonSize.small,
+                    tooltip: 'Delete',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add, size: 18),
+                    size: OmsaIconButtonSize.small,
+                    tooltip: 'Add',
+                  ),
+                  OmsaIconButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.remove, size: 18),
+                    size: OmsaIconButtonSize.small,
+                    tooltip: 'Disabled',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Icon Buttons - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Medium Size:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.search),
+                    mode: OmsaComponentMode.contrast,
+                    tooltip: 'Search',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.favorite),
+                    mode: OmsaComponentMode.contrast,
+                    tooltip: 'Favorite',
+                  ),
+                  OmsaIconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.share),
+                    mode: OmsaComponentMode.contrast,
+                    tooltip: 'Share',
+                  ),
+                  OmsaIconButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.delete),
+                    mode: OmsaComponentMode.contrast,
+                    tooltip: 'Disabled',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Square Buttons - Standard Mode',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Secondary Variant:'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                    label: 'Add Item',
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit),
+                    label: 'Edit',
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.download),
+                  ),
+                  OmsaSquareButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.delete),
+                    label: 'Disabled',
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.save),
+                    label: 'Loading',
+                    isLoading: true,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text('Success Variant:'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.check),
+                    label: 'Confirm',
+                    variant: OmsaSquareButtonVariant.success,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.check_circle),
+                    label: 'Approve',
+                    variant: OmsaSquareButtonVariant.success,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.check),
+                    variant: OmsaSquareButtonVariant.success,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text('Tertiary Variant (Smaller):'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.more_horiz),
+                    label: 'More',
+                    variant: OmsaSquareButtonVariant.tertiary,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.filter_list),
+                    label: 'Filter',
+                    variant: OmsaSquareButtonVariant.tertiary,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.sort),
+                    variant: OmsaSquareButtonVariant.tertiary,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Square Buttons - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Secondary:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                    label: 'Add',
+                    mode: OmsaComponentMode.contrast,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.download),
+                    mode: OmsaComponentMode.contrast,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text('Success:', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.check),
+                    label: 'Confirm',
+                    variant: OmsaSquareButtonVariant.success,
+                    mode: OmsaComponentMode.contrast,
+                  ),
+                  OmsaSquareButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.check),
+                    variant: OmsaSquareButtonVariant.success,
+                    mode: OmsaComponentMode.contrast,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
