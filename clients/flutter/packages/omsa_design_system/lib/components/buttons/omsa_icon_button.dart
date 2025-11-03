@@ -149,12 +149,15 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
         width: 16,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(colors.icon),
+          valueColor: AlwaysStoppedAnimation<Color>(colors.text),
         ),
       );
     }
 
     final button = MouseRegion(
+      cursor: _isDisabled || widget.isLoading
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
       onEnter: _isDisabled ? null : (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
@@ -163,30 +166,20 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
             : (_) => setState(() => _isPressed = true),
         onTapUp: _isDisabled ? null : (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
-        child: Material(
-          color: colors.background,
-          borderRadius: BorderRadius.circular(4.0),
-          child: InkWell(
-            onTap: widget.isLoading || _isDisabled ? null : widget.onPressed,
+        onTap: widget.isLoading || _isDisabled ? null : widget.onPressed,
+        child: Container(
+          width: _size,
+          height: _size,
+          padding: _padding,
+          decoration: BoxDecoration(
+            color: colors.background,
+            border: Border.all(color: Colors.transparent, width: 2.0),
             borderRadius: BorderRadius.circular(4.0),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            child: Container(
-              width: _size,
-              height: _size,
-              padding: _padding,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent, width: 2.0),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: Center(
-                child: IconTheme(
-                  data: IconThemeData(color: colors.icon, size: _iconSize),
-                  child: content,
-                ),
-              ),
+          ),
+          child: Center(
+            child: IconTheme(
+              data: IconThemeData(color: colors.text, size: _iconSize),
+              child: content,
             ),
           ),
         ),

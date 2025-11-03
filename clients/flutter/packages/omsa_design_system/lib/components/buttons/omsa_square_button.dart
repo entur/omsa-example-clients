@@ -86,86 +86,13 @@ class _OmsaSquareButtonState extends State<OmsaSquareButton> {
         border: Theme.of(context).disabledColor,
         icon: Theme.of(context).disabledColor,
         label: Theme.of(context).disabledColor,
-        borderStyle: BorderStyle.solid,
       );
     }
 
     switch (widget.variant) {
       case OmsaSquareButtonVariant.secondary:
-        return SquareButtonColors(
-          background: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryStandardHover
-                : ComponentLightTokens.buttonSquaresecondaryStandardDefault,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryContrastHover
-                : ComponentLightTokens.buttonSquaresecondaryContrastDefault,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardHover
-                : ComponentDarkTokens.buttonSquaresecondaryStandardDefault,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastHover
-                : ComponentDarkTokens.buttonSquaresecondaryContrastDefault,
-          ),
-          border: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardBorderActive
-                : ComponentLightTokens.buttonSquaresecondaryStandardBorder,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastBorderActive
-                : ComponentLightTokens.buttonSquaresecondaryContrastBorder,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardBorderActive
-                : ComponentDarkTokens.buttonSquaresecondaryStandardBorder,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastBorderActive
-                : ComponentDarkTokens.buttonSquaresecondaryContrastBorder,
-          ),
-          icon: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardIconActive
-                : ComponentLightTokens.buttonSquaresecondaryStandardIcon,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastIconActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryContrastIconHover
-                : ComponentLightTokens.buttonSquaresecondaryContrastIconDefault,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardIconActive
-                : ComponentDarkTokens.buttonSquaresecondaryStandardIcon,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastIconActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastIconHover
-                : ComponentDarkTokens.buttonSquaresecondaryContrastIconDefault,
-          ),
-          label: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard:
-                ComponentLightTokens.buttonSquaresecondaryStandardText,
-            lightContrast:
-                ComponentLightTokens.buttonSquaresecondaryContrastLabel,
-            darkStandard: ComponentDarkTokens.buttonSquaresecondaryStandardText,
-            darkContrast:
-                ComponentDarkTokens.buttonSquaresecondaryContrastLabel,
-          ),
-          borderStyle: BorderStyle.solid,
-        );
+      case OmsaSquareButtonVariant.tertiary:
+        return _getSecondaryColors(isLight, isStandard);
 
       case OmsaSquareButtonVariant.success:
         return SquareButtonColors(
@@ -221,85 +148,81 @@ class _OmsaSquareButtonState extends State<OmsaSquareButton> {
             darkStandard: ComponentDarkTokens.buttonSquaresuccessStandardLabel,
             darkContrast: ComponentDarkTokens.buttonSquaresuccessContrastLabel,
           ),
-          borderStyle: BorderStyle.solid,
-        );
-
-      case OmsaSquareButtonVariant.tertiary:
-        return SquareButtonColors(
-          background: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryStandardHover
-                : ComponentLightTokens.buttonSquaresecondaryStandardDefault,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryContrastHover
-                : ComponentLightTokens.buttonSquaresecondaryContrastDefault,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardHover
-                : ComponentDarkTokens.buttonSquaresecondaryStandardDefault,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastHover
-                : ComponentDarkTokens.buttonSquaresecondaryContrastDefault,
-          ),
-          border: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardBorderActive
-                : ComponentLightTokens.buttonSquaresecondaryStandardBorder,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastBorderActive
-                : ComponentLightTokens.buttonSquaresecondaryContrastBorder,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardBorderActive
-                : ComponentDarkTokens.buttonSquaresecondaryStandardBorder,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastBorderActive
-                : ComponentDarkTokens.buttonSquaresecondaryContrastBorder,
-          ),
-          icon: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryStandardIconActive
-                : ComponentLightTokens.buttonSquaresecondaryStandardIcon,
-            lightContrast: _isPressed
-                ? ComponentLightTokens.buttonSquaresecondaryContrastIconActive
-                : _isHovered
-                ? ComponentLightTokens.buttonSquaresecondaryContrastIconHover
-                : ComponentLightTokens.buttonSquaresecondaryContrastIconDefault,
-            darkStandard: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryStandardIconActive
-                : ComponentDarkTokens.buttonSquaresecondaryStandardIcon,
-            darkContrast: _isPressed
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastIconActive
-                : _isHovered
-                ? ComponentDarkTokens.buttonSquaresecondaryContrastIconHover
-                : ComponentDarkTokens.buttonSquaresecondaryContrastIconDefault,
-          ),
-          label: _getColorToken(
-            isLight: isLight,
-            isStandard: isStandard,
-            lightStandard:
-                ComponentLightTokens.buttonSquaresecondaryStandardText,
-            lightContrast:
-                ComponentLightTokens.buttonSquaresecondaryContrastLabel,
-            darkStandard: ComponentDarkTokens.buttonSquaresecondaryStandardText,
-            darkContrast:
-                ComponentDarkTokens.buttonSquaresecondaryContrastLabel,
-          ),
-          borderStyle: BorderStyle.solid,
         );
     }
+  }
+
+  SquareButtonColors _getSecondaryColors(bool isLight, bool isStandard) {
+    return SquareButtonColors(
+      background: _getColorToken(
+        isLight: isLight,
+        isStandard: isStandard,
+        lightStandard: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryStandardActive
+            : _isHovered
+            ? ComponentLightTokens.buttonSquaresecondaryStandardHover
+            : ComponentLightTokens.buttonSquaresecondaryStandardDefault,
+        lightContrast: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryContrastActive
+            : _isHovered
+            ? ComponentLightTokens.buttonSquaresecondaryContrastHover
+            : ComponentLightTokens.buttonSquaresecondaryContrastDefault,
+        darkStandard: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryStandardActive
+            : _isHovered
+            ? ComponentDarkTokens.buttonSquaresecondaryStandardHover
+            : ComponentDarkTokens.buttonSquaresecondaryStandardDefault,
+        darkContrast: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryContrastActive
+            : _isHovered
+            ? ComponentDarkTokens.buttonSquaresecondaryContrastHover
+            : ComponentDarkTokens.buttonSquaresecondaryContrastDefault,
+      ),
+      border: _getColorToken(
+        isLight: isLight,
+        isStandard: isStandard,
+        lightStandard: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryStandardBorderActive
+            : ComponentLightTokens.buttonSquaresecondaryStandardBorder,
+        lightContrast: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryContrastBorderActive
+            : ComponentLightTokens.buttonSquaresecondaryContrastBorder,
+        darkStandard: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryStandardBorderActive
+            : ComponentDarkTokens.buttonSquaresecondaryStandardBorder,
+        darkContrast: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryContrastBorderActive
+            : ComponentDarkTokens.buttonSquaresecondaryContrastBorder,
+      ),
+      icon: _getColorToken(
+        isLight: isLight,
+        isStandard: isStandard,
+        lightStandard: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryStandardIconActive
+            : ComponentLightTokens.buttonSquaresecondaryStandardIcon,
+        lightContrast: _isPressed
+            ? ComponentLightTokens.buttonSquaresecondaryContrastIconActive
+            : _isHovered
+            ? ComponentLightTokens.buttonSquaresecondaryContrastIconHover
+            : ComponentLightTokens.buttonSquaresecondaryContrastIconDefault,
+        darkStandard: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryStandardIconActive
+            : ComponentDarkTokens.buttonSquaresecondaryStandardIcon,
+        darkContrast: _isPressed
+            ? ComponentDarkTokens.buttonSquaresecondaryContrastIconActive
+            : _isHovered
+            ? ComponentDarkTokens.buttonSquaresecondaryContrastIconHover
+            : ComponentDarkTokens.buttonSquaresecondaryContrastIconDefault,
+      ),
+      label: _getColorToken(
+        isLight: isLight,
+        isStandard: isStandard,
+        lightStandard: ComponentLightTokens.buttonSquaresecondaryStandardText,
+        lightContrast: ComponentLightTokens.buttonSquaresecondaryContrastLabel,
+        darkStandard: ComponentDarkTokens.buttonSquaresecondaryStandardText,
+        darkContrast: ComponentDarkTokens.buttonSquaresecondaryContrastLabel,
+      ),
+    );
   }
 
   Color _getColorToken({
@@ -342,9 +265,6 @@ class _OmsaSquareButtonState extends State<OmsaSquareButton> {
         border: Border.all(
           color: colors.border,
           width: _borderWidth,
-          style: _isDisabled && !widget.isLoading
-              ? BorderStyle.solid
-              : colors.borderStyle,
         ),
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -406,12 +326,10 @@ class SquareButtonColors {
     required this.border,
     required this.icon,
     required this.label,
-    required this.borderStyle,
   });
 
   final Color background;
   final Color border;
   final Color icon;
   final Color label;
-  final BorderStyle borderStyle;
 }
