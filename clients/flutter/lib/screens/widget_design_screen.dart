@@ -34,6 +34,11 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   bool _checkboxPanel2 = true;
   bool _checkboxPanel3 = false;
 
+  // State for segmented control examples
+  String? _segmentedStandardValue = 'departures';
+  String? _segmentedLargeValue = 'today';
+  String? _segmentedContrastValue = 'overview';
+
   final List<String> _categories = [
     'Buttons',
     'Inputs',
@@ -786,6 +791,110 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                 mode: OmsaComponentMode.contrast,
                 variant: OmsaTextFieldVariant.negative,
                 feedback: 'This field has an error',
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Segmented Control - Standard Mode',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSegmentedControl(
+                label: 'Travel type',
+                value: _segmentedStandardValue,
+                onChanged: (value) =>
+                    setState(() => _segmentedStandardValue = value),
+                children: [
+                  OmsaSegmentedChoice(
+                    value: 'departures',
+                    child: const Text('Departures'),
+                  ),
+                  OmsaSegmentedChoice(
+                    value: 'arrivals',
+                    child: const Text('Arrivals'),
+                  ),
+                  OmsaSegmentedChoice(
+                    value: 'delays',
+                    child: const Text('Delays'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Selected: ${_segmentedStandardValue ?? 'None'}',
+                style: AppTypography.textMedium,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Segmented Control - Sizes',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSegmentedControl(
+                label: 'Today view',
+                size: OmsaSegmentedControlSize.large,
+                value: _segmentedLargeValue,
+                onChanged: (value) =>
+                    setState(() => _segmentedLargeValue = value),
+                children: [
+                  OmsaSegmentedChoice(
+                    value: 'today',
+                    child: const Text('Today'),
+                  ),
+                  OmsaSegmentedChoice(value: 'week', child: const Text('Week')),
+                  OmsaSegmentedChoice(
+                    value: 'month',
+                    child: const Text('Month'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Segmented Control - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSegmentedControl(
+                label: 'Overview',
+                mode: OmsaComponentMode.contrast,
+                value: _segmentedContrastValue,
+                onChanged: (value) =>
+                    setState(() => _segmentedContrastValue = value),
+                children: [
+                  OmsaSegmentedChoice(
+                    value: 'overview',
+                    child: const Text('Overview'),
+                  ),
+                  OmsaSegmentedChoice(
+                    value: 'details',
+                    child: const Text('Details'),
+                  ),
+                  OmsaSegmentedChoice(
+                    value: 'map',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.map_outlined, size: 16),
+                        SizedBox(width: 4),
+                        Text('Map'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
