@@ -16,8 +16,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? _fromZone;
-  String? _toZone;
+  OmsaDropdownItem<String>? _fromZone;
+  OmsaDropdownItem<String>? _toZone;
   DepartureType _departureType = DepartureType.now;
   DateTime _selectedDateTime = DateTime.now().add(const Duration(minutes: 30));
   int _travelerAge = 30;
@@ -64,8 +64,8 @@ class _SearchScreenState extends State<SearchScreen> {
       }
 
       final offerCollection = await OmsaApiService.searchOffers(
-        fromZoneId: _fromZone!,
-        toZoneId: _toZone!,
+        fromZoneId: _fromZone!.value,
+        toZoneId: _toZone!.value,
         startTime: startTime,
         endTime: endTime,
         travelerAge: _travelerAge,
@@ -164,27 +164,29 @@ class _SearchScreenState extends State<SearchScreen> {
 
               OmsaDropdown<String>(
                 label: 'From Zone',
-                value: _fromZone,
+                selectedItem: _fromZone,
                 items: _zones.map((zone) {
-                  return DropdownMenuItem(
-                    value: zone['id'],
-                    child: Text(zone['name']!),
+                  return OmsaDropdownItem(
+                    value: zone['id']!,
+                    label: zone['name']!,
                   );
                 }).toList(),
-                onChanged: (value) => setState(() => _fromZone = value),
+                onChange: (value) => setState(() => _fromZone = value),
+                placeholder: 'Select a zone',
               ),
               const SizedBox(height: 16),
 
               OmsaDropdown<String>(
                 label: 'To Zone',
-                value: _toZone,
+                selectedItem: _toZone,
                 items: _zones.map((zone) {
-                  return DropdownMenuItem(
-                    value: zone['id'],
-                    child: Text(zone['name']!),
+                  return OmsaDropdownItem(
+                    value: zone['id']!,
+                    label: zone['name']!,
                   );
                 }).toList(),
-                onChanged: (value) => setState(() => _toZone = value),
+                onChange: (value) => setState(() => _toZone = value),
+                placeholder: 'Select a zone',
               ),
               const SizedBox(height: 16),
 
