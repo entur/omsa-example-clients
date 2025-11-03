@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
+import 'package:omsa_design_system/components/shared/component_enums.dart';
 
 enum OmsaButtonVariant { primary, secondary, success, negative }
 
@@ -7,9 +8,6 @@ enum OmsaButtonVariant { primary, secondary, success, negative }
 enum OmsaButtonSize { small, medium, large }
 
 enum OmsaButtonWidth { fluid, auto }
-
-/// Component mode for switching between default and contrast tokens
-enum OmsaComponentMode { standard, contrast }
 
 /// Button component following EDS design system with support for variants,
 /// sizes, loading and disabled states.
