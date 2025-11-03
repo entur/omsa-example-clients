@@ -41,7 +41,10 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
 
   // State for dropdown examples
   OmsaDropdownItem<String>? _selectedDropdownOption1;
-  OmsaDropdownItem<String>? _selectedDropdownOption2 = const OmsaDropdownItem(value: '2', label: 'Option 2');
+  OmsaDropdownItem<String>? _selectedDropdownOption2 = const OmsaDropdownItem(
+    value: '2',
+    label: 'Option 2',
+  );
 
   final List<String> _categories = [
     'Buttons',
@@ -1437,7 +1440,8 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                   OmsaDropdownItem(value: '2', label: 'Option 2'),
                   OmsaDropdownItem(value: '3', label: 'Option 3'),
                 ],
-                onChange: (value) => setState(() => _selectedDropdownOption1 = value),
+                onChange: (value) =>
+                    setState(() => _selectedDropdownOption1 = value),
                 placeholder: 'Choose an option',
               ),
               const SizedBox(height: 16),
@@ -1449,7 +1453,8 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                   OmsaDropdownItem(value: '2', label: 'Option 2'),
                   OmsaDropdownItem(value: '3', label: 'Option 3'),
                 ],
-                onChange: (value) => setState(() => _selectedDropdownOption2 = value),
+                onChange: (value) =>
+                    setState(() => _selectedDropdownOption2 = value),
                 clearable: true,
               ),
             ],

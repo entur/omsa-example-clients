@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_list_colors.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_item.dart';
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_colors.dart';
+import 'package:omsa_design_system/components/shared/component_enums.dart';
 
 class OmsaDropdownList<T> extends StatelessWidget {
   const OmsaDropdownList({
@@ -16,6 +18,7 @@ class OmsaDropdownList<T> extends StatelessWidget {
     this.loadingText = 'Loading...',
     this.noMatchesText = 'No matches',
     this.highlightedIndex = -1,
+    this.mode = OmsaComponentMode.standard,
   });
 
   final List<OmsaDropdownItem<T>> items;
@@ -26,18 +29,19 @@ class OmsaDropdownList<T> extends StatelessWidget {
   final String loadingText;
   final String noMatchesText;
   final int highlightedIndex;
+  final OmsaComponentMode mode;
 
   @override
   Widget build(BuildContext context) {
+    final menuColors = OmsaDropdownListColors.fromContext(context, mode: mode);
+
     return Container(
-      constraints: const BoxConstraints(
-        maxHeight: 320.0,
-      ),
+      constraints: const BoxConstraints(maxHeight: 320.0),
       decoration: BoxDecoration(
-        color: colors.fill,
+        color: menuColors.background,
         borderRadius: AppDimensions.borderRadiusMedium,
         border: Border.all(
-          color: colors.border,
+          color: menuColors.border,
           width: AppDimensions.borderWidthsMedium,
         ),
         boxShadow: [
@@ -48,20 +52,21 @@ class OmsaDropdownList<T> extends StatelessWidget {
           ),
         ],
       ),
-      child: _buildContent(),
+      child: _buildContent(menuColors),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(OmsaDropdownListColors menuColors) {
     if (isLoading) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.spaceDefault),
         child: Text(
           loadingText,
           style: TextStyle(
-            color: colors.text,
+            color: menuColors.text,
             fontSize: AppTypography.fontSizesLarge,
-            height: AppTypography.lineHeightsSmall / AppTypography.fontSizesLarge,
+            height:
+                AppTypography.lineHeightsMedium / AppTypography.fontSizesLarge,
           ),
         ),
       );
@@ -73,16 +78,17 @@ class OmsaDropdownList<T> extends StatelessWidget {
         child: Text(
           noMatchesText,
           style: TextStyle(
-            color: colors.text,
+            color: menuColors.text,
             fontSize: AppTypography.fontSizesLarge,
-            height: AppTypography.lineHeightsSmall / AppTypography.fontSizesLarge,
+            height:
+                AppTypography.lineHeightsMedium / AppTypography.fontSizesLarge,
           ),
         ),
       );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.spaceExtraSmall2),
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -94,7 +100,7 @@ class OmsaDropdownList<T> extends StatelessWidget {
           item: item,
           isSelected: isSelected,
           isHighlighted: isHighlighted,
-          colors: colors,
+          menuColors: menuColors,
           onTap: () => onItemSelected(item),
         );
       },
@@ -107,14 +113,14 @@ class _DropdownListItem<T> extends StatefulWidget {
     required this.item,
     required this.isSelected,
     required this.isHighlighted,
-    required this.colors,
+    required this.menuColors,
     required this.onTap,
   });
 
   final OmsaDropdownItem<T> item;
   final bool isSelected;
   final bool isHighlighted;
-  final OmsaTextFieldColors colors;
+  final OmsaDropdownListColors menuColors;
   final VoidCallback onTap;
 
   @override
@@ -126,9 +132,10 @@ class _DropdownListItemState<T> extends State<_DropdownListItem<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = widget.isSelected || widget.isHighlighted || _isHovered
-        ? widget.colors.borderInteractive.withValues(alpha: 0.1)
-        : Colors.transparent;
+    final backgroundColor =
+        widget.isSelected || widget.isHighlighted || _isHovered
+        ? widget.menuColors.itemHoverBackground
+        : widget.menuColors.itemBackground;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -148,14 +155,13 @@ class _DropdownListItemState<T> extends State<_DropdownListItem<T>> {
                 child: Text(
                   widget.item.label,
                   style: TextStyle(
-                    color: widget.colors.text,
+                    color: widget.menuColors.text,
                     fontSize: AppTypography.fontSizesLarge,
-                    height: AppTypography.lineHeightsSmall /
+                    height:
+                        AppTypography.lineHeightsMedium /
                         AppTypography.fontSizesLarge,
-                    fontWeight: widget.isSelected
-                        ? FontWeight.w600
-                        : AppTypography.fontWeightsBody,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (widget.item.icons != null) ...[

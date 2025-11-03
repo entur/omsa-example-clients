@@ -95,7 +95,10 @@ class _OmsaDropdownState<T> extends State<OmsaDropdown<T>> {
   }
 
   bool get _shouldFloatLabel {
-    return widget.disableLabelAnimation || _isFocused || _hasValue || widget.placeholder != null;
+    return widget.disableLabelAnimation ||
+        _isFocused ||
+        _hasValue ||
+        widget.placeholder != null;
   }
 
   bool get _showPlaceholder {
@@ -201,6 +204,7 @@ class _OmsaDropdownState<T> extends State<OmsaDropdown<T>> {
                     isLoading: widget.loading,
                     loadingText: widget.loadingText,
                     noMatchesText: widget.noMatchesText,
+                    mode: widget.mode,
                   ),
                 ),
               ),
@@ -235,12 +239,14 @@ class _OmsaDropdownState<T> extends State<OmsaDropdown<T>> {
       isHovered: _isHovered,
     );
 
-    final minHeight = OmsaTextFieldDecorationBuilder.getMinHeight(textFieldSize);
+    final minHeight = OmsaTextFieldDecorationBuilder.getMinHeight(
+      textFieldSize,
+    );
     final containerDecoration =
         OmsaTextFieldDecorationBuilder.buildContainerDecoration(
-      colors: colors,
-      isFocused: _isFocused,
-    );
+          colors: colors,
+          isFocused: _isFocused,
+        );
     final textStyle = OmsaTextFieldDecorationBuilder.getTextStyle(
       colors: colors,
       size: textFieldSize,
@@ -340,16 +346,10 @@ class _OmsaDropdownState<T> extends State<OmsaDropdown<T>> {
                       bottom: AppSpacing.spaceExtraSmall2,
                     ),
                     child: _hasValue
-                        ? Text(
-                            widget.selectedItem!.label,
-                            style: textStyle,
-                          )
+                        ? Text(widget.selectedItem!.label, style: textStyle)
                         : _showPlaceholder
-                            ? Text(
-                                widget.placeholder!,
-                                style: textStyle,
-                              )
-                            : const SizedBox.shrink(),
+                        ? Text(widget.placeholder!, style: textStyle)
+                        : const SizedBox.shrink(),
                   ),
                 ),
                 _DropdownAppendix(
@@ -398,7 +398,8 @@ class _FloatingLabel extends StatelessWidget {
       shouldFloat: shouldFloat,
     );
 
-    final leftOffset = AppSpacing.spaceDefault +
+    final leftOffset =
+        AppSpacing.spaceDefault +
         (hasPrepend
             ? OmsaTextFieldDimensions.prependWidgetSize + AppSpacing.spaceSmall
             : 0);
