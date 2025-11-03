@@ -21,7 +21,6 @@ class OmsaTextFieldColors {
   final Color label;
   final Color icon;
 
-  /// Factory constructor to build colors based on context and state
   factory OmsaTextFieldColors.fromContext(
     BuildContext context, {
     required OmsaComponentMode mode,
@@ -29,12 +28,12 @@ class OmsaTextFieldColors {
     required bool disabled,
     required bool readOnly,
     required bool isFocused,
+    required bool isHovered,
   }) {
     final brightness = Theme.of(context).brightness;
     final isLight = brightness == Brightness.light;
     final isStandard = mode == OmsaComponentMode.standard;
 
-    // Get base colors from tokens
     final Color borderDefault;
     final Color borderInteractive;
     final Color borderSuccess;
@@ -107,7 +106,6 @@ class OmsaTextFieldColors {
       }
     }
 
-    // Determine border color based on state
     Color borderColor;
     if (disabled || readOnly) {
       borderColor = Colors.transparent;
@@ -115,7 +113,7 @@ class OmsaTextFieldColors {
       borderColor = borderSuccess;
     } else if (variant == OmsaTextFieldVariant.negative) {
       borderColor = borderNegative;
-    } else if (isFocused) {
+    } else if (isFocused || isHovered) {
       borderColor = borderInteractive;
     } else {
       borderColor = borderDefault;

@@ -9,7 +9,6 @@ import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_
 class OmsaTextFieldDecorationBuilder {
   OmsaTextFieldDecorationBuilder._();
 
-  /// Get label top position based on size and float state
   static double getLabelTop({
     required OmsaTextFieldSize size,
     required bool shouldFloat,
@@ -62,6 +61,7 @@ class OmsaTextFieldDecorationBuilder {
 
   static BoxDecoration buildContainerDecoration({
     required OmsaTextFieldColors colors,
+    required bool isFocused,
   }) {
     return BoxDecoration(
       color: colors.fill,
@@ -70,6 +70,16 @@ class OmsaTextFieldDecorationBuilder {
         color: colors.border,
         width: AppDimensions.borderWidthsMedium,
       ),
+      boxShadow: isFocused
+          ? [
+              BoxShadow(
+                color: colors.border,
+                spreadRadius: 1.0,
+                blurRadius: 0,
+                offset: Offset.zero,
+              ),
+            ]
+          : null,
     );
   }
 

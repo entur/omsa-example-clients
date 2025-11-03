@@ -86,6 +86,7 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
   late FocusNode _focusNode;
   bool _isFocused = false;
   bool _hasValue = false;
+  bool _isHovered = false;
 
   @override
   void initState() {
@@ -101,7 +102,6 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
   @override
   void didUpdateWidget(OmsaTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Handle controller changes
     if (widget.controller != oldWidget.controller) {
       // Clean up old controller if we created it
       if (oldWidget.controller == null) {
@@ -115,7 +115,6 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
       _controller.addListener(_onTextChange);
       _hasValue = _controller.text.isNotEmpty;
     }
-    // Handle focus node changes
     if (widget.focusNode != oldWidget.focusNode) {
       // Clean up old focus node if we created it
       if (oldWidget.focusNode == null) {
@@ -177,6 +176,7 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
       disabled: widget.disabled,
       readOnly: widget.readOnly,
       isFocused: _isFocused,
+      isHovered: _isHovered,
     );
 
     final minHeight = OmsaTextFieldDecorationBuilder.getMinHeight(widget.size);
@@ -191,94 +191,117 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
       size: widget.size,
     );
     final containerDecoration =
-        OmsaTextFieldDecorationBuilder.buildContainerDecoration(colors: colors);
+        OmsaTextFieldDecorationBuilder.buildContainerDecoration(
+          colors: colors,
+          isFocused: _isFocused,
+        );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
-          onTap: widget.disabled || widget.readOnly
+        MouseRegion(
+          onEnter: widget.disabled || widget.readOnly
               ? null
-              : () => _focusNode.requestFocus(),
-          child: Container(
-            constraints: BoxConstraints(minHeight: minHeight),
-            decoration: containerDecoration,
-            child: Stack(
+              : (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          child: GestureDetector(
+            onTap: widget.disabled || widget.readOnly
+                ? null
+                : () => _focusNode.requestFocus(),
+            child: Container(
+              constraints: BoxConstraints(minHeight: minHeight),
+              decoration: containerDecoration,
+              child: _buildTextFieldContent(
+                minHeight: minHeight,
+                colors: colors,
+                textStyle: textStyle,
+                decoration: decoration,
+              ),
+            ),
+          ),
+        ),
+        if (widget.feedback != null) ...[
+          const SizedBox(height: AppSpacing.spaceExtraSmall2),
+          OmsaTextFieldFeedback(
+            text: widget.feedback!,
+            variant: widget.variant,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildTextFieldContent({
+    required double minHeight,
+    required OmsaTextFieldColors colors,
+    required TextStyle textStyle,
+    required InputDecoration decoration,
+  }) {
+    return Stack(
+      children: [
+        _FloatingLabel(
+          label: widget.label,
+          required: widget.required,
+          shouldFloat: _shouldFloatLabel,
+          size: widget.size,
+          colors: colors,
+          hasPrepend: widget.prepend != null,
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(minHeight: minHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.spaceDefault,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _FloatingLabel(
-                  label: widget.label,
-                  required: widget.required,
-                  shouldFloat: _shouldFloatLabel,
-                  size: widget.size,
-                  colors: colors,
-                  hasPrepend: widget.prepend != null,
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: minHeight),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.spaceDefault,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Prepend widget
-                        if (widget.prepend != null)
-                          _PrependAppendWrapper(
-                            colors: colors,
-                            size: widget.size,
-                            isAppend: false,
-                            child: widget.prepend!,
-                          ),
-                        // Text field
-                        Expanded(
-                          child: TextField(
-                            controller: _controller,
-                            focusNode: _focusNode,
-                            enabled: !widget.disabled,
-                            readOnly: widget.readOnly,
-                            autofocus: widget.autofocus,
-                            obscureText: widget.obscureText,
-                            maxLines: widget.maxLines,
-                            maxLength: widget.maxLength,
-                            keyboardType: widget.keyboardType,
-                            textInputAction: widget.textInputAction,
-                            inputFormatters: widget.inputFormatters,
-                            onSubmitted: widget.onSubmitted,
-                            style: textStyle,
-                            decoration: decoration,
-                          ),
-                        ),
-                        // Clear button or append widget
-                        if (widget.clearable &&
-                            _hasValue &&
-                            !widget.disabled &&
-                            !widget.readOnly)
-                          OmsaTextFieldClearButton(
-                            onClear: _onClear,
-                            iconColor: colors.icon,
-                          )
-                        else if (widget.append != null)
-                          _PrependAppendWrapper(
-                            colors: colors,
-                            size: widget.size,
-                            isAppend: true,
-                            child: widget.append!,
-                          ),
-                      ],
-                    ),
+                if (widget.prepend != null)
+                  _PrependAppendWrapper(
+                    colors: colors,
+                    size: widget.size,
+                    isAppend: false,
+                    child: widget.prepend!,
+                  ),
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    enabled: !widget.disabled,
+                    readOnly: widget.readOnly,
+                    autofocus: widget.autofocus,
+                    obscureText: widget.obscureText,
+                    maxLines: widget.maxLines,
+                    maxLength: widget.maxLength,
+                    keyboardType: widget.keyboardType,
+                    textInputAction: widget.textInputAction,
+                    inputFormatters: widget.inputFormatters,
+                    onSubmitted: widget.onSubmitted,
+                    style: textStyle,
+                    decoration: decoration,
                   ),
                 ),
+                // Clear button or append widget
+                if (widget.clearable &&
+                    _hasValue &&
+                    !widget.disabled &&
+                    !widget.readOnly)
+                  OmsaTextFieldClearButton(
+                    onClear: _onClear,
+                    iconColor: colors.icon,
+                  )
+                else if (widget.append != null)
+                  _PrependAppendWrapper(
+                    colors: colors,
+                    size: widget.size,
+                    isAppend: true,
+                    child: widget.append!,
+                  ),
               ],
             ),
           ),
         ),
-        // Feedback text
-        if (widget.feedback != null) ...[
-          const SizedBox(height: AppSpacing.spaceExtraSmall2),
-          OmsaTextFieldFeedback(text: widget.feedback!, variant: widget.variant),
-        ],
       ],
     );
   }
