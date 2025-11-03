@@ -18,6 +18,7 @@ class OmsaRadioPanel<T> extends StatelessWidget {
     this.mode = OmsaComponentMode.standard,
     this.hideRadioButton = false,
     this.disabled = false,
+    this.expandOnSelected = false,
   });
 
   final T value;
@@ -30,12 +31,16 @@ class OmsaRadioPanel<T> extends StatelessWidget {
   final OmsaComponentMode mode;
   final bool hideRadioButton;
   final bool disabled;
+  final bool expandOnSelected;
 
   bool get _isChecked => value == groupValue;
 
   void _handleChanged(bool checked) {
-    if (onChanged != null && checked) {
-      onChanged!(value);
+    if (onChanged != null) {
+      // Always call onChanged and let the parent decide what to do
+      // If checked is true, select this value
+      // If checked is false, we're clicking an already-selected panel (deselect by passing current value)
+      onChanged!(checked ? value : groupValue);
     }
   }
 
@@ -51,6 +56,7 @@ class OmsaRadioPanel<T> extends StatelessWidget {
       mode: mode,
       hideSelectionIndicator: hideRadioButton,
       disabled: disabled,
+      expandOnSelected: expandOnSelected,
       selectionIndicator: IgnorePointer(
         child: OmsaRadio<T>(
           value: value,

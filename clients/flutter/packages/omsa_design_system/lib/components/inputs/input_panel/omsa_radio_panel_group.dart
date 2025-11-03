@@ -12,12 +12,14 @@ class OmsaRadioPanelOption<T> {
     required this.title,
     this.secondaryLabel,
     this.children,
+    this.expandOnSelected = false,
   });
 
   final T value;
   final Widget title;
   final Widget? secondaryLabel;
   final Widget? children;
+  final bool expandOnSelected;
 }
 
 /// A radio panel group component for managing multiple radio panels
@@ -32,6 +34,7 @@ class OmsaRadioPanelGroup<T> extends StatelessWidget {
     this.mode = OmsaComponentMode.standard,
     this.spacing,
     this.disabled = false,
+    this.expandOnSelected = false,
   });
 
   final T? value;
@@ -42,6 +45,12 @@ class OmsaRadioPanelGroup<T> extends StatelessWidget {
   final OmsaComponentMode mode;
   final double? spacing;
   final bool disabled;
+
+  /// Whether to animate expand/collapse of children based on checked state.
+  /// When true, children are only shown when the panel is checked.
+  /// When false (default), children are always shown if provided.
+  /// This applies to all options unless overridden per option.
+  final bool expandOnSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +83,7 @@ class OmsaRadioPanelGroup<T> extends StatelessWidget {
                 size: size,
                 mode: mode,
                 disabled: disabled,
+                expandOnSelected: option.expandOnSelected || expandOnSelected,
                 children: option.children,
               ),
               if (!isLast) SizedBox(height: effectiveSpacing),

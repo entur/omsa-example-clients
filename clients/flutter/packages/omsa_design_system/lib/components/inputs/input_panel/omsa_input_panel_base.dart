@@ -26,6 +26,7 @@ class OmsaInputPanelBase extends StatefulWidget {
     this.hideSelectionIndicator = false,
     this.disabled = false,
     this.selectionIndicator,
+    this.expandOnSelected = false,
   });
 
   final Widget title;
@@ -39,6 +40,11 @@ class OmsaInputPanelBase extends StatefulWidget {
   final bool hideSelectionIndicator;
   final bool disabled;
   final Widget? selectionIndicator;
+
+  /// Whether to animate expand/collapse of children based on checked state.
+  /// When true, children are only shown when the panel is checked.
+  /// When false (default), children are always shown if provided.
+  final bool expandOnSelected;
 
   @override
   State<OmsaInputPanelBase> createState() => _OmsaInputPanelBaseState();
@@ -151,15 +157,44 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
                   ],
                 ],
               ),
-              if (widget.children != null) ...[
-                const SizedBox(height: AppSpacing.spaceExtraSmall2),
-                DefaultTextStyle(
-                  style: AppTypography.textMedium.copyWith(
-                    color: effectiveTextColor,
-                  ),
-                  child: widget.children!,
-                ),
-              ],
+              if (widget.children != null)
+                widget.expandOnSelected
+                    ? ClipRect(
+                        child: AnimatedAlign(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          heightFactor: widget.checked ? 1.0 : 0.0,
+                          alignment: Alignment.topLeft,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: AppSpacing.spaceExtraSmall2,
+                              ),
+                              DefaultTextStyle(
+                                style: AppTypography.textMedium.copyWith(
+                                  color: effectiveTextColor,
+                                ),
+                                child: widget.children!,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppSpacing.spaceExtraSmall2),
+                          DefaultTextStyle(
+                            style: AppTypography.textMedium.copyWith(
+                              color: effectiveTextColor,
+                            ),
+                            child: widget.children!,
+                          ),
+                        ],
+                      ),
             ],
           ),
         ),

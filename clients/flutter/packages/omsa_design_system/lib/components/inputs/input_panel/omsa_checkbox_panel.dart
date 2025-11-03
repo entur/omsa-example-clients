@@ -18,6 +18,7 @@ class OmsaCheckboxPanel extends StatelessWidget {
     this.mode = OmsaComponentMode.standard,
     this.hideCheckbox = false,
     this.disabled = false,
+    this.expandOnSelected = false,
   });
 
   final String value;
@@ -30,6 +31,7 @@ class OmsaCheckboxPanel extends StatelessWidget {
   final OmsaComponentMode mode;
   final bool hideCheckbox;
   final bool disabled;
+  final bool expandOnSelected;
 
   void _handleChanged(bool newChecked) {
     onChanged?.call(newChecked);
@@ -47,6 +49,7 @@ class OmsaCheckboxPanel extends StatelessWidget {
       mode: mode,
       hideSelectionIndicator: hideCheckbox,
       disabled: disabled,
+      expandOnSelected: expandOnSelected,
       selectionIndicator: IgnorePointer(
         child: OmsaCheckbox(
           checked: checked,
