@@ -59,7 +59,7 @@ class OmsaTextField extends StatefulWidget {
   final bool required;
   final bool clearable;
   final bool disableLabelAnimation;
-  final String? labelTooltip;
+  final String? labelTooltip; /// TODO: Add support for labelTooltip for desktop or web version
   final int? maxLines;
   final int? maxLength;
   final TextInputType? keyboardType;
@@ -99,6 +99,7 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) {
+        _controller.removeListener(_onTextChange);
         _controller.dispose();
       }
       _controller =
@@ -108,6 +109,7 @@ class _OmsaTextFieldState extends State<OmsaTextField> {
     }
     if (widget.focusNode != oldWidget.focusNode) {
       if (oldWidget.focusNode == null) {
+        _focusNode.removeListener(_onFocusChange);
         _focusNode.dispose();
       }
       _focusNode = widget.focusNode ?? FocusNode();
