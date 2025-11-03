@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/components/inputs/omsa_checkbox_colors.dart';
+import 'package:omsa_design_system/components/inputs/omsa_checkbox_dimensions.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
@@ -84,7 +85,9 @@ class _OmsaCheckboxState extends State<OmsaCheckbox> {
           margin: const EdgeInsets.symmetric(
             vertical: AppSpacing.spaceExtraSmall,
           ),
-          constraints: const BoxConstraints(minHeight: 32),
+          constraints: const BoxConstraints(
+            minHeight: OmsaCheckboxDimensions.containerMinHeight,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,10 +164,12 @@ class _CheckboxIndicator extends StatelessWidget {
     final effectiveIconColor = disabled ? colors.iconDisabled : colors.icon;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(
+        milliseconds: OmsaCheckboxDimensions.animationDurationMs,
+      ),
       curve: Curves.easeInOut,
-      width: 20,
-      height: 20,
+      width: OmsaCheckboxDimensions.indicatorWidth,
+      height: OmsaCheckboxDimensions.indicatorHeight,
       decoration: BoxDecoration(
         color: effectiveBackgroundColor,
         border: Border.all(
@@ -176,10 +181,18 @@ class _CheckboxIndicator extends StatelessWidget {
         ),
       ),
       child: _isChecked
-          ? Icon(Icons.check, size: 14, color: effectiveIconColor)
+          ? Icon(
+              Icons.check,
+              size: OmsaCheckboxDimensions.checkIconSize,
+              color: effectiveIconColor,
+            )
           : _isIndeterminate
           ? Center(
-              child: Container(width: 10, height: 2, color: effectiveIconColor),
+              child: Container(
+                width: OmsaCheckboxDimensions.indeterminateBarWidth,
+                height: OmsaCheckboxDimensions.indeterminateBarHeight,
+                color: effectiveIconColor,
+              ),
             )
           : null,
     );

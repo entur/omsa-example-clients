@@ -4,6 +4,7 @@ import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_colors.dart';
+import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_dimensions.dart';
 
 /// Size variants for input panels
 enum OmsaInputPanelSize { medium, large }
@@ -59,14 +60,9 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
     }
   }
 
-  double get _minHeight {
-    switch (widget.size) {
-      case OmsaInputPanelSize.medium:
-        return 60.0; // 3.75rem
-      case OmsaInputPanelSize.large:
-        return 96.0; // 6rem
-    }
-  }
+  double get _minHeight => OmsaInputPanelDimensions.getMinHeight(widget.size);
+
+  double get _minWidth => OmsaInputPanelDimensions.minWidth;
 
   TextStyle get _titleStyle {
     final baseStyle = widget.size == OmsaInputPanelSize.large
@@ -113,11 +109,13 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
       child: GestureDetector(
         onTap: _handleTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(
+            milliseconds: OmsaInputPanelDimensions.containerAnimationDurationMs,
+          ),
           curve: Curves.easeInOut,
           constraints: BoxConstraints(
             minHeight: _minHeight,
-            minWidth: 320.0, // 20rem
+            minWidth: _minWidth,
           ),
           decoration: BoxDecoration(
             color: effectiveBackgroundColor,
@@ -142,7 +140,7 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
                     ),
                   ),
                   if (widget.secondaryLabel != null) ...[
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.spaceSmall),
                     DefaultTextStyle(
                       style: AppTypography.textMedium.copyWith(
                         color: effectiveTextColor,
@@ -151,7 +149,7 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
                     ),
                   ],
                   if (!widget.hideSelectionIndicator && !widget.disabled) ...[
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.spaceSmall),
                     if (widget.selectionIndicator != null)
                       widget.selectionIndicator!,
                   ],
@@ -161,7 +159,10 @@ class _OmsaInputPanelBaseState extends State<OmsaInputPanelBase> {
                 widget.expandOnSelected
                     ? ClipRect(
                         child: AnimatedAlign(
-                          duration: const Duration(milliseconds: 250),
+                          duration: const Duration(
+                            milliseconds: OmsaInputPanelDimensions
+                                .expandAnimationDurationMs,
+                          ),
                           curve: Curves.easeInOut,
                           heightFactor: widget.checked ? 1.0 : 0.0,
                           alignment: Alignment.topLeft,

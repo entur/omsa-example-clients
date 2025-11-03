@@ -6,6 +6,7 @@ import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_decoration.dart';
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_clear_button.dart';
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_feedback.dart';
+import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_dimensions.dart';
 
 enum OmsaTextFieldVariant { none, success, negative, information, warning }
 
@@ -339,23 +340,35 @@ class _FloatingLabel extends StatelessWidget {
 
     // Calculate left offset (includes prepend widget spacing if present)
     final leftOffset =
-        AppSpacing.spaceDefault + (hasPrepend ? 24 + AppSpacing.spaceSmall : 0);
+        AppSpacing.spaceDefault +
+        (hasPrepend
+            ? OmsaTextFieldDimensions.prependWidgetSize + AppSpacing.spaceSmall
+            : 0);
 
     return AnimatedPositioned(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(
+        milliseconds: OmsaTextFieldDimensions.animationDurationMs,
+      ),
       curve: Curves.easeInOut,
       left: leftOffset,
       top: labelTop,
       child: IgnorePointer(
         child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(
+            milliseconds: OmsaTextFieldDimensions.animationDurationMs,
+          ),
           curve: Curves.easeInOut,
           style: labelStyle,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(label),
-              if (required) ...[const SizedBox(width: 4), const Text('*')],
+              if (required) ...[
+                const SizedBox(
+                  width: OmsaTextFieldDimensions.labelRequiredSpacing,
+                ),
+                const Text('*'),
+              ],
             ],
           ),
         ),
@@ -391,7 +404,10 @@ class _PrependAppendWrapper extends StatelessWidget {
         right: isAppend ? 0 : AppSpacing.spaceSmall,
       ),
       child: IconTheme(
-        data: IconThemeData(color: colors.icon, size: 24),
+        data: IconThemeData(
+          color: colors.icon,
+          size: OmsaTextFieldDimensions.iconSize,
+        ),
         child: DefaultTextStyle(
           style: textStyle.copyWith(color: colors.icon),
           child: child,

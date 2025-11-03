@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 
+class OmsaCheckboxGroupDimensions {
+  OmsaCheckboxGroupDimensions._();
+
+  /// Spacing when label is present
+  static const double labelSpacing = AppSpacing.spaceExtraSmall;
+}
+
 /// A checkbox group component for managing multiple checkboxes
 class OmsaCheckboxGroup extends StatelessWidget {
   const OmsaCheckboxGroup({
@@ -17,7 +24,8 @@ class OmsaCheckboxGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveSpacing = spacing ?? AppSpacing.spaceExtraSmall;
+    final effectiveSpacing =
+        spacing ?? OmsaCheckboxGroupDimensions.labelSpacing;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

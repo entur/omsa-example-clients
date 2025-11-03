@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/components/inputs/omsa_radio_colors.dart';
+import 'package:omsa_design_system/components/inputs/omsa_radio_dimensions.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
@@ -73,7 +74,9 @@ class _OmsaRadioState<T> extends State<OmsaRadio<T>> {
         onTap: _handleTap,
         child: Container(
           height: AppSpacing.spaceExtraLarge,
-          constraints: const BoxConstraints(minHeight: 32),
+          constraints: const BoxConstraints(
+            minHeight: OmsaRadioDimensions.containerMinHeight,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -143,8 +146,8 @@ class _RadioIndicator extends StatelessWidget {
     final effectiveIconColor = disabled ? colors.iconDisabled : colors.icon;
 
     return Container(
-      width: 20,
-      height: 20,
+      width: OmsaRadioDimensions.indicatorWidth,
+      height: OmsaRadioDimensions.indicatorHeight,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: effectiveBackgroundColor,
@@ -156,10 +159,12 @@ class _RadioIndicator extends StatelessWidget {
       child: checked
           ? Center(
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 150),
+                duration: const Duration(
+                  milliseconds: OmsaRadioDimensions.animationDurationMs,
+                ),
                 curve: Curves.easeInOut,
-                width: 10,
-                height: 10,
+                width: OmsaRadioDimensions.innerCircleWidth,
+                height: OmsaRadioDimensions.innerCircleHeight,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: effectiveIconColor,
