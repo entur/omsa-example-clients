@@ -146,18 +146,20 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
   Widget build(BuildContext context) {
     final colors = _getColors(context);
 
-    final Widget content = widget.isLoading ? SizedBox(
-        height: 16,
-        width: 16,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(colors.text),
-        ),
-      ) : _NormalizedIcon(
-        size: _iconSize,
-        color: colors.icon,
-        child: widget.icon
-    );
+    final Widget content = widget.isLoading
+        ? SizedBox(
+            height: 16,
+            width: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(colors.text),
+            ),
+          )
+        : _NormalizedIcon(
+            size: _iconSize,
+            color: colors.icon,
+            child: widget.icon,
+          );
 
     final button = MouseRegion(
       cursor: _isDisabled || widget.isLoading
@@ -181,9 +183,7 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
             border: Border.all(color: Colors.transparent, width: 2.0),
             borderRadius: BorderRadius.circular(4.0),
           ),
-          child: Center(
-              child: content,
-          ),
+          child: Center(child: content),
         ),
       ),
     );

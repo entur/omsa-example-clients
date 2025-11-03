@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
@@ -257,15 +258,11 @@ class _OmsaSquareButtonState extends State<OmsaSquareButton> {
       );
     }
 
-    final iconButton = Container(
+    final iconButtonContent = Container(
       width: _buttonSize,
       height: _buttonSize,
       decoration: BoxDecoration(
         color: colors.background,
-        border: Border.all(
-          color: colors.border,
-          width: _borderWidth,
-        ),
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Center(
@@ -275,6 +272,33 @@ class _OmsaSquareButtonState extends State<OmsaSquareButton> {
         ),
       ),
     );
+
+    final Widget iconButton = (_isDisabled && !widget.isLoading)
+        ? DottedBorder(
+            options: RoundedRectDottedBorderOptions(
+              radius: const Radius.circular(4.0),
+              strokeWidth: _borderWidth,
+              color: colors.border,
+              dashPattern: const [4, 4],
+              padding: EdgeInsets.zero,
+            ),
+            child: iconButtonContent,
+          )
+        : Container(
+            width: _buttonSize,
+            height: _buttonSize,
+            decoration: BoxDecoration(
+              color: colors.background,
+              border: Border.all(color: colors.border, width: _borderWidth),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Center(
+              child: IconTheme(
+                data: IconThemeData(color: colors.icon, size: 24.0),
+                child: iconContent,
+              ),
+            ),
+          );
 
     Widget button;
 
