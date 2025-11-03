@@ -341,7 +341,9 @@ class _FloatingLabel extends StatelessWidget {
     final leftOffset =
         AppSpacing.spaceDefault + (hasPrepend ? 24 + AppSpacing.spaceSmall : 0);
 
-    return Positioned(
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
       left: leftOffset,
       top: labelTop,
       child: IgnorePointer(
