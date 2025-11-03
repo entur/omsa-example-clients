@@ -11,6 +11,29 @@ class WidgetDesignScreen extends StatefulWidget {
 class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   String _selectedCategory = 'Buttons';
 
+  // State for radio examples
+  String? _radioValue1 = 'option1';
+  String? _radioValue2 = 'option2';
+
+  // State for checkbox examples
+  bool _checkbox1 = false;
+  bool _checkbox2 = true;
+  bool _checkbox3 = false;
+  bool _checkbox4 = false;
+  bool _checkbox5 = true;
+  bool? _tristateCheckbox;
+
+  // State for radio panel examples
+  String? _radioPanelValue1 = 'basic';
+  String? _radioPanelValue2 = 'standard';
+  String? _radioPanelValue3;
+  String? _radioPanelValue4;
+
+  // State for checkbox panel examples
+  bool _checkboxPanel1 = false;
+  bool _checkboxPanel2 = true;
+  bool _checkboxPanel3 = false;
+
   final List<String> _categories = [
     'Buttons',
     'Inputs',
@@ -763,6 +786,525 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                 mode: OmsaComponentMode.contrast,
                 variant: OmsaTextFieldVariant.negative,
                 feedback: 'This field has an error',
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Buttons - Basic',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaRadio<String>(
+                value: 'option1',
+                groupValue: _radioValue1,
+                onChanged: (value) => setState(() => _radioValue1 = value),
+                label: const Text('Option 1'),
+              ),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'option2',
+                groupValue: _radioValue1,
+                onChanged: (value) => setState(() => _radioValue1 = value),
+                label: const Text('Option 2'),
+              ),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'option3',
+                groupValue: _radioValue1,
+                onChanged: (value) => setState(() => _radioValue1 = value),
+                label: const Text('Option 3'),
+              ),
+              const SizedBox(height: 16),
+              const Text('With Radio Group:'),
+              const SizedBox(height: 8),
+              OmsaRadioGroup<String>(
+                value: _radioValue1,
+                onChanged: (value) => setState(() => _radioValue1 = value),
+                label: const Text('Select an option:'),
+                children: [
+                  OmsaRadio<String>(
+                    value: 'option1',
+                    groupValue: _radioValue1,
+                    onChanged: (value) => setState(() => _radioValue1 = value),
+                    label: const Text('First option'),
+                  ),
+                  OmsaRadio<String>(
+                    value: 'option2',
+                    groupValue: _radioValue1,
+                    onChanged: (value) => setState(() => _radioValue1 = value),
+                    label: const Text('Second option'),
+                  ),
+                  OmsaRadio<String>(
+                    value: 'option3',
+                    groupValue: _radioValue1,
+                    onChanged: (value) => setState(() => _radioValue1 = value),
+                    label: const Text('Third option'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Buttons - States',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Disabled:'),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'disabled',
+                groupValue: null,
+                onChanged: null,
+                label: const Text('Disabled radio'),
+                disabled: true,
+              ),
+              const SizedBox(height: 16),
+              const Text('Read-only:'),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'readonly',
+                groupValue: 'readonly',
+                onChanged: (value) {},
+                label: const Text('Read-only radio'),
+                readOnly: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Radio Buttons - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaRadio<String>(
+                value: 'option1',
+                groupValue: _radioValue2,
+                onChanged: (value) => setState(() => _radioValue2 = value),
+                label: const Text(
+                  'Option 1',
+                  style: TextStyle(color: Colors.white),
+                ),
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'option2',
+                groupValue: _radioValue2,
+                onChanged: (value) => setState(() => _radioValue2 = value),
+                label: const Text(
+                  'Option 2',
+                  style: TextStyle(color: Colors.white),
+                ),
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 8),
+              OmsaRadio<String>(
+                value: 'option3',
+                groupValue: _radioValue2,
+                onChanged: (value) => setState(() => _radioValue2 = value),
+                label: const Text(
+                  'Option 3',
+                  style: TextStyle(color: Colors.white),
+                ),
+                mode: OmsaComponentMode.contrast,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Checkboxes - Basic',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaCheckbox(
+                checked: _checkbox1,
+                onChanged: (value) =>
+                    setState(() => _checkbox1 = value ?? false),
+                label: const Text('Unchecked checkbox'),
+              ),
+              const SizedBox(height: 8),
+              OmsaCheckbox(
+                checked: _checkbox2,
+                onChanged: (value) =>
+                    setState(() => _checkbox2 = value ?? false),
+                label: const Text('Checked checkbox'),
+              ),
+              const SizedBox(height: 16),
+              const Text('With Checkbox Group:'),
+              const SizedBox(height: 8),
+              OmsaCheckboxGroup(
+                label: const Text('Select multiple options:'),
+                children: [
+                  OmsaCheckbox(
+                    checked: _checkbox3,
+                    onChanged: (value) =>
+                        setState(() => _checkbox3 = value ?? false),
+                    label: const Text('First option'),
+                  ),
+                  OmsaCheckbox(
+                    checked: _checkbox4,
+                    onChanged: (value) =>
+                        setState(() => _checkbox4 = value ?? false),
+                    label: const Text('Second option'),
+                  ),
+                  OmsaCheckbox(
+                    checked: _checkbox5,
+                    onChanged: (value) =>
+                        setState(() => _checkbox5 = value ?? false),
+                    label: const Text('Third option'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Checkboxes - States',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Disabled:'),
+              const SizedBox(height: 8),
+              const OmsaCheckbox(
+                checked: false,
+                onChanged: null,
+                label: Text('Disabled unchecked'),
+                disabled: true,
+              ),
+              const SizedBox(height: 8),
+              const OmsaCheckbox(
+                checked: true,
+                onChanged: null,
+                label: Text('Disabled checked'),
+                disabled: true,
+              ),
+              const SizedBox(height: 16),
+              const Text('Read-only:'),
+              const SizedBox(height: 8),
+              OmsaCheckbox(
+                checked: true,
+                onChanged: (value) {},
+                label: const Text('Read-only checked'),
+                readOnly: true,
+              ),
+              const SizedBox(height: 16),
+              const Text('Tristate (Indeterminate):'),
+              const SizedBox(height: 8),
+              OmsaCheckbox(
+                checked: _tristateCheckbox,
+                onChanged: (value) => setState(() => _tristateCheckbox = value),
+                label: const Text('Click to cycle: null → false → true → null'),
+                tristate: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Checkboxes - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaCheckbox(
+                checked: false,
+                onChanged: (value) {},
+                label: const Text(
+                  'Unchecked',
+                  style: TextStyle(color: Colors.white),
+                ),
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 8),
+              OmsaCheckbox(
+                checked: true,
+                onChanged: (value) {},
+                label: const Text(
+                  'Checked',
+                  style: TextStyle(color: Colors.white),
+                ),
+                mode: OmsaComponentMode.contrast,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Panels - Basic',
+          Column(
+            children: [
+              OmsaRadioPanel<String>(
+                value: 'basic',
+                groupValue: _radioPanelValue1,
+                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                title: const Text('Basic Plan'),
+                secondaryLabel: const Text('Free • Up to 10 users'),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'standard',
+                groupValue: _radioPanelValue1,
+                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                title: const Text('Standard Plan'),
+                secondaryLabel: const Text('\$29/mo • Up to 50 users'),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'premium',
+                groupValue: _radioPanelValue1,
+                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                title: const Text('Premium Plan'),
+                secondaryLabel: const Text('\$99/mo • Unlimited users'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Panels - With Children',
+          Column(
+            children: [
+              OmsaRadioPanel<String>(
+                value: 'card',
+                groupValue: _radioPanelValue3,
+                onChanged: (value) => setState(() {
+                  _radioPanelValue3 = _radioPanelValue3 == value ? null : value;
+                }),
+                title: const Text('Credit Card'),
+                secondaryLabel: const Text('Pay with credit or debit card'),
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'Visa, Mastercard, Amex accepted',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'paypal',
+                groupValue: _radioPanelValue3,
+                onChanged: (value) => setState(() {
+                  _radioPanelValue3 = _radioPanelValue3 == value ? null : value;
+                }),
+                title: const Text('PayPal'),
+                secondaryLabel: const Text('Pay securely with PayPal'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Panels - Expand on Selected',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Children are only shown when the panel is selected. '
+                'Click again to deselect (toggle behavior):',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'expand1',
+                groupValue: _radioPanelValue4,
+                onChanged: (value) => setState(() {
+                  // Toggle: deselect if clicking the already selected option
+                  _radioPanelValue4 = _radioPanelValue4 == value ? null : value;
+                }),
+                title: const Text('Option with Details'),
+                secondaryLabel: const Text('Click to expand'),
+                expandOnSelected: true,
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'These details only appear when this option is selected. '
+                    'The panel will animate smoothly when expanding and collapsing.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'expand2',
+                groupValue: _radioPanelValue4,
+                onChanged: (value) => setState(() {
+                  // Toggle: deselect if clicking the already selected option
+                  _radioPanelValue4 = _radioPanelValue4 == value ? null : value;
+                }),
+                title: const Text('Another Option'),
+                secondaryLabel: const Text('Also expandable'),
+                expandOnSelected: true,
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'This is great for forms where you want to keep the UI clean '
+                    'and only show relevant details for the selected option.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Panels - Without Radio Button',
+          Column(
+            children: [
+              OmsaRadioPanel<String>(
+                value: 'option1',
+                groupValue: _radioPanelValue1,
+                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                title: const Text('Option 1'),
+                secondaryLabel: const Text('Clean card-style selection'),
+                hideRadioButton: true,
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'option2',
+                groupValue: _radioPanelValue1,
+                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                title: const Text('Option 2'),
+                secondaryLabel: const Text('No radio indicator shown'),
+                hideRadioButton: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Radio Panels - Contrast Mode (Dark Background)',
+          Column(
+            children: [
+              OmsaRadioPanel<String>(
+                value: 'basic',
+                groupValue: _radioPanelValue2,
+                onChanged: (value) => setState(() => _radioPanelValue2 = value),
+                title: const Text('Basic Plan'),
+                secondaryLabel: const Text('Free forever'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'standard',
+                groupValue: _radioPanelValue2,
+                onChanged: (value) => setState(() => _radioPanelValue2 = value),
+                title: const Text('Standard Plan'),
+                secondaryLabel: const Text('\$29/month'),
+                mode: OmsaComponentMode.contrast,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Checkbox Panels - Basic',
+          Column(
+            children: [
+              OmsaCheckboxPanel(
+                value: 'notifications',
+                checked: _checkboxPanel1,
+                onChanged: (value) => setState(() => _checkboxPanel1 = value),
+                title: const Text('Enable Notifications'),
+                secondaryLabel: const Text('Receive email notifications'),
+              ),
+              const SizedBox(height: 12),
+              OmsaCheckboxPanel(
+                value: 'newsletter',
+                checked: _checkboxPanel2,
+                onChanged: (value) => setState(() => _checkboxPanel2 = value),
+                title: const Text('Subscribe to Newsletter'),
+                secondaryLabel: const Text('Weekly updates and tips'),
+              ),
+              const SizedBox(height: 12),
+              OmsaCheckboxPanel(
+                value: 'marketing',
+                checked: _checkboxPanel3,
+                onChanged: (value) => setState(() => _checkboxPanel3 = value),
+                title: const Text('Marketing Emails'),
+                secondaryLabel: const Text('Product updates and offers'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Checkbox Panels - With Children',
+          Column(
+            children: [
+              OmsaCheckboxPanel(
+                value: 'terms',
+                checked: _checkboxPanel1,
+                onChanged: (value) => setState(() => _checkboxPanel1 = value),
+                title: const Text('Accept Terms & Conditions'),
+                secondaryLabel: const Text('Required to continue'),
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'By checking this box, you agree to our Terms of Service and Privacy Policy.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Checkbox Panels - Without Checkbox',
+          Column(
+            children: [
+              OmsaCheckboxPanel(
+                value: 'feature1',
+                checked: _checkboxPanel1,
+                onChanged: (value) => setState(() => _checkboxPanel1 = value),
+                title: const Text('Feature 1'),
+                secondaryLabel: const Text('Toggle this feature'),
+                hideCheckbox: true,
+              ),
+              const SizedBox(height: 12),
+              OmsaCheckboxPanel(
+                value: 'feature2',
+                checked: _checkboxPanel2,
+                onChanged: (value) => setState(() => _checkboxPanel2 = value),
+                title: const Text('Feature 2'),
+                secondaryLabel: const Text('Toggle this feature'),
+                hideCheckbox: true,
               ),
             ],
           ),

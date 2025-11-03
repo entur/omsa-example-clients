@@ -29,6 +29,75 @@ class OffersScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildOfferDetails(BuildContext context, Offer offer) {
+    final summary = offer.properties.summary;
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (summary.description.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          MarkdownBody(
+            data: summary.description.replaceAll('\\n', '\n'),
+            styleSheet: MarkdownStyleSheet(
+              p: AppTypography.textMedium.copyWith(
+                color: BaseLightTokens.textSubdued,
+                height: 1.3,
+              ),
+              a: AppTypography.textMedium.copyWith(
+                color: theme.colorScheme.primary,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            onTapLink: (text, href, title) {
+              if (href != null) {
+                launchUrl(Uri.parse(href));
+              }
+            },
+          ),
+        ],
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            OmsaChip(
+              label: Text(
+                summary.isRefundable ? 'Refundable' : 'Non-refundable',
+                style: AppTypography.textSmall,
+              ),
+              variant: OmsaChipVariant.filled,
+              color: summary.isRefundable
+                  ? OmsaChipColor.success
+                  : OmsaChipColor.warning,
+              icon: Icon(
+                summary.isRefundable ? Icons.check_circle : Icons.cancel,
+                size: 12,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+            OmsaChip(
+              label: Text(
+                summary.isExchangeable ? 'Exchangeable' : 'Non-exchangeable',
+                style: AppTypography.textSmall,
+              ),
+              variant: OmsaChipVariant.filled,
+              color: summary.isExchangeable
+                  ? OmsaChipColor.success
+                  : OmsaChipColor.warning,
+              icon: Icon(
+                summary.isExchangeable ? Icons.swap_horiz : Icons.block,
+                size: 12,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedOffer = context.watch<OfferSelectionProvider>().selectedOffer;
@@ -55,18 +124,39 @@ class OffersScreen extends StatelessWidget {
             )
           : Stack(
               children: [
-                ListView.builder(
+                SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                   ).copyWith(top: 16, bottom: selectedOffer != null ? 112 : 16),
-                  itemCount: offers.offers.length,
-                  itemBuilder: (context, index) {
-                    final offer = offers.offers[index];
-                    return OfferCard(
-                      offer: offer,
-                      isSelected: selectedOffer == offer,
-                    );
-                  },
+                  child: OmsaRadioPanelGroup<Offer>(
+                    value: selectedOffer,
+                    expandOnSelected: true,
+                    onChanged: (value) {
+                      final provider = Provider.of<OfferSelectionProvider>(
+                        context,
+                        listen: false,
+                      );
+                      provider.selectOffer(
+                        selectedOffer == value ? null : value,
+                      );
+                    },
+                    options: offers.offers
+                        .map(
+                          (offer) => OmsaRadioPanelOption<Offer>(
+                            value: offer,
+                            title: Text(offer.properties.summary.name),
+                            secondaryLabel: Text(
+                              '${offer.properties.price.amount.toInt()} ${offer.properties.price.currencyCode}',
+                              style: AppTypography.textLarge.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            children: _buildOfferDetails(context, offer),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
                 if (selectedOffer != null)
                   Positioned(
@@ -103,195 +193,6 @@ class OffersScreen extends StatelessWidget {
                   ),
               ],
             ),
-    );
-  }
-}
-
-class OfferCard extends StatelessWidget {
-  final Offer offer;
-  final bool isSelected;
-
-  const OfferCard({super.key, required this.offer, required this.isSelected});
-
-  void _handleTap(BuildContext context) {
-    final provider = Provider.of<OfferSelectionProvider>(
-      context,
-      listen: false,
-    );
-    final currentSelection = provider.selectedOffer;
-    provider.selectOffer(currentSelection == offer ? null : offer);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final price = offer.properties.price;
-    final summary = offer.properties.summary;
-
-    return GestureDetector(
-      onTap: () => _handleTap(context),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: AppDimensions.borderRadiusMedium,
-          border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.outlineVariant,
-            width: 2.0,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      summary.name,
-                      style: AppTypography.textLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Row(
-                    children: [
-                      Text(
-                        '${price.amount.toInt()} ${price.currencyCode}',
-                        style: AppTypography.textLarge.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isSelected
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.outline,
-                            width: 2,
-                          ),
-                        ),
-                        child: isSelected
-                            ? Center(
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                              )
-                            : null,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              ClipRect(
-                child: AnimatedAlign(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeInOut,
-                  heightFactor: isSelected ? 1.0 : 0.0,
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (summary.description.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        MarkdownBody(
-                          data: summary.description.replaceAll('\\n', '\n'),
-                          styleSheet: MarkdownStyleSheet(
-                            p: AppTypography.textMedium.copyWith(
-                              color: BaseLightTokens.textSubdued,
-                              height: 1.3,
-                            ),
-                            a: AppTypography.textMedium.copyWith(
-                              color: theme.colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          onTapLink: (text, href, title) {
-                            if (href != null) {
-                              launchUrl(Uri.parse(href));
-                            }
-                          },
-                        ),
-                      ],
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: [
-                          OmsaChip(
-                            label: Text(
-                              summary.isRefundable
-                                  ? 'Refundable'
-                                  : 'Non-refundable',
-                              style: AppTypography.textSmall,
-                            ),
-                            variant: OmsaChipVariant.filled,
-                            color: summary.isRefundable
-                                ? OmsaChipColor.success
-                                : OmsaChipColor.warning,
-                            icon: Icon(
-                              summary.isRefundable
-                                  ? Icons.check_circle
-                                  : Icons.cancel,
-                              size: 12,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                          ),
-                          OmsaChip(
-                            label: Text(
-                              summary.isExchangeable
-                                  ? 'Exchangeable'
-                                  : 'Non-exchangeable',
-                              style: AppTypography.textSmall,
-                            ),
-                            variant: OmsaChipVariant.filled,
-                            color: summary.isExchangeable
-                                ? OmsaChipColor.success
-                                : OmsaChipColor.warning,
-                            icon: Icon(
-                              summary.isExchangeable
-                                  ? Icons.swap_horiz
-                                  : Icons.block,
-                              size: 12,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
