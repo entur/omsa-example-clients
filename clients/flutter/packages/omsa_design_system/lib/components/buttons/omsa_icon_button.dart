@@ -45,7 +45,12 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
   }
 
   double get _iconSize {
-    return 24.0;
+    switch (widget.size) {
+      case OmsaIconButtonSize.small:
+        return 16.0;
+      case OmsaIconButtonSize.medium:
+        return 24.0;
+    }
   }
 
   EdgeInsets get _padding {
@@ -141,18 +146,18 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
   Widget build(BuildContext context) {
     final colors = _getColors(context);
 
-    Widget content = widget.icon;
-
-    if (widget.isLoading) {
-      content = SizedBox(
+    final Widget content = widget.isLoading ? SizedBox(
         height: 16,
         width: 16,
         child: CircularProgressIndicator(
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation<Color>(colors.text),
         ),
-      );
-    }
+      ) : _NormalizedIcon(
+        size: _iconSize,
+        color: colors.icon,
+        child: widget.icon
+    );
 
     final button = MouseRegion(
       cursor: _isDisabled || widget.isLoading
@@ -177,10 +182,7 @@ class _OmsaIconButtonState extends State<OmsaIconButton> {
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: Center(
-            child: IconTheme(
-              data: IconThemeData(color: colors.text, size: _iconSize),
               child: content,
-            ),
           ),
         ),
       ),
@@ -208,4 +210,31 @@ class IconButtonColors {
   final Color background;
   final Color icon;
   final Color text;
+}
+
+class _NormalizedIcon extends StatelessWidget {
+  const _NormalizedIcon({
+    required this.child,
+    required this.size,
+    required this.color,
+  });
+
+  final Widget child;
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: size,
+      child: FittedBox(
+        fit: BoxFit.contain,
+        alignment: Alignment.center,
+        child: IconTheme.merge(
+          data: IconThemeData(size: size, color: color),
+          child: child,
+        ),
+      ),
+    );
+  }
 }
