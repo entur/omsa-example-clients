@@ -26,6 +26,8 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   // State for radio panel examples
   String? _radioPanelValue1 = 'basic';
   String? _radioPanelValue2 = 'standard';
+  String? _radioPanelValue3;
+  String? _radioPanelValue4;
 
   // State for checkbox panel examples
   bool _checkboxPanel1 = false;
@@ -1086,8 +1088,10 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             children: [
               OmsaRadioPanel<String>(
                 value: 'card',
-                groupValue: _radioPanelValue1,
-                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                groupValue: _radioPanelValue3,
+                onChanged: (value) => setState(() {
+                  _radioPanelValue3 = _radioPanelValue3 == value ? null : value;
+                }),
                 title: const Text('Credit Card'),
                 secondaryLabel: const Text('Pay with credit or debit card'),
                 children: const Padding(
@@ -1101,10 +1105,68 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
               const SizedBox(height: 12),
               OmsaRadioPanel<String>(
                 value: 'paypal',
-                groupValue: _radioPanelValue1,
-                onChanged: (value) => setState(() => _radioPanelValue1 = value),
+                groupValue: _radioPanelValue3,
+                onChanged: (value) => setState(() {
+                  _radioPanelValue3 = _radioPanelValue3 == value ? null : value;
+                }),
                 title: const Text('PayPal'),
                 secondaryLabel: const Text('Pay securely with PayPal'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Radio Panels - Expand on Selected',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Children are only shown when the panel is selected. '
+                'Click again to deselect (toggle behavior):',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'expand1',
+                groupValue: _radioPanelValue4,
+                onChanged: (value) => setState(() {
+                  // Toggle: deselect if clicking the already selected option
+                  _radioPanelValue4 = _radioPanelValue4 == value ? null : value;
+                }),
+                title: const Text('Option with Details'),
+                secondaryLabel: const Text('Click to expand'),
+                expandOnSelected: true,
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'These details only appear when this option is selected. '
+                    'The panel will animate smoothly when expanding and collapsing.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              OmsaRadioPanel<String>(
+                value: 'expand2',
+                groupValue: _radioPanelValue4,
+                onChanged: (value) => setState(() {
+                  // Toggle: deselect if clicking the already selected option
+                  _radioPanelValue4 = _radioPanelValue4 == value ? null : value;
+                }),
+                title: const Text('Another Option'),
+                secondaryLabel: const Text('Also expandable'),
+                expandOnSelected: true,
+                children: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Text(
+                    'This is great for forms where you want to keep the UI clean '
+                    'and only show relevant details for the selected option.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
               ),
             ],
           ),
