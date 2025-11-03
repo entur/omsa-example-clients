@@ -14,5 +14,7 @@ export './inputs/input_panel/omsa_radio_panel.dart';
 export './inputs/input_panel/omsa_radio_panel_group.dart';
 export './inputs/input_panel/omsa_checkbox_panel.dart';
 export './inputs/input_panel/omsa_checkbox_panel_group.dart';
+export './inputs/segmented_control/omsa_segmented_choice.dart';
+export './inputs/segmented_control/omsa_segmented_control.dart';
 export './cards/omsa_card.dart';
 export './display/omsa_chip.dart';
