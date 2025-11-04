@@ -51,7 +51,9 @@ class OmsaTravelSwitch extends StatelessWidget {
     final switchWidget = Semantics(
       label: transportStyle.ariaLabel,
       child: MouseRegion(
-        cursor: disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+        cursor: disabled
+            ? SystemMouseCursors.forbidden
+            : SystemMouseCursors.click,
         child: GestureDetector(
           onTap: disabled ? null : () => onChanged?.call(!checked),
           child: Opacity(

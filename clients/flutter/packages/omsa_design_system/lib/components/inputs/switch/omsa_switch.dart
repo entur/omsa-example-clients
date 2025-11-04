@@ -50,7 +50,9 @@ class OmsaSwitch extends StatelessWidget {
         : OmsaSwitchDimensions.mediumIconSize;
 
     final switchWidget = MouseRegion(
-      cursor: disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+      cursor: disabled
+          ? SystemMouseCursors.forbidden
+          : SystemMouseCursors.click,
       child: GestureDetector(
         onTap: disabled ? null : () => onChanged?.call(!checked),
         child: Opacity(
@@ -73,7 +75,9 @@ class OmsaSwitch extends StatelessWidget {
                   ),
                   curve: Curves.easeInOut,
                   left: checked
-                      ? trackWidth - thumbSize - OmsaSwitchDimensions.thumbPadding
+                      ? trackWidth -
+                            thumbSize -
+                            OmsaSwitchDimensions.thumbPadding
                       : OmsaSwitchDimensions.thumbPadding,
                   top: OmsaSwitchDimensions.thumbPadding,
                   child: Container(
