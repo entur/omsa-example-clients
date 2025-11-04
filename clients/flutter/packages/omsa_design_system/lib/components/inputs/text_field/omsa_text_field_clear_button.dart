@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 
 /// Clear button with divider for text field
 class OmsaTextFieldClearButton extends StatelessWidget {
@@ -33,7 +34,7 @@ class OmsaTextFieldClearButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.spaceExtraSmall),
-              child: Icon(Icons.close, size: 16, color: iconColor),
+              child: OmsaIcons.CloseSmall(size: 16, color: iconColor),
             ),
           ),
         ),

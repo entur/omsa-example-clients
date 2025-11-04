@@ -5,6 +5,7 @@ import 'package:omsa_design_system/components/inputs/omsa_checkbox_dimensions.da
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 
 /// A checkbox component following OMSA Design System guidelines
 class OmsaCheckbox extends StatefulWidget {
@@ -181,8 +182,7 @@ class _CheckboxIndicator extends StatelessWidget {
         ),
       ),
       child: _isChecked
-          ? Icon(
-              Icons.check,
+          ? OmsaIcons.Check(
               size: OmsaCheckboxDimensions.checkIconSize,
               color: effectiveIconColor,
             )

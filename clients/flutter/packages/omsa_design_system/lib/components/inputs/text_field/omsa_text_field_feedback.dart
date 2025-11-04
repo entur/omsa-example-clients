@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 
 /// Feedback text component for text fields
 class OmsaTextFieldFeedback extends StatelessWidget {
@@ -14,14 +15,14 @@ class OmsaTextFieldFeedback extends StatelessWidget {
   final String text;
   final OmsaTextFieldVariant variant;
 
-  IconData? get _icon {
+  OmsaIconData? get _icon {
     switch (variant) {
       case OmsaTextFieldVariant.success:
-        return Icons.check_circle;
+        return OmsaIcons.ValidationSuccessFilled;
       case OmsaTextFieldVariant.negative:
-        return Icons.error;
+        return OmsaIcons.ValidationErrorFilled;
       case OmsaTextFieldVariant.warning:
-        return Icons.warning;
+        return OmsaIcons.ValidationExclamationCircleFilled;
       case OmsaTextFieldVariant.information:
       case OmsaTextFieldVariant.none:
         return null;
@@ -59,7 +60,7 @@ class OmsaTextFieldFeedback extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (_icon != null) ...[
-          Icon(_icon, size: 16, color: _getIconColor(context)),
+          _icon!(size: 16, color: _getIconColor(context)),
           const SizedBox(width: 4),
         ],
         Expanded(
