@@ -197,6 +197,10 @@ class TravelSwitchColors {
 
   static Color _getStandardIconTrueColor(String transport, bool isLight) {
     switch (transport) {
+      case 'Air':
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueAir
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueAir;
       case 'Bicycle':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBicycle
@@ -393,6 +397,10 @@ class TravelSwitchColors {
 
   static Color _getContrastIconTrueColor(String transport, bool isLight) {
     switch (transport) {
+      case 'Air':
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueAir
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueAir;
       case 'Bicycle':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBicycle
@@ -437,6 +445,10 @@ class TravelSwitchColors {
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTruePlane
             : ComponentDarkTokens.travelTravelSwitchContrastIconTruePlane;
+      case 'Rail':
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueRail
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueRail;
       case 'Taxi':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTaxi
@@ -453,6 +465,10 @@ class TravelSwitchColors {
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTrueWalk
             : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWalk;
+      case 'Water':
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueWater
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWater;
       case 'Airportlinkbus':
         return isLight
             ? ComponentLightTokens
