@@ -34,6 +34,8 @@ dependencies:
   # OMSA Design System
   omsa_design_system:
     path: packages/omsa_design_system
+  omsa_icons:
+    path: packages/omsa_icons
 
   # State Management
   provider: ^6.1.2
