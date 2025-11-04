@@ -28,40 +28,25 @@ class TransportStyle {
   final OmsaIconData icon;
   final String ariaLabel;
 
-  const TransportStyle({
-    required this.icon,
-    required this.ariaLabel,
-  });
+  const TransportStyle({required this.icon, required this.ariaLabel});
 }
 
 TransportStyle getTransportStyle(Transport transport) {
   switch (transport) {
     case Transport.metro:
-      return const TransportStyle(
-        icon: OmsaIcons.Metro,
-        ariaLabel: 'T-bane',
-      );
+      return const TransportStyle(icon: OmsaIcons.Metro, ariaLabel: 'T-bane');
     case Transport.bus:
-      return const TransportStyle(
-        icon: OmsaIcons.Bus,
-        ariaLabel: 'Buss',
-      );
+      return const TransportStyle(icon: OmsaIcons.Bus, ariaLabel: 'Buss');
     case Transport.plane:
     case Transport.air:
-      return const TransportStyle(
-        icon: OmsaIcons.Plane,
-        ariaLabel: 'Fly',
-      );
+      return const TransportStyle(icon: OmsaIcons.Plane, ariaLabel: 'Fly');
     case Transport.helicopter:
       return const TransportStyle(
         icon: OmsaIcons.Helicopter,
         ariaLabel: 'Helikopter',
       );
     case Transport.tram:
-      return const TransportStyle(
-        icon: OmsaIcons.Tram,
-        ariaLabel: 'Trikk',
-      );
+      return const TransportStyle(icon: OmsaIcons.Tram, ariaLabel: 'Trikk');
     case Transport.funicular:
       return const TransportStyle(
         icon: OmsaIcons.Funicular,
@@ -73,33 +58,18 @@ TransportStyle getTransportStyle(Transport transport) {
         ariaLabel: 'Gondol',
       );
     case Transport.taxi:
-      return const TransportStyle(
-        icon: OmsaIcons.Taxi,
-        ariaLabel: 'Taxi',
-      );
+      return const TransportStyle(icon: OmsaIcons.Taxi, ariaLabel: 'Taxi');
     case Transport.bicycle:
     case Transport.citybike:
-      return const TransportStyle(
-        icon: OmsaIcons.Bicycle,
-        ariaLabel: 'Sykkel',
-      );
+      return const TransportStyle(icon: OmsaIcons.Bicycle, ariaLabel: 'Sykkel');
     case Transport.walk:
-      return const TransportStyle(
-        icon: OmsaIcons.Walk,
-        ariaLabel: 'Gange',
-      );
+      return const TransportStyle(icon: OmsaIcons.Walk, ariaLabel: 'Gange');
     case Transport.train:
     case Transport.rail:
-      return const TransportStyle(
-        icon: OmsaIcons.Train,
-        ariaLabel: 'Tog',
-      );
+      return const TransportStyle(icon: OmsaIcons.Train, ariaLabel: 'Tog');
     case Transport.ferry:
     case Transport.water:
-      return const TransportStyle(
-        icon: OmsaIcons.Ferry,
-        ariaLabel: 'Ferge',
-      );
+      return const TransportStyle(icon: OmsaIcons.Ferry, ariaLabel: 'Ferge');
     case Transport.carferry:
       return const TransportStyle(
         icon: OmsaIcons.Carferry,
@@ -111,20 +81,11 @@ TransportStyle getTransportStyle(Transport transport) {
         ariaLabel: 'El-sparkesykkel',
       );
     case Transport.airportLinkBus:
-      return const TransportStyle(
-        icon: OmsaIcons.Bus,
-        ariaLabel: 'Flybuss',
-      );
+      return const TransportStyle(icon: OmsaIcons.Bus, ariaLabel: 'Flybuss');
     case Transport.airportLinkRail:
-      return const TransportStyle(
-        icon: OmsaIcons.Train,
-        ariaLabel: 'Flytog',
-      );
+      return const TransportStyle(icon: OmsaIcons.Train, ariaLabel: 'Flytog');
     case Transport.none:
-      return const TransportStyle(
-        icon: OmsaIcons.Circle,
-        ariaLabel: '',
-      );
+      return const TransportStyle(icon: OmsaIcons.Circle, ariaLabel: '');
   }
 }
 

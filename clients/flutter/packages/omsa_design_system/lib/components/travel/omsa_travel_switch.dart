@@ -50,49 +50,52 @@ class OmsaTravelSwitch extends StatelessWidget {
 
     final switchWidget = Semantics(
       label: transportStyle.ariaLabel,
-      child: GestureDetector(
-        onTap: disabled ? null : () => onChanged?.call(!checked),
-        child: Opacity(
-          opacity: disabled ? 0.5 : 1.0,
-          child: AnimatedContainer(
-            duration: const Duration(
-              milliseconds: OmsaSwitchDimensions.animationDurationMs,
-            ),
-            width: trackWidth,
-            height: trackHeight,
-            decoration: BoxDecoration(
-              color: checked ? colors.trackColorTrue : colors.trackColorFalse,
-              borderRadius: BorderRadius.circular(trackHeight / 2),
-            ),
-            child: Stack(
-              children: [
-                AnimatedPositioned(
-                  duration: const Duration(
-                    milliseconds: OmsaSwitchDimensions.animationDurationMs,
-                  ),
-                  curve: Curves.easeInOut,
-                  left: checked
-                      ? trackWidth -
-                          thumbSize -
-                          OmsaSwitchDimensions.thumbPadding
-                      : OmsaSwitchDimensions.thumbPadding,
-                  top: OmsaSwitchDimensions.thumbPadding,
-                  child: Container(
-                    width: thumbSize,
-                    height: thumbSize,
-                    decoration: BoxDecoration(
-                      color: colors.thumbColor,
-                      shape: BoxShape.circle,
+      child: MouseRegion(
+        cursor: disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: disabled ? null : () => onChanged?.call(!checked),
+          child: Opacity(
+            opacity: disabled ? 0.5 : 1.0,
+            child: AnimatedContainer(
+              duration: const Duration(
+                milliseconds: OmsaSwitchDimensions.animationDurationMs,
+              ),
+              width: trackWidth,
+              height: trackHeight,
+              decoration: BoxDecoration(
+                color: checked ? colors.trackColorTrue : colors.trackColorFalse,
+                borderRadius: BorderRadius.circular(trackHeight / 2),
+              ),
+              child: Stack(
+                children: [
+                  AnimatedPositioned(
+                    duration: const Duration(
+                      milliseconds: OmsaSwitchDimensions.animationDurationMs,
                     ),
-                    child: Center(
-                      child: transportStyle.icon(
-                        size: iconSize,
-                        color: colors.iconColor,
+                    curve: Curves.easeInOut,
+                    left: checked
+                        ? trackWidth -
+                              thumbSize -
+                              OmsaSwitchDimensions.thumbPadding
+                        : OmsaSwitchDimensions.thumbPadding,
+                    top: OmsaSwitchDimensions.thumbPadding,
+                    child: Container(
+                      width: thumbSize,
+                      height: thumbSize,
+                      decoration: BoxDecoration(
+                        color: colors.thumbColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: transportStyle.icon(
+                          size: iconSize,
+                          color: colors.iconColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

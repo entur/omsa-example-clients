@@ -32,21 +32,27 @@ class TravelSwitchColors {
     if (mode == OmsaComponentMode.contrast) {
       if (isLight) {
         return TravelSwitchColors(
-          trackColorTrue: _getContrastBackgroundTrueColor(capitalizedSuffix, true),
+          trackColorTrue: _getContrastBackgroundTrueColor(
+            capitalizedSuffix,
+            true,
+          ),
           trackColorFalse:
               ComponentLightTokens.travelTravelSwitchContrastBackgroundFalse,
-          thumbColor: ComponentLightTokens
-              .travelTravelSwitchContrastSwitchFillTrue,
+          thumbColor:
+              ComponentLightTokens.travelTravelSwitchContrastSwitchFillTrue,
           iconColor: _getContrastIconTrueColor(capitalizedSuffix, true),
           textColor: ComponentLightTokens.travelTravelSwitchContrastText,
         );
       } else {
         return TravelSwitchColors(
-          trackColorTrue: _getContrastBackgroundTrueColor(capitalizedSuffix, false),
+          trackColorTrue: _getContrastBackgroundTrueColor(
+            capitalizedSuffix,
+            false,
+          ),
           trackColorFalse:
               ComponentDarkTokens.travelTravelSwitchContrastBackgroundFalse,
-          thumbColor: ComponentDarkTokens
-              .travelTravelSwitchContrastSwitchFillTrue,
+          thumbColor:
+              ComponentDarkTokens.travelTravelSwitchContrastSwitchFillTrue,
           iconColor: _getContrastIconTrueColor(capitalizedSuffix, false),
           textColor: ComponentDarkTokens.travelTravelSwitchContrastText,
         );
@@ -55,21 +61,27 @@ class TravelSwitchColors {
 
     if (isLight) {
       return TravelSwitchColors(
-        trackColorTrue: _getStandardBackgroundTrueColor(capitalizedSuffix, true),
+        trackColorTrue: _getStandardBackgroundTrueColor(
+          capitalizedSuffix,
+          true,
+        ),
         trackColorFalse:
             ComponentLightTokens.travelTravelSwitchStandardBackgroundFalse,
-        thumbColor: ComponentLightTokens
-            .travelTravelSwitchStandardSwitchFillTrue,
+        thumbColor:
+            ComponentLightTokens.travelTravelSwitchStandardSwitchFillTrue,
         iconColor: _getStandardIconTrueColor(capitalizedSuffix, true),
         textColor: ComponentLightTokens.travelTravelSwitchStandardText,
       );
     } else {
       return TravelSwitchColors(
-        trackColorTrue: _getStandardBackgroundTrueColor(capitalizedSuffix, false),
+        trackColorTrue: _getStandardBackgroundTrueColor(
+          capitalizedSuffix,
+          false,
+        ),
         trackColorFalse:
             ComponentDarkTokens.travelTravelSwitchStandardBackgroundFalse,
-        thumbColor: ComponentDarkTokens
-            .travelTravelSwitchStandardSwitchFillTrue,
+        thumbColor:
+            ComponentDarkTokens.travelTravelSwitchStandardSwitchFillTrue,
         iconColor: _getStandardIconTrueColor(capitalizedSuffix, false),
         textColor: ComponentDarkTokens.travelTravelSwitchStandardText,
       );
@@ -79,180 +91,384 @@ class TravelSwitchColors {
   static Color _getStandardBackgroundTrueColor(String transport, bool isLight) {
     switch (transport) {
       case 'Air':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueAir : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueAir;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueAir
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueAir;
       case 'Bicycle':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueBicycle : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueBicycle;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueBicycle
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueBicycle;
       case 'Bus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueBus : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueBus
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueBus;
       case 'Cableway':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueCableway : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueCableway;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueCableway
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueCableway;
       case 'Carferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueCarferry : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueCarferry;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueCarferry
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueCarferry;
       case 'Citybike':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueCitybike : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueCitybike;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueCitybike
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueCitybike;
       case 'Ferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueFerry : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueFerry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueFerry
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueFerry;
       case 'Funicular':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueFunicular : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueFunicular;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueFunicular
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueFunicular;
       case 'Helicopter':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueHelicopter : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueHelicopter;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueHelicopter
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueHelicopter;
       case 'Metro':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueMetro : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueMetro;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueMetro
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueMetro;
       case 'Mobility':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueMobility : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueMobility;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueMobility
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueMobility;
       case 'Plane':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTruePlane : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTruePlane;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTruePlane
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTruePlane;
       case 'Rail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueRail : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueRail;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueRail
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueRail;
       case 'Taxi':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTaxi : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTaxi;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTaxi
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTaxi;
       case 'Train':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTrain : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTrain;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTrain
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTrain;
       case 'Tram':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTram : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTram;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueTram
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueTram;
       case 'Walk':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueWalk : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueWalk;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueWalk
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueWalk;
       case 'Water':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueWater : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueWater;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueWater
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueWater;
       case 'Airportlinkbus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueairportLinkBus : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueairportLinkBus;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueairportLinkBus
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueairportLinkBus;
       case 'Airportlinkrail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueairportLinkRail : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueairportLinkRail;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardBackgroundTrueairportLinkRail
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardBackgroundTrueairportLinkRail;
       default:
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueBus : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardBackgroundTrueBus
+            : ComponentDarkTokens.travelTravelSwitchStandardBackgroundTrueBus;
     }
   }
 
   static Color _getStandardIconTrueColor(String transport, bool isLight) {
     switch (transport) {
       case 'Bicycle':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBicycle : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBicycle;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBicycle
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBicycle;
       case 'Bus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBus : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBus
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBus;
       case 'Cableway':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCableway : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCableway;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCableway
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCableway;
       case 'Carferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCarferry : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCarferry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCarferry
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCarferry;
       case 'Citybike':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCitybike : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCitybike;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueCitybike
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueCitybike;
       case 'Ferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueFerry : ComponentDarkTokens.travelTravelSwitchStandardIconTrueFerry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueFerry
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueFerry;
       case 'Funicular':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueFunicular : ComponentDarkTokens.travelTravelSwitchStandardIconTrueFunicular;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueFunicular
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueFunicular;
       case 'Helicopter':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueHelicopter : ComponentDarkTokens.travelTravelSwitchStandardIconTrueHelicopter;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueHelicopter
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueHelicopter;
       case 'Metro':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueMetro : ComponentDarkTokens.travelTravelSwitchStandardIconTrueMetro;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueMetro
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueMetro;
       case 'Mobility':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueMobility : ComponentDarkTokens.travelTravelSwitchStandardIconTrueMobility;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueMobility
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueMobility;
       case 'Plane':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTruePlane : ComponentDarkTokens.travelTravelSwitchStandardIconTruePlane;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTruePlane
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTruePlane;
       case 'Taxi':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTaxi : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTaxi;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTaxi
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTaxi;
       case 'Train':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTrain : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTrain;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTrain
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTrain;
       case 'Rail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueRail : ComponentDarkTokens.travelTravelSwitchStandardIconTrueRail;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueRail
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueRail;
       case 'Tram':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTram : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTram;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueTram
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueTram;
       case 'Walk':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueWalk : ComponentDarkTokens.travelTravelSwitchStandardIconTrueWalk;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueWalk
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueWalk;
       case 'Water':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueWater : ComponentDarkTokens.travelTravelSwitchStandardIconTrueWater;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueWater
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueWater;
       case 'Airportlinkbus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueairportLinkBus : ComponentDarkTokens.travelTravelSwitchStandardIconTrueairportLinkBus;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardIconTrueairportLinkBus
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardIconTrueairportLinkBus;
       case 'Airportlinkrail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueairportLinkRail : ComponentDarkTokens.travelTravelSwitchStandardIconTrueairportLinkRail;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchStandardIconTrueairportLinkRail
+            : ComponentDarkTokens
+                  .travelTravelSwitchStandardIconTrueairportLinkRail;
       default:
-        return isLight ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBus : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBus
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueBus;
     }
   }
 
   static Color _getContrastBackgroundTrueColor(String transport, bool isLight) {
     switch (transport) {
       case 'Air':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueAir : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueAir;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueAir
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueAir;
       case 'Bicycle':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueBicycle : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueBicycle;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueBicycle
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueBicycle;
       case 'Bus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueBus : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueBus
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueBus;
       case 'Cableway':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueCableway : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueCableway;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueCableway
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueCableway;
       case 'Carferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueCarferry : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueCarferry;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueCarferry
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueCarferry;
       case 'Citybike':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueCitybike : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueCitybike;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueCitybike
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueCitybike;
       case 'Ferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueFerry : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueFerry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueFerry
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueFerry;
       case 'Funicular':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueFunicular : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueFunicular;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueFunicular
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueFunicular;
       case 'Helicopter':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueHelicopter : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueHelicopter;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueHelicopter
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueHelicopter;
       case 'Metro':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueMetro : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueMetro;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueMetro
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueMetro;
       case 'Mobility':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueMobility : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueMobility;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueMobility
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueMobility;
       case 'Plane':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTruePlane : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTruePlane;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTruePlane
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTruePlane;
       case 'Rail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueRail : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueRail;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueRail
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueRail;
       case 'Taxi':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTaxi : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTaxi;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTaxi
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTaxi;
       case 'Train':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTrain : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTrain;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTrain
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTrain;
       case 'Tram':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTram : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTram;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueTram
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueTram;
       case 'Walk':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueWalk : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueWalk;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueWalk
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueWalk;
       case 'Water':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueWater : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueWater;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueWater
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueWater;
       case 'Airportlinkbus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueairportLinkBus : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueairportLinkBus;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueairportLinkBus
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueairportLinkBus;
       case 'Airportlinkrail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueairportLinkRail : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueairportLinkRail;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastBackgroundTrueairportLinkRail
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastBackgroundTrueairportLinkRail;
       default:
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueBus : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastBackgroundTrueBus
+            : ComponentDarkTokens.travelTravelSwitchContrastBackgroundTrueBus;
     }
   }
 
   static Color _getContrastIconTrueColor(String transport, bool isLight) {
     switch (transport) {
       case 'Bicycle':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBicycle : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBicycle;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBicycle
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBicycle;
       case 'Bus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBus : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBus
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBus;
       case 'Cableway':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCableway : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCableway;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCableway
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCableway;
       case 'Carferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCarferry : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCarferry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCarferry
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCarferry;
       case 'Citybike':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCitybike : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCitybike;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueCitybike
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueCitybike;
       case 'Ferry':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueFerry : ComponentDarkTokens.travelTravelSwitchContrastIconTrueFerry;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueFerry
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueFerry;
       case 'Funicular':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueFunicular : ComponentDarkTokens.travelTravelSwitchContrastIconTrueFunicular;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueFunicular
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueFunicular;
       case 'Helicopter':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueHelicopter : ComponentDarkTokens.travelTravelSwitchContrastIconTrueHelicopter;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueHelicopter
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueHelicopter;
       case 'Metro':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueMetro : ComponentDarkTokens.travelTravelSwitchContrastIconTrueMetro;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueMetro
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueMetro;
       case 'Mobility':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueMobility : ComponentDarkTokens.travelTravelSwitchContrastIconTrueMobility;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueMobility
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueMobility;
       case 'Plane':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTruePlane : ComponentDarkTokens.travelTravelSwitchContrastIconTruePlane;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTruePlane
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTruePlane;
       case 'Taxi':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTaxi : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTaxi;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTaxi
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTaxi;
       case 'Train':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTrain : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTrain;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTrain
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTrain;
       case 'Tram':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTram : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTram;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTram
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTram;
       case 'Walk':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueWalk : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWalk;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueWalk
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWalk;
       case 'Airportlinkbus':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueairportLinkBus : ComponentDarkTokens.travelTravelSwitchContrastIconTrueairportLinkBus;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastIconTrueairportLinkBus
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastIconTrueairportLinkBus;
       case 'Airportlinkrail':
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueairportLinkRail : ComponentDarkTokens.travelTravelSwitchContrastIconTrueairportLinkRail;
+        return isLight
+            ? ComponentLightTokens
+                  .travelTravelSwitchContrastIconTrueairportLinkRail
+            : ComponentDarkTokens
+                  .travelTravelSwitchContrastIconTrueairportLinkRail;
       default:
-        return isLight ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBus : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBus;
+        return isLight
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBus
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueBus;
     }
   }
 }
