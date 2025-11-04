@@ -46,6 +46,20 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
     label: 'Option 2',
   );
 
+  // State for switch examples
+  bool _switch1 = false;
+  bool _switch2 = true;
+  bool _switch3 = false;
+  bool _switch4 = true;
+
+  // State for travel switch examples
+  bool _travelSwitchBus = true;
+  bool _travelSwitchTrain = false;
+  bool _travelSwitchFerry = true;
+  bool _travelSwitchMetro = false;
+  bool _travelSwitchTram = true;
+  bool _travelSwitchBicycle = false;
+
   final List<String> _categories = [
     'Buttons',
     'Inputs',
@@ -1456,6 +1470,348 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
                 onChange: (value) =>
                     setState(() => _selectedDropdownOption2 = value),
                 clearable: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Switch - Basic',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSwitch(
+                checked: _switch1,
+                onChanged: (value) => setState(() => _switch1 = value),
+                label: const Text('Enable notifications'),
+              ),
+              const SizedBox(height: 16),
+              OmsaSwitch(
+                checked: _switch2,
+                onChanged: (value) => setState(() => _switch2 = value),
+                label: const Text('Auto-save enabled'),
+              ),
+              const SizedBox(height: 16),
+              const OmsaSwitch(
+                checked: true,
+                label: Text('Disabled switch'),
+                disabled: true,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Switch - Sizes',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSwitch(
+                checked: _switch1,
+                onChanged: (value) => setState(() => _switch1 = value),
+                label: const Text('Medium (default)'),
+                size: OmsaSwitchSize.medium,
+              ),
+              const SizedBox(height: 16),
+              OmsaSwitch(
+                checked: _switch2,
+                onChanged: (value) => setState(() => _switch2 = value),
+                label: const Text('Large'),
+                size: OmsaSwitchSize.large,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Switch - Label Placement',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSwitch(
+                checked: _switch1,
+                onChanged: (value) => setState(() => _switch1 = value),
+                label: const Text('Label on right'),
+                labelPlacement: OmsaSwitchLabelPlacement.right,
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: OmsaSwitch(
+                  checked: _switch2,
+                  onChanged: (value) => setState(() => _switch2 = value),
+                  label: const Text('Label below'),
+                  labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Switch - Without Default Icon',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSwitch(
+                checked: _switch3,
+                onChanged: (value) => setState(() => _switch3 = value),
+                label: const Text('No icon'),
+                hideIcon: true,
+              ),
+              const SizedBox(height: 16),
+              OmsaSwitch(
+                checked: _switch4,
+                onChanged: (value) => setState(() => _switch4 = value),
+                label: const Text('Custom icon'),
+                icon: const Icon(Icons.star, size: 16),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Switch - Contrast Mode (Dark Background)',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaSwitch(
+                checked: _switch1,
+                onChanged: (value) => setState(() => _switch1 = value),
+                label: const Text('Contrast mode'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              const SizedBox(height: 16),
+              OmsaSwitch(
+                checked: _switch2,
+                onChanged: (value) => setState(() => _switch2 = value),
+                label: const Text('Large contrast'),
+                mode: OmsaComponentMode.contrast,
+                size: OmsaSwitchSize.large,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Travel Switch - Basic',
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              OmsaTravelSwitch(
+                transport: Transport.bus,
+                checked: _travelSwitchBus,
+                onChanged: (value) => setState(() => _travelSwitchBus = value),
+                label: const Text('Bus'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.train,
+                checked: _travelSwitchTrain,
+                onChanged: (value) => setState(() => _travelSwitchTrain = value),
+                label: const Text('Train'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.ferry,
+                checked: _travelSwitchFerry,
+                onChanged: (value) => setState(() => _travelSwitchFerry = value),
+                label: const Text('Ferry'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.metro,
+                checked: _travelSwitchMetro,
+                onChanged: (value) => setState(() => _travelSwitchMetro = value),
+                label: const Text('Metro'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.tram,
+                checked: _travelSwitchTram,
+                onChanged: (value) => setState(() => _travelSwitchTram = value),
+                label: const Text('Tram'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.bicycle,
+                checked: _travelSwitchBicycle,
+                onChanged: (value) =>
+                    setState(() => _travelSwitchBicycle = value),
+                label: const Text('Bicycle'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Travel Switch - All Transport Types',
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              OmsaTravelSwitch(
+                transport: Transport.metro,
+                checked: _travelSwitchMetro,
+                onChanged: (value) => setState(() => _travelSwitchMetro = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Metro'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.bus,
+                checked: _travelSwitchBus,
+                onChanged: (value) => setState(() => _travelSwitchBus = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Bus'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.tram,
+                checked: _travelSwitchTram,
+                onChanged: (value) => setState(() => _travelSwitchTram = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Tram'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.train,
+                checked: _travelSwitchTrain,
+                onChanged: (value) => setState(() => _travelSwitchTrain = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Train'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.ferry,
+                checked: _travelSwitchFerry,
+                onChanged: (value) => setState(() => _travelSwitchFerry = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Ferry'),
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.bicycle,
+                checked: _travelSwitchBicycle,
+                onChanged: (value) =>
+                    setState(() => _travelSwitchBicycle = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Bike'),
+              ),
+              const OmsaTravelSwitch(
+                transport: Transport.walk,
+                checked: true,
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: Text('Walk'),
+              ),
+              const OmsaTravelSwitch(
+                transport: Transport.taxi,
+                checked: false,
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: Text('Taxi'),
+              ),
+              const OmsaTravelSwitch(
+                transport: Transport.plane,
+                checked: true,
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: Text('Plane'),
+              ),
+              const OmsaTravelSwitch(
+                transport: Transport.cableway,
+                checked: false,
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: Text('Cable'),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildSection(
+          'Travel Switch - Sizes',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OmsaTravelSwitch(
+                transport: Transport.bus,
+                checked: _travelSwitchBus,
+                onChanged: (value) => setState(() => _travelSwitchBus = value),
+                label: const Text('Medium (default)'),
+                size: OmsaSwitchSize.medium,
+              ),
+              const SizedBox(height: 16),
+              OmsaTravelSwitch(
+                transport: Transport.train,
+                checked: _travelSwitchTrain,
+                onChanged: (value) => setState(() => _travelSwitchTrain = value),
+                label: const Text('Large'),
+                size: OmsaSwitchSize.large,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        _buildContrastSection(
+          'Travel Switch - Contrast Mode (Dark Background)',
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              OmsaTravelSwitch(
+                transport: Transport.metro,
+                checked: _travelSwitchMetro,
+                onChanged: (value) => setState(() => _travelSwitchMetro = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Metro'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.bus,
+                checked: _travelSwitchBus,
+                onChanged: (value) => setState(() => _travelSwitchBus = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Bus'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.tram,
+                checked: _travelSwitchTram,
+                onChanged: (value) => setState(() => _travelSwitchTram = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Tram'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.train,
+                checked: _travelSwitchTrain,
+                onChanged: (value) => setState(() => _travelSwitchTrain = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Train'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.ferry,
+                checked: _travelSwitchFerry,
+                onChanged: (value) => setState(() => _travelSwitchFerry = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Ferry'),
+                mode: OmsaComponentMode.contrast,
+              ),
+              OmsaTravelSwitch(
+                transport: Transport.bicycle,
+                checked: _travelSwitchBicycle,
+                onChanged: (value) =>
+                    setState(() => _travelSwitchBicycle = value),
+                labelPlacement: OmsaSwitchLabelPlacement.bottom,
+                label: const Text('Bike'),
+                mode: OmsaComponentMode.contrast,
               ),
             ],
           ),
