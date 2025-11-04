@@ -17,5 +17,8 @@ export './inputs/input_panel/omsa_checkbox_panel.dart';
 export './inputs/input_panel/omsa_checkbox_panel_group.dart';
 export './inputs/segmented_control/omsa_segmented_choice.dart';
 export './inputs/segmented_control/omsa_segmented_control.dart';
+export './inputs/switch/omsa_switch.dart';
 export './cards/omsa_card.dart';
 export './display/omsa_chip.dart';
+export './travel/omsa_travel_switch.dart';
+export './travel/transport_utils.dart';
