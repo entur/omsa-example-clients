@@ -39,6 +39,13 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
   String? _segmentedLargeValue = 'today';
   String? _segmentedContrastValue = 'overview';
 
+  // State for dropdown examples
+  OmsaDropdownItem<String>? _selectedDropdownOption1;
+  OmsaDropdownItem<String>? _selectedDropdownOption2 = const OmsaDropdownItem(
+    value: '2',
+    label: 'Option 2',
+  );
+
   final List<String> _categories = [
     'Buttons',
     'Inputs',
@@ -1427,23 +1434,28 @@ class _WidgetDesignScreenState extends State<WidgetDesignScreen> {
             children: [
               OmsaDropdown<String>(
                 label: 'Select an Option',
+                selectedItem: _selectedDropdownOption1,
                 items: const [
-                  DropdownMenuItem(value: '1', child: Text('Option 1')),
-                  DropdownMenuItem(value: '2', child: Text('Option 2')),
-                  DropdownMenuItem(value: '3', child: Text('Option 3')),
+                  OmsaDropdownItem(value: '1', label: 'Option 1'),
+                  OmsaDropdownItem(value: '2', label: 'Option 2'),
+                  OmsaDropdownItem(value: '3', label: 'Option 3'),
                 ],
-                onChanged: (value) {},
+                onChange: (value) =>
+                    setState(() => _selectedDropdownOption1 = value),
+                placeholder: 'Choose an option',
               ),
               const SizedBox(height: 16),
               OmsaDropdown<String>(
                 label: 'With Selected Value',
-                value: '2',
+                selectedItem: _selectedDropdownOption2,
                 items: const [
-                  DropdownMenuItem(value: '1', child: Text('Option 1')),
-                  DropdownMenuItem(value: '2', child: Text('Option 2')),
-                  DropdownMenuItem(value: '3', child: Text('Option 3')),
+                  OmsaDropdownItem(value: '1', label: 'Option 1'),
+                  OmsaDropdownItem(value: '2', label: 'Option 2'),
+                  OmsaDropdownItem(value: '3', label: 'Option 3'),
                 ],
-                onChanged: (value) {},
+                onChange: (value) =>
+                    setState(() => _selectedDropdownOption2 = value),
+                clearable: true,
               ),
             ],
           ),
