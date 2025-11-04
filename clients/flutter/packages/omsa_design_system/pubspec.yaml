@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   dotted_border: ^3.1.0
+  omsa_icons:
+    path: ../omsa_icons
 
 dev_dependencies:
   flutter_test:

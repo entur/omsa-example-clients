@@ -9,6 +9,7 @@ import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_feedback.dart';
 import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_item.dart';
 import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_list.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 
 enum OmsaDropdownVariant { none, success, negative, information, warning }
 
@@ -500,8 +501,7 @@ class _DropdownAppendix extends StatelessWidget {
             onTap: onClear,
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: Icon(
-                Icons.close,
+              child: OmsaIcons.CloseSmall(
                 size: OmsaTextFieldDimensions.iconSize - 4,
                 color: iconColor,
               ),
@@ -522,8 +522,7 @@ class _DropdownAppendix extends StatelessWidget {
           duration: const Duration(
             milliseconds: OmsaTextFieldDimensions.animationDurationMs,
           ),
-          child: Icon(
-            Icons.keyboard_arrow_down,
+          child: OmsaIcons.DownArrow(
             size: OmsaTextFieldDimensions.iconSize,
             color: iconColor,
           ),
