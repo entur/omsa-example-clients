@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field.dart';
@@ -261,11 +262,11 @@ class _OmsaDropdownState<T> extends State<OmsaDropdown<T>> {
           child: Focus(
             focusNode: _focusNode,
             onKeyEvent: (node, event) {
-              if (event.logicalKey.keyLabel == 'Escape' && _isOpen) {
+              if (event.logicalKey == LogicalKeyboardKey.escape && _isOpen) {
                 _closeDropdown();
                 return KeyEventResult.handled;
-              } else if (event.logicalKey.keyLabel == 'Enter' ||
-                  event.logicalKey.keyLabel == ' ') {
+              } else if (event.logicalKey == LogicalKeyboardKey.enter ||
+                  event.logicalKey == LogicalKeyboardKey.space) {
                 _toggleDropdown();
                 return KeyEventResult.handled;
               }

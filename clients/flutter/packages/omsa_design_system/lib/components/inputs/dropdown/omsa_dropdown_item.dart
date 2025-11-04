@@ -16,7 +16,8 @@ class OmsaDropdownItem<T> {
     if (identical(this, other)) return true;
     return other is OmsaDropdownItem<T> &&
         other.value == value &&
-        other.label == label;
+        other.label == label &&
+        other.icons == icons;
   }
 
   @override
