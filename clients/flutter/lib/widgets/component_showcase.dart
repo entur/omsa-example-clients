@@ -10,7 +10,7 @@ abstract class ComponentShowcase extends StatefulWidget {
   IconData? get icon => null;
 }
 
-/// Helper widget to display a component example with label
+/// Helper widget to alert a component example with label
 class ComponentExample extends StatelessWidget {
   final String label;
   final Widget child;
@@ -71,7 +71,7 @@ class ComponentExample extends StatelessWidget {
   }
 }
 
-/// Helper widget to display variants in a grid or row
+/// Helper widget to alert variants in a grid or row
 class VariantShowcase extends StatelessWidget {
   final List<Widget> children;
   final Axis direction;
