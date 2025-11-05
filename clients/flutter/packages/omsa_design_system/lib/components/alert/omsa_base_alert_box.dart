@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/display/alert/omsa_alert_colors.dart';
-import 'package:omsa_design_system/components/display/alert/omsa_alert_dimensions.dart';
+import 'package:omsa_design_system/components/alert/omsa_alert_colors.dart';
+import 'package:omsa_design_system/components/alert/omsa_alert_dimensions.dart';
 import 'package:omsa_design_system/components/buttons/omsa_icon_button.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 

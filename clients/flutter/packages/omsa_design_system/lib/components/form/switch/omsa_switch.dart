@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/switch/omsa_switch_colors.dart';
-import 'package:omsa_design_system/components/inputs/switch/omsa_switch_dimensions.dart';
+import 'package:omsa_design_system/components/form/switch/omsa_switch_colors.dart';
+import 'package:omsa_design_system/components/form/switch/omsa_switch_dimensions.dart';
 
 enum OmsaSwitchSize { medium, large }
 

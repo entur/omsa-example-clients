@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_colors.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_decoration.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_clear_button.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_feedback.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_dimensions.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_colors.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_decoration.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_clear_button.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_feedback.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_dimensions.dart';
 
 enum OmsaTextFieldVariant { none, success, negative, information, warning }
 

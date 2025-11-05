@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/display/alert/omsa_alert_colors.dart';
-import 'package:omsa_design_system/components/display/alert/omsa_base_alert_box.dart';
+import 'package:omsa_design_system/components/alert/omsa_alert_colors.dart';
+import 'package:omsa_design_system/components/alert/omsa_base_alert_box.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 
 /// Expandable alert box component matching React's ExpandableAlertBox

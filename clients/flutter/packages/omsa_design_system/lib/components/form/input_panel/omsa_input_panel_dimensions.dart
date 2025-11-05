@@ -1,4 +1,4 @@
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_base.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_input_panel_base.dart';
 
 /// Dimensions for the OmsaInputPanel components (radio and checkbox panels)
 class OmsaInputPanelDimensions {

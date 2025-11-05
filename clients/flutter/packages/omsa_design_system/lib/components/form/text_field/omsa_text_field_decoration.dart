@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_colors.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_colors.dart';
 
 /// Utility class for building TextField decorations
 class OmsaTextFieldDecorationBuilder {

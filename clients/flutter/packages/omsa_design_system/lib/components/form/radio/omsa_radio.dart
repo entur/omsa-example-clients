@@ -1,74 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/omsa_checkbox_colors.dart';
-import 'package:omsa_design_system/components/inputs/omsa_checkbox_dimensions.dart';
+import 'package:omsa_design_system/components/form/radio/omsa_radio_colors.dart';
+import 'package:omsa_design_system/components/form/radio/omsa_radio_dimensions.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
-import 'package:omsa_icons/omsa_icons.dart';
 
-/// A checkbox component following OMSA Design System guidelines
-class OmsaCheckbox extends StatefulWidget {
-  const OmsaCheckbox({
+/// A radio button component following the Linje design system
+class OmsaRadio<T> extends StatefulWidget {
+  const OmsaRadio({
     super.key,
-    required this.checked,
+    required this.value,
+    required this.groupValue,
     required this.onChanged,
     this.label,
     this.mode = OmsaComponentMode.standard,
     this.disabled = false,
     this.readOnly = false,
-    this.tristate = false,
   });
 
-  /// Whether the checkbox is checked, unchecked, or null (indeterminate if tristate is true)
-  final bool? checked;
+  /// The value represented by this radio button
+  final T value;
 
-  /// Callback when checkbox state changes
-  final ValueChanged<bool?>? onChanged;
+  /// The currently selected value in the radio group
+  final T? groupValue;
 
-  /// Optional label displayed next to the checkbox
+  /// Callback when this radio button is selected
+  final ValueChanged<T?>? onChanged;
+
+  /// Optional label displayed next to the radio button
   final Widget? label;
 
   /// Component mode (standard or contrast)
   final OmsaComponentMode mode;
 
-  /// Whether the checkbox is disabled
+  /// Whether the radio button is disabled
   final bool disabled;
 
-  /// Whether the checkbox is read-only
+  /// Whether the radio button is read-only
   final bool readOnly;
 
-  /// If true, allows the checkbox to have a third, indeterminate state
-  final bool tristate;
-
   @override
-  State<OmsaCheckbox> createState() => _OmsaCheckboxState();
+  State<OmsaRadio<T>> createState() => _OmsaRadioState<T>();
 }
 
-class _OmsaCheckboxState extends State<OmsaCheckbox> {
+class _OmsaRadioState<T> extends State<OmsaRadio<T>> {
   bool _isHovered = false;
   bool _isFocused = false;
 
+  bool get _isChecked => widget.value == widget.groupValue;
+
   void _handleTap() {
     if (!widget.disabled && !widget.readOnly && widget.onChanged != null) {
-      if (widget.tristate) {
-        // Cycle through null -> false -> true -> null
-        if (widget.checked == null) {
-          widget.onChanged!(false);
-        } else if (widget.checked == false) {
-          widget.onChanged!(true);
-        } else {
-          widget.onChanged!(null);
-        }
-      } else {
-        widget.onChanged!(!(widget.checked ?? false));
-      }
+      widget.onChanged!(widget.value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = OmsaCheckboxColors.fromContext(context, mode: widget.mode);
+    final colors = OmsaRadioColors.fromContext(context, mode: widget.mode);
 
     return MouseRegion(
       onEnter: widget.disabled || widget.readOnly
@@ -83,11 +73,9 @@ class _OmsaCheckboxState extends State<OmsaCheckbox> {
       child: GestureDetector(
         onTap: _handleTap,
         child: Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: AppSpacing.spaceExtraSmall,
-          ),
+          height: AppSpacing.spaceExtraLarge,
           constraints: const BoxConstraints(
-            minHeight: OmsaCheckboxDimensions.containerMinHeight,
+            minHeight: OmsaRadioDimensions.containerMinHeight,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -95,8 +83,8 @@ class _OmsaCheckboxState extends State<OmsaCheckbox> {
               Focus(
                 onFocusChange: (focused) =>
                     setState(() => _isFocused = focused),
-                child: _CheckboxIndicator(
-                  checked: widget.checked,
+                child: _RadioIndicator(
+                  checked: _isChecked,
                   colors: colors,
                   isHovered: _isHovered,
                   isFocused: _isFocused,
@@ -125,9 +113,9 @@ class _OmsaCheckboxState extends State<OmsaCheckbox> {
   }
 }
 
-/// Internal checkbox indicator widget
-class _CheckboxIndicator extends StatelessWidget {
-  const _CheckboxIndicator({
+/// Internal radio indicator widget
+class _RadioIndicator extends StatelessWidget {
+  const _RadioIndicator({
     required this.checked,
     required this.colors,
     required this.isHovered,
@@ -136,62 +124,51 @@ class _CheckboxIndicator extends StatelessWidget {
     required this.readOnly,
   });
 
-  final bool? checked;
-  final OmsaCheckboxColors colors;
+  final bool checked;
+  final OmsaRadioColors colors;
   final bool isHovered;
   final bool isFocused;
   final bool disabled;
   final bool readOnly;
 
-  bool get _isChecked => checked == true;
-  bool get _isIndeterminate => checked == null;
-
   @override
   Widget build(BuildContext context) {
     final effectiveBackgroundColor = disabled
         ? colors.backgroundDisabled
-        : _isChecked || _isIndeterminate
-        ? (isHovered && !readOnly
-              ? colors.backgroundSelectedHover
-              : colors.backgroundSelected)
-        : (isHovered && !readOnly ? colors.backgroundHover : colors.background);
+        : isHovered && !readOnly
+        ? colors.backgroundHover
+        : colors.background;
 
     final effectiveBorderColor = disabled
         ? colors.borderDisabled
-        : (_isChecked || _isIndeterminate)
-        ? Colors.transparent
         : colors.border;
 
     final effectiveIconColor = disabled ? colors.iconDisabled : colors.icon;
 
-    return AnimatedContainer(
-      duration: const Duration(
-        milliseconds: OmsaCheckboxDimensions.animationDurationMs,
-      ),
-      curve: Curves.easeInOut,
-      width: OmsaCheckboxDimensions.indicatorWidth,
-      height: OmsaCheckboxDimensions.indicatorHeight,
+    return Container(
+      width: OmsaRadioDimensions.indicatorWidth,
+      height: OmsaRadioDimensions.indicatorHeight,
       decoration: BoxDecoration(
+        shape: BoxShape.circle,
         color: effectiveBackgroundColor,
         border: Border.all(
           color: effectiveBorderColor,
-          width: AppDimensions.borderWidthsDefault,
-        ),
-        borderRadius: BorderRadius.circular(
-          AppDimensions.borderRadiusesMedium / 2,
+          width: AppDimensions.borderWidthsMedium,
         ),
       ),
-      child: _isChecked
-          ? OmsaIcons.Check(
-              size: OmsaCheckboxDimensions.checkIconSize,
-              color: effectiveIconColor,
-            )
-          : _isIndeterminate
+      child: checked
           ? Center(
-              child: Container(
-                width: OmsaCheckboxDimensions.indeterminateBarWidth,
-                height: OmsaCheckboxDimensions.indeterminateBarHeight,
-                color: effectiveIconColor,
+              child: AnimatedContainer(
+                duration: const Duration(
+                  milliseconds: OmsaRadioDimensions.animationDurationMs,
+                ),
+                curve: Curves.easeInOut,
+                width: OmsaRadioDimensions.innerCircleWidth,
+                height: OmsaRadioDimensions.innerCircleHeight,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: effectiveIconColor,
+                ),
               ),
             )
           : null,

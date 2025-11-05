@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 
 /// Feedback text component for text fields
