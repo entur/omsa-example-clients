@@ -99,10 +99,11 @@ class TicketScreen extends StatelessWidget {
                                     maxLines: 2,
                                   ),
                                   trailing: doc == displayTicket
-                                      ? const OmsaChip(
-                                          label: Text('Primary'),
-                                          variant: OmsaChipVariant.filled,
-                                          color: OmsaChipColor.primary,
+                                      ? OmsaActionChip(
+                                          size: OmsaChipSize.small,
+                                          label: const Text('Primary'),
+                                          leadingIcon: const Icon(Icons.star),
+                                          onPressed: () {},
                                         )
                                       : null,
                                   onTap: () {
@@ -130,7 +131,8 @@ class TicketScreen extends StatelessWidget {
   }
 
   Widget _buildValidityChip(String label, DateTime value) {
-    return OmsaChip(
+    return OmsaActionChip(
+      size: OmsaChipSize.small,
       label: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -143,8 +145,7 @@ class TicketScreen extends StatelessWidget {
           ),
         ],
       ),
-      variant: OmsaChipVariant.filled,
-      color: OmsaChipColor.info,
+      onPressed: () {},
     );
   }
 }
@@ -223,24 +224,24 @@ class _TicketVisual extends StatelessWidget {
                 runSpacing: 4,
                 children: [
                   if (document!.animation!.keyVersion != null)
-                    OmsaChip(
+                    OmsaActionChip(
+                      size: OmsaChipSize.small,
                       label: Text('Key ${document!.animation!.keyVersion}'),
-                      variant: OmsaChipVariant.outlined,
-                      color: OmsaChipColor.neutral,
+                      onPressed: () {},
                     ),
                   if (document!.animation!.color != null)
-                    OmsaChip(
+                    OmsaActionChip(
+                      size: OmsaChipSize.small,
                       label: Text('Color ${document!.animation!.color}'),
-                      variant: OmsaChipVariant.outlined,
-                      color: OmsaChipColor.neutral,
+                      onPressed: () {},
                     ),
                   if (document!.animation!.speed != null)
-                    OmsaChip(
+                    OmsaActionChip(
+                      size: OmsaChipSize.small,
                       label: Text(
                         'Speed ${document!.animation!.speed?.toString()}',
                       ),
-                      variant: OmsaChipVariant.outlined,
-                      color: OmsaChipColor.neutral,
+                      onPressed: () {},
                     ),
                 ],
               ),

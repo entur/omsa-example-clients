@@ -365,26 +365,30 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  OmsaChip(
+                  OmsaActionChip(
+                    size: OmsaChipSize.small,
                     label: Text(
                       summary.isRefundable ? 'Refundable' : 'Non-refundable',
                     ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isRefundable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
+                    leadingIcon: Icon(
+                      summary.isRefundable ? Icons.check_circle : Icons.cancel,
+                      size: 16,
+                    ),
+                    onPressed: () {},
                   ),
                   const SizedBox(height: 4),
-                  OmsaChip(
+                  OmsaActionChip(
+                    size: OmsaChipSize.small,
                     label: Text(
                       summary.isExchangeable
                           ? 'Exchangeable'
                           : 'Non-exchangeable',
                     ),
-                    variant: OmsaChipVariant.filled,
-                    color: summary.isExchangeable
-                        ? OmsaChipColor.success
-                        : OmsaChipColor.warning,
+                    leadingIcon: Icon(
+                      summary.isExchangeable ? Icons.swap_horiz : Icons.block,
+                      size: 16,
+                    ),
+                    onPressed: () {},
                   ),
                 ],
               ),

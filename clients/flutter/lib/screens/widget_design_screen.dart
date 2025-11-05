@@ -7,6 +7,7 @@ import 'package:omsa_demo_app/widgets/showcases/showcases.dart';
 class ShowcaseRegistry {
   static final List<ComponentShowcase> showcases = [
     const ButtonShowcase(),
+    const ChipShowcase(),
     const InputShowcase(),
     const CardShowcase(),
     const DisplayShowcase(),

@@ -62,35 +62,29 @@ class OffersScreen extends StatelessWidget {
           spacing: 6,
           runSpacing: 6,
           children: [
-            OmsaChip(
+            OmsaActionChip(
+              size: OmsaChipSize.small,
               label: Text(
                 summary.isRefundable ? 'Refundable' : 'Non-refundable',
                 style: AppTypography.textSmall,
               ),
-              variant: OmsaChipVariant.filled,
-              color: summary.isRefundable
-                  ? OmsaChipColor.success
-                  : OmsaChipColor.warning,
-              icon: Icon(
+              leadingIcon: Icon(
                 summary.isRefundable ? Icons.check_circle : Icons.cancel,
-                size: 12,
+                size: 16,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              onPressed: () {},
             ),
-            OmsaChip(
+            OmsaActionChip(
+              size: OmsaChipSize.small,
               label: Text(
                 summary.isExchangeable ? 'Exchangeable' : 'Non-exchangeable',
                 style: AppTypography.textSmall,
               ),
-              variant: OmsaChipVariant.filled,
-              color: summary.isExchangeable
-                  ? OmsaChipColor.success
-                  : OmsaChipColor.warning,
-              icon: Icon(
+              leadingIcon: Icon(
                 summary.isExchangeable ? Icons.swap_horiz : Icons.block,
-                size: 12,
+                size: 16,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              onPressed: () {},
             ),
           ],
         ),
