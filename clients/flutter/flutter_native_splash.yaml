@@ -1,0 +1,18 @@
+flutter_native_splash:
+  image: assets/wayfare_icon_logo_1152x1152.png
+
+  color: "#FFFFFF"
+
+  color_dark: "#141527"
+
+  # Enable Android 12+ splash screen support
+  android_12:
+    image: assets/wayfare_icon_logo_1152x1152.png
+    color: "#FFFFFF"
+    image_dark: assets/wayfare_icon_logo_1152x1152.png
+    color_dark: "#141527"
+
+  web: true
+
+  ios_content_mode: center
+  android_gravity: center
