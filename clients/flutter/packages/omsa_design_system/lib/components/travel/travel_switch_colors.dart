@@ -199,8 +199,8 @@ class TravelSwitchColors {
     switch (transport) {
       case 'Air':
         return isLight
-            ? ComponentLightTokens.travelTravelSwitchStandardIconTrueAir
-            : ComponentDarkTokens.travelTravelSwitchStandardIconTrueAir;
+            ? ComponentLightTokens.travelTravelSwitchStandardIconTruePlane
+            : ComponentDarkTokens.travelTravelSwitchStandardIconTruePlane;
       case 'Bicycle':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchStandardIconTrueBicycle
@@ -399,8 +399,8 @@ class TravelSwitchColors {
     switch (transport) {
       case 'Air':
         return isLight
-            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueAir
-            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueAir;
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTruePlane
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTruePlane;
       case 'Bicycle':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTrueBicycle
@@ -447,8 +447,8 @@ class TravelSwitchColors {
             : ComponentDarkTokens.travelTravelSwitchContrastIconTruePlane;
       case 'Rail':
         return isLight
-            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueRail
-            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueRail;
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTrain
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueTrain;
       case 'Taxi':
         return isLight
             ? ComponentLightTokens.travelTravelSwitchContrastIconTrueTaxi
@@ -467,8 +467,8 @@ class TravelSwitchColors {
             : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWalk;
       case 'Water':
         return isLight
-            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueWater
-            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueWater;
+            ? ComponentLightTokens.travelTravelSwitchContrastIconTrueFerry
+            : ComponentDarkTokens.travelTravelSwitchContrastIconTrueFerry;
       case 'Airportlinkbus':
         return isLight
             ? ComponentLightTokens
