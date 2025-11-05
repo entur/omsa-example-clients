@@ -4,7 +4,7 @@ export './buttons/omsa_floating_button.dart';
 export './buttons/omsa_icon_button.dart';
 export './buttons/omsa_square_button.dart';
 export './form/form.dart';
-export './cards/omsa_card.dart';
+export './layout/omsa_card.dart';
 export './chip/omsa_chip.dart';
 export './alert/omsa_alert_colors.dart';
 export './alert/omsa_base_alert_box.dart';
