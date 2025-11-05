@@ -5,3 +5,4 @@ export './display_showcase.dart';
 export 'typography_showcase.dart';
 export 'color_showcase.dart';
 export './spacing_showcase.dart';
+export 'chip_showcase.dart';

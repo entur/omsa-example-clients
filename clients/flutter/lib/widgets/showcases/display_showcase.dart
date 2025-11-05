@@ -27,27 +27,6 @@ class _DisplayShowcaseState extends State<DisplayShowcase> {
         const SizedBox(height: 24),
 
         ComponentExample(
-          label: 'Chips',
-          child: VariantShowcase(
-            children: [
-              const OmsaChip(label: Text('Default')),
-              OmsaChip(
-                label: const Text('With Icon'),
-                icon: const Icon(Icons.check),
-                onPressed: () {},
-              ),
-              OmsaChip(label: const Text('Deletable'), onDeleted: () {}),
-              const OmsaChip(
-                label: Text('Custom Color'),
-                customBackgroundColor: Colors.blue,
-                customTextColor: Colors.white,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-
-        ComponentExample(
           label: 'Banner AlertBox',
           child: VariantShowcase(
             direction: Axis.vertical,
