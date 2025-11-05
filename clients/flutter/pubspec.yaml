@@ -51,6 +51,7 @@ dependencies:
   flutter_markdown_plus: ^1.0.5
   lottie: ^3.2.0
   flutter_native_splash: ^2.4.3
+  flutter_svg: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,8 @@ flutter:
     - assets/wayfare_logo.svg
     - assets/wayfare_logo_solid.svg
     - assets/wayfare_omsa_logo.svg
+    - assets/wayfare_logo_filled.svg
+    - assets/wayfare_combined_header.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

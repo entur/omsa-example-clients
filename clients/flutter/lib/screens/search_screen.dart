@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
@@ -125,13 +126,11 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'OMSA',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
+        title: Padding(
+            padding: EdgeInsets.zero,
+            child: SvgPicture.asset(
+              'assets/wayfare_combined_header.svg',
+            )),
         centerTitle: false,
         actions: [
           IconButton(
