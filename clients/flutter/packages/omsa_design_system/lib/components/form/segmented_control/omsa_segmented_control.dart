@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/components/inputs/segmented_control/omsa_segmented_choice.dart';
-import 'package:omsa_design_system/components/inputs/segmented_control/omsa_segmented_control_colors.dart';
-import 'package:omsa_design_system/components/inputs/segmented_control/omsa_segmented_control_dimensions.dart';
+import 'package:omsa_design_system/components/form/segmented_control/omsa_segmented_choice.dart';
+import 'package:omsa_design_system/components/form/segmented_control/omsa_segmented_control_colors.dart';
+import 'package:omsa_design_system/components/form/segmented_control/omsa_segmented_control_dimensions.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 

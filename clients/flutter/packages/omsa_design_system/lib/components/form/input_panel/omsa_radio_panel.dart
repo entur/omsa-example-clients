@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_base.dart';
-import 'package:omsa_design_system/components/inputs/omsa_radio.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_input_panel_base.dart';
+import 'package:omsa_design_system/components/form/radio/omsa_radio.dart';
 
 /// A radio panel component that displays a selectable card-style option
 /// Used for single-value selection. If you need multi-selection, use the OmsaCheckboxPanel instead.

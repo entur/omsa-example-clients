@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_colors.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_decoration.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_dimensions.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_feedback.dart';
-import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_item.dart';
-import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_list.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_colors.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_decoration.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_dimensions.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_feedback.dart';
+import 'package:omsa_design_system/components/form/dropdown/omsa_dropdown_item.dart';
+import 'package:omsa_design_system/components/form/dropdown/omsa_dropdown_list.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 
 enum OmsaDropdownVariant { none, success, negative, information, warning }

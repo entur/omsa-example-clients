@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_base.dart';
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_checkbox_panel.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_input_panel_base.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_checkbox_panel.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 

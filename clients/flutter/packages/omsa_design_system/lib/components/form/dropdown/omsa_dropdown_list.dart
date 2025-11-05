@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_list_colors.dart';
+import 'package:omsa_design_system/components/form/dropdown/omsa_dropdown_list_colors.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
-import 'package:omsa_design_system/components/inputs/dropdown/omsa_dropdown_item.dart';
-import 'package:omsa_design_system/components/inputs/text_field/omsa_text_field_colors.dart';
+import 'package:omsa_design_system/components/form/dropdown/omsa_dropdown_item.dart';
+import 'package:omsa_design_system/components/form/text_field/omsa_text_field_colors.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 
 class OmsaDropdownList<T> extends StatelessWidget {

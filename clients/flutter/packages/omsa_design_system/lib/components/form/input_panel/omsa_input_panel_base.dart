@@ -3,8 +3,8 @@ import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/theme/app_dimensions.dart';
 import 'package:omsa_design_system/theme/app_spacing.dart';
 import 'package:omsa_design_system/theme/app_typography.dart';
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_colors.dart';
-import 'package:omsa_design_system/components/inputs/input_panel/omsa_input_panel_dimensions.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_input_panel_colors.dart';
+import 'package:omsa_design_system/components/form/input_panel/omsa_input_panel_dimensions.dart';
 
 /// Size variants for input panels
 enum OmsaInputPanelSize { medium, large }
