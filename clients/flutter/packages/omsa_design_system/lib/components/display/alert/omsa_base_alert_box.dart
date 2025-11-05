@@ -193,14 +193,18 @@ class _OmsaBaseAlertBoxState extends State<OmsaBaseAlertBox> {
             : CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               right: OmsaAlertDimensions.iconMarginRight,
             ),
-            child: (widget.size == OmsaAlertSize.banner ||
-                    widget.size == OmsaAlertSize.toast) &&
+            child:
+                (widget.size == OmsaAlertSize.banner ||
+                        widget.size == OmsaAlertSize.toast) &&
                     MediaQuery.of(context).size.width >= 1024
                 ? Transform.translate(
-                    offset: Offset(0, OmsaAlertDimensions.iconMarginTopOffset),
+                    offset: const Offset(
+                      0,
+                      OmsaAlertDimensions.iconMarginTopOffset,
+                    ),
                     child: iconWidget,
                   )
                 : iconWidget,
