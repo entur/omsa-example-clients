@@ -8,6 +8,7 @@ class ShowcaseRegistry {
   static final List<ComponentShowcase> showcases = [
     const ButtonShowcase(),
     const ChipShowcase(),
+    const BadgeTagShowcase(),
     const InputShowcase(),
     const CardShowcase(),
     const DisplayShowcase(),

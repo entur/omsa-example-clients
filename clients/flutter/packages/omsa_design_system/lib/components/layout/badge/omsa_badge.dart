@@ -156,7 +156,9 @@ class OmsaBadge extends StatelessWidget {
         ),
         const SizedBox(width: 8.0),
         DefaultTextStyle(
-          style: dimensions.textStyle.copyWith(color: colors.text),
+          style: dimensions.textStyle.copyWith(
+            color: colors.textBullet ?? colors.text,
+          ),
           child: child is Widget ? child : Text(_displayValue),
         ),
       ],
