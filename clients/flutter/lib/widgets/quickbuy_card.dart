@@ -38,7 +38,7 @@ class QuickbuyCard extends StatelessWidget {
         side: BorderSide(width: 2, color: tokens.strokeSubdued),
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
-      leading: OmsaIcons.ValidTicket(),
+      leading: OmsaIcons.ValidTicket(size: 20),
       horizontalTitleGap: 8,
       title: Text(destinationText, style: AppTypography.textLarge),
       subtitle: Text(
@@ -48,7 +48,7 @@ class QuickbuyCard extends StatelessWidget {
           fontWeight: FontWeight.w400,
         ),
       ),
-      trailing: OmsaIcons.RightArrow(),
+      trailing: OmsaIcons.RightArrow(size: 20),
       onTap: onTap,
     );
   }

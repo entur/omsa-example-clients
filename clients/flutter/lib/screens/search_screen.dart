@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_demo_app/widgets/quickbuy_card.dart';
+import 'package:omsa_demo_app/widgets/travel_search.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
@@ -202,121 +203,131 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: EdgeInsets.zero,
-          child: SvgPicture.asset('assets/wayfare_combined_header.svg'),
-        ),
-        centerTitle: false,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: DemoBadge(text: "Demo"),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 32),
-
-              Text('Where are you going?', style: AppTypography.textExtraLarge),
-
-              const SizedBox(height: 16),
-
-              OmsaButton(
-                onPressed: _openTravelerPicker,
-                variant: OmsaButtonVariant.secondary,
-                contentAlignment: OmsaButtonContentAlignment.spaceBetween,
-                leadingIcon: OmsaIcons.User(
-                  color: context.wayfareTokens.brandPrimary,
-                ),
-                trailingIcon: Text(
-                  "Change",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: context.wayfareTokens.brandPrimary,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/wayfare_combined_header.svg'),
+                      DemoBadge(text: "Demo"),
+                    ],
                   ),
-                ),
-                child: Text(
-                  _getTravelersDisplayText(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: context.wayfareTokens.brandPrimary,
+
+                  const SizedBox(height: 32),
+
+                  Text(
+                    'Where are you going?',
+                    style: AppTypography.textExtraLarge,
                   ),
-                ),
-              ),
 
-              const SizedBox(height: 8),
+                  const SizedBox(height: 16),
 
-              OmsaButton(
-                onPressed: _openTimePicker,
-                variant: OmsaButtonVariant.secondary,
-                contentAlignment: OmsaButtonContentAlignment.spaceBetween,
-                leadingIcon: OmsaIcons.Clock(
-                  color: context.wayfareTokens.brandPrimary,
-                ),
-                trailingIcon: Text(
-                  "Change",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: context.wayfareTokens.brandPrimary,
+                  TravelSearch(zones: _zones),
+
+                  const SizedBox(height: 16),
+
+                  OmsaButton(
+                    onPressed: _openTravelerPicker,
+                    variant: OmsaButtonVariant.secondary,
+                    contentAlignment: OmsaButtonContentAlignment.spaceBetween,
+                    leadingIcon: OmsaIcons.User(
+                      size: 20,
+                      color: context.wayfareTokens.brandPrimary,
+                    ),
+                    trailingIcon: Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
+                    child: Text(
+                      _getTravelersDisplayText(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
                   ),
-                ),
-                child: Text(
-                  _getTimeDisplayText(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: context.wayfareTokens.brandPrimary,
+
+                  const SizedBox(height: 8),
+
+                  OmsaButton(
+                    onPressed: _openTimePicker,
+                    variant: OmsaButtonVariant.secondary,
+                    contentAlignment: OmsaButtonContentAlignment.spaceBetween,
+                    leadingIcon: OmsaIcons.Clock(
+                      size: 20,
+                      color: context.wayfareTokens.brandPrimary,
+                    ),
+                    trailingIcon: Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
+                    child: Text(
+                      _getTimeDisplayText(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
                   ),
-                ),
-              ),
 
-              const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-              OmsaButton(
-                onPressed: _isLoading ? null : _searchOffers,
-                isLoading: _isLoading,
-                width: OmsaButtonWidth.fluid,
-                leadingIcon: OmsaIcons.Search(),
-                child: const Text('Search'),
-              ),
+                  OmsaButton(
+                    onPressed: _isLoading ? null : _searchOffers,
+                    isLoading: _isLoading,
+                    width: OmsaButtonWidth.fluid,
+                    leadingIcon: OmsaIcons.Search(size: 20),
+                    child: const Text('Search'),
+                  ),
 
-              const SizedBox(height: 32),
+                  const SizedBox(height: 32),
 
-              Text('Quickbuy', style: AppTypography.textExtraLarge),
+                  Text('Quickbuy', style: AppTypography.textExtraLarge),
 
-              const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _quickbuyItems.length,
-                itemBuilder: (context, index) {
-                  return QuickbuyCard(
-                    key: ValueKey<int>(index),
-                    onTap: () {
-                      // Navigate to the quickbuy screen
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _quickbuyItems.length,
+                    itemBuilder: (context, index) {
+                      return QuickbuyCard(
+                        key: ValueKey<int>(index),
+                        onTap: () {
+                          // Navigate to the quickbuy screen
+                        },
+                        travellers: _quickbuyItems[index]['travellers'] ?? '',
+                        from: _quickbuyItems[index]['from'] ?? '',
+                        to: _quickbuyItems[index]['to'] ?? '',
+                        time: _quickbuyItems[index]['time'] ?? '',
+                        ticketType: _quickbuyItems[index]['ticketType'] ?? '',
+                      );
                     },
-                    travellers: _quickbuyItems[index]['travellers'] ?? '',
-                    from: _quickbuyItems[index]['from'] ?? '',
-                    to: _quickbuyItems[index]['to'] ?? '',
-                    time: _quickbuyItems[index]['time'] ?? '',
-                    ticketType: _quickbuyItems[index]['ticketType'] ?? '',
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(height: 8);
-                },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(height: 8);
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

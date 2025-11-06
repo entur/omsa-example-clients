@@ -87,6 +87,7 @@ flutter:
     - assets/wayfare_combined_header.svg
     - assets/turtle_signed_in.png
     - assets/ninja_turtle.png
+    - assets/turtle_searching.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
