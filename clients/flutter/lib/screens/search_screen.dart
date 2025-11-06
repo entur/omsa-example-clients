@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:omsa_demo_app/widgets/demo_badge.dart';
+import 'package:omsa_demo_app/widgets/quickbuy_card.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
@@ -25,6 +27,23 @@ class _SearchScreenState extends State<SearchScreen> {
   int _children = 0;
   int _infants = 0;
   bool _isLoading = false;
+
+  final List<Map<String, String>> _zones = [
+    {'id': 'KOL:FareZone:1', 'name': 'Haugalandet'},
+    {'id': 'KOL:FareZone:2', 'name': 'Nærsone Haugesund'},
+    {'id': 'KOL:FareZone:3', 'name': 'Ryfylke'},
+    {'id': 'KOL:FareZone:4', 'name': 'Nord-Jæren'},
+    {'id': 'KOL:FareZone:5', 'name': 'Jæren'},
+    {'id': 'KOL:FareZone:6', 'name': 'Dalane'},
+    {'id': 'KOL:FareZone:7', 'name': 'Nærsone Egersund'},
+  ];
+
+
+  final List<Map<String, String>> _quickbuyItems = [
+    {'from': 'Haugalandet', 'to': 'Ryfylke', 'time': 'Now', 'travellers': '1 Adult', 'ticketType': 'single'},
+    {'from': 'Haugalandet', 'to': 'Haugalandet', 'time': 'Now', 'travellers': '1 Adult', 'ticketType': '24H'},
+    {'from': 'Jæren', 'to': 'Nord-Jæren', 'time': 'Now', 'travellers': '1 Adult, 2 children', 'ticketType': 'single'},
+  ];
 
   Future<void> _openTravelerPicker() async {
     final result = await TravelerPickerDrawer.show(
@@ -175,10 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
-            child: OmsaBadge(
-              variant: OmsaBadgeVariant.information,
-              child: Text("Demo"),
-            ),
+            child: DemoBadge(text: "Demo")
           ),
         ],
       ),
@@ -189,13 +205,11 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Where are you going?',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
+
+              Text('Where are you going?', style: AppTypography.textExtraLarge),
+
+              const SizedBox(height: 16),
 
               OmsaButton(
                 onPressed: _openTravelerPicker,
@@ -204,11 +218,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 leadingIcon: OmsaIcons.User(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
-                  style: TextStyle(color: Color(0xFFE90037)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFE90037)),
                 ),
                 child: Text(
                   _getTravelersDisplayText(),
-                  style: TextStyle(color: Color(0xFFE90037)),
+                  style: TextStyle(fontWeight: FontWeight.normal, color: Color(0xFFE90037)),
                 ),
               ),
 
@@ -221,11 +235,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 leadingIcon: OmsaIcons.Clock(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
-                  style: TextStyle(color: Color(0xFFE90037)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFE90037)),
                 ),
                 child: Text(
                   _getTimeDisplayText(),
-                  style: TextStyle(color: Color(0xFFE90037)),
+                  style: TextStyle(fontWeight: FontWeight.normal, color: Color(0xFFE90037)),
                 ),
               ),
 
@@ -237,6 +251,33 @@ class _SearchScreenState extends State<SearchScreen> {
                 width: OmsaButtonWidth.fluid,
                 leadingIcon: OmsaIcons.Search(),
                 child: const Text('Search'),
+              ),
+
+              const SizedBox(height: 32),
+
+              Text('Quickbuy', style: AppTypography.textExtraLarge),
+
+              const SizedBox(height: 16),
+
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _quickbuyItems.length,
+                itemBuilder: (context, index) {
+                  return QuickbuyCard(
+                    key: ValueKey<int>(index),
+                    onTap: () {
+                      // Navigate to the quickbuy screen
+                    },
+                    travellers: _quickbuyItems[index]['travellers'] ?? '',
+                    from: _quickbuyItems[index]['from'] ?? '',
+                    to: _quickbuyItems[index]['to'] ?? '',
+                    time: _quickbuyItems[index]['time'] ?? '',
+                    ticketType: _quickbuyItems[index]['ticketType'] ?? '',
+                  );
+                }, separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(height: 8);
+              },
               ),
             ],
           ),

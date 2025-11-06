@@ -80,10 +80,10 @@ class _OmsaDemoAppState extends State<OmsaDemoApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OMSA Travel Demo',
+      title: 'Wayfare',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: !_isInitialized
           ? const Scaffold(body: Center(child: CircularProgressIndicator()))

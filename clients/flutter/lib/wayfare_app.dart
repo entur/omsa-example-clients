@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_design_system/theme/tokens/base_color_tokens.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/screens/search_screen.dart';
 import 'package:omsa_demo_app/screens/tickets_screen.dart';
@@ -25,30 +26,36 @@ class _WayfareAppState extends State<WayfareApp> {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        destinations: [
-          NavigationDestination(
-            icon: OmsaIcons.Search(size: 24),
-            selectedIcon: OmsaIcons.SearchFilled(size: 24),
-            label: 'Search',
+            indicatorColor: Colors.transparent,
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            labelTextStyle: WidgetStateProperty<TextStyle>.fromMap(<WidgetStatesConstraint, TextStyle>{
+              WidgetState.selected: TextStyle(fontSize: 12, color: const Color(0xFFE90037), fontWeight: FontWeight.w600),
+              WidgetState.any: TextStyle(fontSize: 12, color: BaseLightTokens.textSubdued, fontWeight: FontWeight.w500),
+            }),
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            destinations: [
+              NavigationDestination(
+                icon: OmsaIcons.Search(size: 24, color: BaseLightTokens.textSubdued),
+                selectedIcon: OmsaIcons.SearchFilled(size: 24, color: const Color(0xFFE90037)),
+                label: 'Search',
+              ),
+              NavigationDestination(
+                icon: OmsaIcons.ValidTicket(size: 24, color: BaseLightTokens.textSubdued),
+                selectedIcon: OmsaIcons.ValidTicketFilled(size: 24, color: const Color(0xFFE90037)),
+                label: 'Tickets',
+              ),
+              NavigationDestination(
+                icon: OmsaIcons.User(size: 24, color: BaseLightTokens.textSubdued),
+                selectedIcon: OmsaIcons.User(size: 24, color: const Color(0xFFE90037)),
+                label: 'Profile',
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: OmsaIcons.ValidTicket(size: 24),
-            selectedIcon: OmsaIcons.ValidTicketFilled(size: 24),
-            label: 'Tickets',
-          ),
-          NavigationDestination(
-            icon: OmsaIcons.User(size: 24),
-            selectedIcon: OmsaIcons.User(size: 24),
-            label: 'Profile',
-          ),
-        ],
-      ),
     );
   }
 }
