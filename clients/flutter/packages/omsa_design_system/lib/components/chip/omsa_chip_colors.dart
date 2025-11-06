@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
 import 'package:omsa_design_system/theme/tokens/base_color_tokens.dart';
+import 'package:omsa_design_system/theme/tokens/base_tokens.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 
 enum ChipState { defaultState, hovered, pressed, selected, disabled }
@@ -42,10 +43,11 @@ class OmsaChipColors {
   }) {
     final brightness = Theme.of(context).brightness;
     final isLight = brightness == Brightness.light;
+    final tokens = BaseTokens.from(brightness);
 
     if (mode == OmsaComponentMode.contrast) {
       if (isLight) {
-        return const OmsaChipColors(
+        return OmsaChipColors(
           backgroundDefault: ComponentLightTokens.chipContrastDefault,
           backgroundHover: ComponentLightTokens.chipContrastHover,
           backgroundActive: ComponentLightTokens.chipContrastActive,
@@ -57,10 +59,10 @@ class OmsaChipColors {
           iconUnselected: ComponentLightTokens.chipContrastIconUnselected,
           iconSelected: ComponentLightTokens.chipContrastIconSelected,
           iconDisabled: ComponentLightTokens.chipContrastIconDisabled,
-          focus: BaseLightTokens.strokeFocusContrast,
+          focus: tokens.strokeFocusContrast,
         );
       } else {
-        return const OmsaChipColors(
+        return OmsaChipColors(
           backgroundDefault: ComponentDarkTokens.chipContrastDefault,
           backgroundHover: ComponentDarkTokens.chipContrastHover,
           backgroundActive: ComponentDarkTokens.chipContrastActive,
@@ -72,14 +74,14 @@ class OmsaChipColors {
           iconUnselected: ComponentDarkTokens.chipContrastIconUnselected,
           iconSelected: ComponentDarkTokens.chipContrastIconSelected,
           iconDisabled: ComponentDarkTokens.chipContrastIconDisabled,
-          focus: BaseDarkTokens.strokeFocusContrast,
+          focus: tokens.strokeFocusContrast,
         );
       }
     }
 
     // Standard mode
     if (isLight) {
-      return const OmsaChipColors(
+      return OmsaChipColors(
         backgroundDefault: ComponentLightTokens.chipStandardDefault,
         backgroundHover: ComponentLightTokens.chipStandardHover,
         backgroundActive: ComponentLightTokens.chipStandardActive,
@@ -91,10 +93,10 @@ class OmsaChipColors {
         iconUnselected: ComponentLightTokens.chipStandardIconUnselected,
         iconSelected: ComponentLightTokens.chipStandardIconSelected,
         iconDisabled: ComponentLightTokens.chipStandardIconDisabled,
-        focus: BaseLightTokens.strokeFocusStandard,
+        focus: tokens.strokeFocusStandard,
       );
     } else {
-      return const OmsaChipColors(
+      return OmsaChipColors(
         backgroundDefault: ComponentDarkTokens.chipStandardDefault,
         backgroundHover: ComponentDarkTokens.chipStandardHover,
         backgroundActive: ComponentDarkTokens.chipStandardActive,
@@ -106,7 +108,7 @@ class OmsaChipColors {
         iconUnselected: ComponentDarkTokens.chipStandardIconUnselected,
         iconSelected: ComponentDarkTokens.chipStandardIconSelected,
         iconDisabled: ComponentDarkTokens.chipStandardIconDisabled,
-        focus: BaseDarkTokens.strokeFocusStandard,
+        focus: tokens.strokeFocusStandard,
       );
     }
   }

@@ -88,8 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onTap: () {},
           ),
-          const Divider(
-            color: BaseLightTokens.strokeSubduedAlt,
+          Divider(
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -102,9 +102,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onTap: () {},
           ),
-          const Divider(
+          Divider(
             height: 1,
-            color: BaseLightTokens.strokeSubduedAlt,
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
           ),
@@ -113,8 +113,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: const Text('Notifications', style: AppTypography.titleSmall),
             onTap: () {},
           ),
-          const Divider(
-            color: BaseLightTokens.strokeSubduedAlt,
+          Divider(
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -127,8 +127,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onTap: () {},
           ),
-          const Divider(
-            color: BaseLightTokens.strokeSubduedAlt,
+          Divider(
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -147,8 +147,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             },
           ),
-          const Divider(
-            color: BaseLightTokens.strokeSubduedAlt,
+          Divider(
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -158,8 +158,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: const Text('Advantages', style: AppTypography.titleSmall),
             onTap: () {},
           ),
-          const Divider(
-            color: BaseLightTokens.strokeSubduedAlt,
+          Divider(
+            color: context.tokens.strokeSubduedAlt,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -176,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               "Version 0.0.1",
               textAlign: TextAlign.center,
               style: AppTypography.textSmall.copyWith(
-                color: BaseLightTokens.textSubdued,
+                color: context.tokens.textSubdued,
               ),
             ),
           ),

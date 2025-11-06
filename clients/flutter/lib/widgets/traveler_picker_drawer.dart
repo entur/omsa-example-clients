@@ -62,17 +62,12 @@ class TravelerPickerDrawer extends StatefulWidget {
     int initialSeniors = 0,
     String? initialDiscount,
   }) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
-
     return showModalBottomSheet<TravelerPickerResult>(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: isLight
-          ? BaseLightTokens.frameTint
-          : BaseDarkTokens.frameTint,
+      backgroundColor: context.tokens.frameTint,
       builder: (context) => TravelerPickerDrawer(
         initialAdults: initialAdults,
         initialYouth: initialYouth,
@@ -119,8 +114,7 @@ class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final tokens = context.tokens;
 
     return SafeArea(
       child: Padding(
@@ -136,9 +130,7 @@ class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: isLight
-                      ? BaseLightTokens.strokeSubdued
-                      : BaseDarkTokens.strokeSubdued,
+                  color: tokens.strokeSubdued,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -259,8 +251,7 @@ class _TravelerCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final tokens = context.tokens;
 
     return Row(
       children: [
@@ -278,9 +269,7 @@ class _TravelerCounter extends StatelessWidget {
               Text(
                 subtitle,
                 style: AppTypography.textSmall.copyWith(
-                  color: isLight
-                      ? BaseLightTokens.textSubdued
-                      : BaseDarkTokens.textSubdued,
+                  color: tokens.textSubdued,
                 ),
               ),
             ],

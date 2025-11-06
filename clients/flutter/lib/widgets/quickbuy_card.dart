@@ -30,10 +30,12 @@ class QuickbuyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
     return ListTile(
       dense: true,
       shape: RoundedRectangleBorder(
-        side: BorderSide(width: 2, color: BaseLightTokens.strokeSubdued),
+        side: BorderSide(width: 2, color: tokens.strokeSubdued),
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       leading: OmsaIcons.ValidTicket(),
@@ -42,7 +44,7 @@ class QuickbuyCard extends StatelessWidget {
       subtitle: Text(
         '$ticketTypeText ⋅ $travellers',
         style: AppTypography.textMedium.copyWith(
-          color: BaseLightTokens.textSubdued,
+          color: tokens.textSubdued,
           fontWeight: FontWeight.w400,
         ),
       ),

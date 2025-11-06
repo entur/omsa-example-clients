@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_design_system/theme/tokens/base_color_tokens.dart';
+import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/screens/search_screen.dart';
 import 'package:omsa_demo_app/screens/tickets_screen.dart';
@@ -42,7 +42,7 @@ class _WayfareAppState extends State<WayfareApp> {
             ),
             WidgetState.any: TextStyle(
               fontSize: 12,
-              color: BaseLightTokens.textSubdued,
+              color: context.tokens.textSubdued,
               fontWeight: FontWeight.w500,
             ),
           },
@@ -52,7 +52,7 @@ class _WayfareAppState extends State<WayfareApp> {
           NavigationDestination(
             icon: OmsaIcons.Search(
               size: 24,
-              color: BaseLightTokens.textSubdued,
+              color: context.tokens.textSubdued,
             ),
             selectedIcon: OmsaIcons.SearchFilled(
               size: 24,
@@ -63,7 +63,7 @@ class _WayfareAppState extends State<WayfareApp> {
           NavigationDestination(
             icon: OmsaIcons.ValidTicket(
               size: 24,
-              color: BaseLightTokens.textSubdued,
+              color: context.tokens.textSubdued,
             ),
             selectedIcon: OmsaIcons.ValidTicketFilled(
               size: 24,
@@ -72,7 +72,7 @@ class _WayfareAppState extends State<WayfareApp> {
             label: 'Tickets',
           ),
           NavigationDestination(
-            icon: OmsaIcons.User(size: 24, color: BaseLightTokens.textSubdued),
+            icon: OmsaIcons.User(size: 24, color: context.tokens.textSubdued),
             selectedIcon: OmsaIcons.User(
               size: 24,
               color: const Color(0xFFE90037),

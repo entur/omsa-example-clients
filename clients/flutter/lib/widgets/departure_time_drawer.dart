@@ -29,17 +29,12 @@ class DepartureTimeDrawer extends StatefulWidget {
     TimeType initialTimeType = TimeType.now,
     DateTime? initialDateTime,
   }) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
-
     return showModalBottomSheet<DepartureTimeDrawerResult>(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: isLight
-          ? BaseLightTokens.frameTint
-          : BaseDarkTokens.frameTint,
+      backgroundColor: context.tokens.frameTint,
       builder: (context) => DepartureTimeDrawer(
         initialTimeType: initialTimeType,
         initialDateTime: initialDateTime,
@@ -220,8 +215,7 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
   @override
   Widget build(BuildContext context) {
     final availableDates = _getAvailableDates();
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final tokens = context.tokens;
 
     return SafeArea(
       child: Padding(
@@ -237,9 +231,7 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: isLight
-                      ? BaseLightTokens.strokeSubdued
-                      : BaseDarkTokens.strokeSubdued,
+                  color: tokens.strokeSubdued,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -405,15 +397,11 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                                 bottom: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                               ),
@@ -429,15 +417,11 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                                 bottom: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                               ),
@@ -453,15 +437,11 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                                 bottom: BorderSide(
-                                  color: isLight
-                                      ? BaseLightTokens.strokeSubdued
-                                      : BaseDarkTokens.strokeSubdued,
+                                  color: tokens.strokeSubdued,
                                   width: 2,
                                 ),
                               ),
@@ -484,13 +464,8 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              isLight
-                                  ? BaseLightTokens.frameTint
-                                  : BaseDarkTokens.frameTint,
-                              (isLight
-                                      ? BaseLightTokens.frameTint
-                                      : BaseDarkTokens.frameTint)
-                                  .withValues(alpha: 0.0),
+                              tokens.frameTint,
+                              tokens.frameTint.withValues(alpha: 0.0),
                             ],
                           ),
                         ),
@@ -510,13 +485,8 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              isLight
-                                  ? BaseLightTokens.frameTint
-                                  : BaseDarkTokens.frameTint,
-                              (isLight
-                                      ? BaseLightTokens.frameTint
-                                      : BaseDarkTokens.frameTint)
-                                  .withValues(alpha: 0.0),
+                              tokens.frameTint,
+                              tokens.frameTint.withValues(alpha: 0.0),
                             ],
                           ),
                         ),

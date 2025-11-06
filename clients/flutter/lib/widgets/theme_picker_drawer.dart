@@ -18,17 +18,12 @@ class ThemePickerDrawer extends StatefulWidget {
     BuildContext context, {
     required AppThemeMode initialThemeMode,
   }) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
-
     return showModalBottomSheet<AppThemeMode>(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: isLight
-          ? BaseLightTokens.frameTint
-          : BaseDarkTokens.frameTint,
+      backgroundColor: context.tokens.frameTint,
       builder: (context) => ThemePickerDrawer(
         initialThemeMode: initialThemeMode,
       ),
@@ -51,8 +46,7 @@ class _ThemePickerDrawerState extends State<ThemePickerDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final tokens = context.tokens;
 
     return SafeArea(
       child: Padding(
@@ -68,9 +62,7 @@ class _ThemePickerDrawerState extends State<ThemePickerDrawer> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: isLight
-                      ? BaseLightTokens.strokeSubdued
-                      : BaseDarkTokens.strokeSubdued,
+                  color: tokens.strokeSubdued,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
