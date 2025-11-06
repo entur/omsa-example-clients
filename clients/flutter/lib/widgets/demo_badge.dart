@@ -8,18 +8,22 @@ class DemoBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
       decoration: BoxDecoration(
         color: Color(0xFFF9FAFF),
         border: Border.fromBorderSide(
-          BorderSide(
-            color: Color(0xFFB5C1DC),
-            width: 1,
-          ),
+          BorderSide(color: Color(0xFFB5C1DC), width: 1),
         ),
-        borderRadius: BorderRadius.circular(4)),
-        child:
-        Text(text, style: TextStyle(color: Color(0xFF181C56), fontWeight: FontWeight.w500)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Color(0xFF181C56),
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }

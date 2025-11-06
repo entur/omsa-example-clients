@@ -138,7 +138,10 @@ class OmsaIcons {
   static const Database = OmsaIconData('assets/icons/database.vec');
   static const Date = OmsaIconData('assets/icons/date.vec');
   static const Delete = OmsaIconData('assets/icons/delete.vec');
-  static const Denmark = OmsaIconData('assets/icons/denmark.vec');
+  static const Denmark = OmsaIconData(
+    'assets/icons/denmark.vec',
+    preserveOriginalColor: true,
+  );
   static const Deposition = OmsaIconData('assets/icons/deposition.vec');
   static const Desktop = OmsaIconData('assets/icons/desktop.vec');
   static const Destination = OmsaIconData('assets/icons/destination.vec');
@@ -263,7 +266,10 @@ class OmsaIcons {
   static const New = OmsaIconData('assets/icons/new.vec');
   static const Night = OmsaIconData('assets/icons/night.vec');
   static const Nordland = OmsaIconData('assets/icons/nordland.vec');
-  static const Norway = OmsaIconData('assets/icons/norway.vec');
+  static const Norway = OmsaIconData(
+    'assets/icons/norway.vec',
+    preserveOriginalColor: true,
+  );
   static const NumberList = OmsaIconData('assets/icons/number_list.vec');
   static const ObjectAlignBottom = OmsaIconData(
     'assets/icons/object_align_bottom.vec',
@@ -385,7 +391,10 @@ class OmsaIcons {
   static const SJ = OmsaIconData('assets/icons/s_j.vec');
   static const SJNord = OmsaIconData('assets/icons/s_j_nord.vec');
   static const SURF = OmsaIconData('assets/icons/s_u_r_f.vec');
-  static const Sami = OmsaIconData('assets/icons/sami.vec');
+  static const Sami = OmsaIconData(
+    'assets/icons/sami.vec',
+    preserveOriginalColor: true,
+  );
   static const Save = OmsaIconData('assets/icons/save.vec');
   static const Scope = OmsaIconData('assets/icons/scope.vec');
   static const Search = OmsaIconData('assets/icons/search.vec');
@@ -429,7 +438,10 @@ class OmsaIcons {
   static const SunCloud = OmsaIconData('assets/icons/sun_cloud.vec');
   static const SunCloudRain = OmsaIconData('assets/icons/sun_cloud_rain.vec');
   static const Svipper = OmsaIconData('assets/icons/svipper.vec');
-  static const Sweden = OmsaIconData('assets/icons/sweden.vec');
+  static const Sweden = OmsaIconData(
+    'assets/icons/sweden.vec',
+    preserveOriginalColor: true,
+  );
   static const Switch = OmsaIconData('assets/icons/switch.vec');
   static const TVM = OmsaIconData('assets/icons/t_v_m.vec');
   static const Tag = OmsaIconData('assets/icons/tag.vec');
@@ -463,7 +475,10 @@ class OmsaIcons {
   );
   static const Turnable = OmsaIconData('assets/icons/turnable.vec');
   static const Twitter = OmsaIconData('assets/icons/twitter.vec');
-  static const UK = OmsaIconData('assets/icons/u_k.vec');
+  static const UK = OmsaIconData(
+    'assets/icons/u_k.vec',
+    preserveOriginalColor: true,
+  );
   static const Umbrella = OmsaIconData('assets/icons/umbrella.vec');
   static const Underline = OmsaIconData('assets/icons/underline.vec');
   static const Undo = OmsaIconData('assets/icons/undo.vec');

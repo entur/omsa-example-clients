@@ -26,36 +26,61 @@ class _WayfareAppState extends State<WayfareApp> {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
-            indicatorColor: Colors.transparent,
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            labelTextStyle: WidgetStateProperty<TextStyle>.fromMap(<WidgetStatesConstraint, TextStyle>{
-              WidgetState.selected: TextStyle(fontSize: 12, color: const Color(0xFFE90037), fontWeight: FontWeight.w600),
-              WidgetState.any: TextStyle(fontSize: 12, color: BaseLightTokens.textSubdued, fontWeight: FontWeight.w500),
-            }),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: [
-              NavigationDestination(
-                icon: OmsaIcons.Search(size: 24, color: BaseLightTokens.textSubdued),
-                selectedIcon: OmsaIcons.SearchFilled(size: 24, color: const Color(0xFFE90037)),
-                label: 'Search',
-              ),
-              NavigationDestination(
-                icon: OmsaIcons.ValidTicket(size: 24, color: BaseLightTokens.textSubdued),
-                selectedIcon: OmsaIcons.ValidTicketFilled(size: 24, color: const Color(0xFFE90037)),
-                label: 'Tickets',
-              ),
-              NavigationDestination(
-                icon: OmsaIcons.User(size: 24, color: BaseLightTokens.textSubdued),
-                selectedIcon: OmsaIcons.User(size: 24, color: const Color(0xFFE90037)),
-                label: 'Profile',
-              ),
-            ],
+        indicatorColor: Colors.transparent,
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        labelTextStyle: WidgetStateProperty<TextStyle>.fromMap(
+          <WidgetStatesConstraint, TextStyle>{
+            WidgetState.selected: TextStyle(
+              fontSize: 12,
+              color: const Color(0xFFE90037),
+              fontWeight: FontWeight.w600,
+            ),
+            WidgetState.any: TextStyle(
+              fontSize: 12,
+              color: BaseLightTokens.textSubdued,
+              fontWeight: FontWeight.w500,
+            ),
+          },
+        ),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        destinations: [
+          NavigationDestination(
+            icon: OmsaIcons.Search(
+              size: 24,
+              color: BaseLightTokens.textSubdued,
+            ),
+            selectedIcon: OmsaIcons.SearchFilled(
+              size: 24,
+              color: const Color(0xFFE90037),
+            ),
+            label: 'Search',
           ),
+          NavigationDestination(
+            icon: OmsaIcons.ValidTicket(
+              size: 24,
+              color: BaseLightTokens.textSubdued,
+            ),
+            selectedIcon: OmsaIcons.ValidTicketFilled(
+              size: 24,
+              color: const Color(0xFFE90037),
+            ),
+            label: 'Tickets',
+          ),
+          NavigationDestination(
+            icon: OmsaIcons.User(size: 24, color: BaseLightTokens.textSubdued),
+            selectedIcon: OmsaIcons.User(
+              size: 24,
+              color: const Color(0xFFE90037),
+            ),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }

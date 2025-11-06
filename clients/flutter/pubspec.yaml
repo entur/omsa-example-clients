@@ -85,6 +85,8 @@ flutter:
     - assets/wayfare_omsa_logo.svg
     - assets/wayfare_logo_filled.svg
     - assets/wayfare_combined_header.svg
+    - assets/turtle_signed_in.png
+    - assets/ninja_turtle.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

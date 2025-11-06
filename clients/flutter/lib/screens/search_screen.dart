@@ -38,11 +38,28 @@ class _SearchScreenState extends State<SearchScreen> {
     {'id': 'KOL:FareZone:7', 'name': 'Nærsone Egersund'},
   ];
 
-
   final List<Map<String, String>> _quickbuyItems = [
-    {'from': 'Haugalandet', 'to': 'Ryfylke', 'time': 'Now', 'travellers': '1 Adult', 'ticketType': 'single'},
-    {'from': 'Haugalandet', 'to': 'Haugalandet', 'time': 'Now', 'travellers': '1 Adult', 'ticketType': '24H'},
-    {'from': 'Jæren', 'to': 'Nord-Jæren', 'time': 'Now', 'travellers': '1 Adult, 2 children', 'ticketType': 'single'},
+    {
+      'from': 'Haugalandet',
+      'to': 'Ryfylke',
+      'time': 'Now',
+      'travellers': '1 Adult',
+      'ticketType': 'single',
+    },
+    {
+      'from': 'Haugalandet',
+      'to': 'Haugalandet',
+      'time': 'Now',
+      'travellers': '1 Adult',
+      'ticketType': '24H',
+    },
+    {
+      'from': 'Jæren',
+      'to': 'Nord-Jæren',
+      'time': 'Now',
+      'travellers': '1 Adult, 2 children',
+      'ticketType': 'single',
+    },
   ];
 
   Future<void> _openTravelerPicker() async {
@@ -194,7 +211,7 @@ class _SearchScreenState extends State<SearchScreen> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
-            child: DemoBadge(text: "Demo")
+            child: DemoBadge(text: "Demo"),
           ),
         ],
       ),
@@ -218,11 +235,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 leadingIcon: OmsaIcons.User(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFE90037)),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFE90037),
+                  ),
                 ),
                 child: Text(
                   _getTravelersDisplayText(),
-                  style: TextStyle(fontWeight: FontWeight.normal, color: Color(0xFFE90037)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Color(0xFFE90037),
+                  ),
                 ),
               ),
 
@@ -235,11 +259,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 leadingIcon: OmsaIcons.Clock(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFE90037)),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFE90037),
+                  ),
                 ),
                 child: Text(
                   _getTimeDisplayText(),
-                  style: TextStyle(fontWeight: FontWeight.normal, color: Color(0xFFE90037)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Color(0xFFE90037),
+                  ),
                 ),
               ),
 
@@ -275,9 +306,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     time: _quickbuyItems[index]['time'] ?? '',
                     ticketType: _quickbuyItems[index]['ticketType'] ?? '',
                   );
-                }, separatorBuilder: (BuildContext context, int index) {
+                },
+                separatorBuilder: (BuildContext context, int index) {
                   return const SizedBox(height: 8);
-              },
+                },
               ),
             ],
           ),

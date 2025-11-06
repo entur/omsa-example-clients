@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/screens/widget_design_screen.dart';
@@ -19,370 +20,184 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // App preferences
   bool _notificationsEnabled = true;
   bool _darkModeEnabled = false;
+  bool _biometricsEnabled = false;
+  bool _soundEffectsEnabled = true;
   String _language = 'English';
-
-  // Developer options
-  int _tapCount = 0;
-
-  final List<String> _categories = [
-    'Child (0-15)',
-    'Youth (16-19)',
-    'Adult (20-66)',
-    'Senior (67+)',
-    'Student',
-  ];
-
-  final List<String> _paymentMethods = [
-    'Credit Card ****1234',
-    'Debit Card ****5678',
-    'Add new payment method',
-  ];
-
-  final List<String> _languages = ['English', 'Norwegian', 'Swedish', 'Danish'];
-
-  void _handleVersionTap() {
-    setState(() {
-      _tapCount++;
-    });
-
-    if (_tapCount >= 7) {
-      _tapCount = 0;
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const WidgetDesignScreen()),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // User header
-            Container(
-              padding: const EdgeInsets.all(24),
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              child: Column(
-                children: [
-                  OmsaIcons.User(size: 64, color: theme.colorScheme.primary),
-                  const SizedBox(height: 12),
-                  Text('Guest User', style: AppTypography.headlineMedium),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Manage your travel preferences',
-                    style: AppTypography.textMedium.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Traveller Settings Section
-            _buildSection(
-              title: 'Default Traveller Settings',
-              children: [
-                _buildSettingTile(
-                  icon: Icons.person,
-                  title: 'Traveller Category',
-                  subtitle: _selectedCategory,
-                  onTap: () => _showCategoryPicker(context),
-                ),
-                _buildSettingTile(
-                  icon: Icons.cake,
-                  title: 'Default Age',
-                  subtitle: '$_defaultAge years',
-                  onTap: () => _showAgePicker(context),
-                ),
-                _buildSettingTile(
-                  icon: Icons.payment,
-                  title: 'Saved Payment Method',
-                  subtitle: _paymentMethod ?? 'None',
-                  onTap: () => _showPaymentMethodPicker(context),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // App Preferences Section
-            _buildSection(
-              title: 'App Preferences',
-              children: [
-                _buildSwitchTile(
-                  icon: Icons.notifications,
-                  title: 'Push Notifications',
-                  subtitle: 'Receive travel updates and offers',
-                  value: _notificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _notificationsEnabled = value;
-                    });
-                  },
-                ),
-                _buildSwitchTile(
-                  icon: Icons.dark_mode,
-                  title: 'Dark Mode',
-                  subtitle: 'Use dark theme',
-                  value: _darkModeEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _darkModeEnabled = value;
-                    });
-                  },
-                ),
-                _buildSettingTile(
-                  icon: Icons.language,
-                  title: 'Language',
-                  subtitle: _language,
-                  onTap: () => _showLanguagePicker(context),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // About Section
-            _buildSection(
-              title: 'About',
-              children: [
-                _buildSettingTile(
-                  icon: Icons.info,
-                  title: 'Terms of Service',
-                  onTap: () {},
-                ),
-                _buildSettingTile(
-                  icon: Icons.privacy_tip,
-                  title: 'Privacy Policy',
-                  onTap: () {},
-                ),
-                _buildSettingTile(
-                  icon: Icons.help,
-                  title: 'Help & Support',
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.info_outline,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  title: Text('Version', style: AppTypography.textMedium),
-                  subtitle: Text(
-                    '1.0.0 (Tap 7 times for developer options)',
-                    style: AppTypography.textSmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  onTap: _handleVersionTap,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection({
-    required String title,
-    required List<Widget> children,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
+          const SizedBox(height: 48),
           Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset('assets/turtle_signed_in.png', width: 100),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 4,
+                    children: [
+                      Text(
+                        "Hi!",
+                        style: AppTypography.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "Currently logged in as superturtle@wayfare.no",
+                        softWrap: true,
+                        style: AppTypography.bodySmall,
+                      ),
+                      OmsaBadge(
+                        variant: OmsaBadgeVariant.neutral,
+                        child: Text('CUSTOMER: 3518474', style: TextStyle(fontWeight: FontWeight.w300, color: Color(0xFFE90037))),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 48),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Text('Your profile', style: AppTypography.headingExtraLarge2),
+                const SizedBox(width: 12),
+                DemoBadge(text: "Demo"),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          _SettingsTile(
+            leading: OmsaIcons.ClosedLock(size: 20),
+            title: const Text(
+              'Username and password',
+              style: AppTypography.titleSmall,
+            ),
+            onTap: () {},
+          ),
+          const Divider(
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+            height: 1,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.Banknote(size: 20),
+            title: const Text(
+              'Card and payment',
+              style: AppTypography.titleSmall,
+            ),
+            onTap: () {},
+          ),
+          const Divider(
+            height: 1,
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.Bell(size: 20),
+            title: const Text('Notifications', style: AppTypography.titleSmall),
+            onTap: () {},
+          ),
+          const Divider(
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+            height: 1,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.ShoppingCart(size: 20),
+            title: const Text(
+              'Purchases and receipts',
+              style: AppTypography.titleSmall,
+            ),
+            onTap: () {},
+          ),
+          const Divider(
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+            height: 1,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.ColorPicker(size: 20),
+            title: const Text('Theme', style: AppTypography.titleSmall),
+            onTap: () {},
+          ),
+          const Divider(
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+            height: 1,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.Value(size: 20),
+            title: const Text('Advantages', style: AppTypography.titleSmall),
+            onTap: () {},
+          ),
+          const Divider(
+            color: BaseLightTokens.strokeSubduedAlt,
+            indent: 16,
+            endIndent: 16,
+            height: 1,
+          ),
+          _SettingsTile(
+            leading: OmsaIcons.Norway(size: 20),
+            title: const Text('Language', style: AppTypography.titleSmall),
+            onTap: () {},
+          ),
+          const SizedBox(height: 32),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              title,
-              style: AppTypography.textLarge.copyWith(
-                fontWeight: FontWeight.w600,
+              "Version 0.0.1",
+              textAlign: TextAlign.center,
+              style: AppTypography.textSmall.copyWith(
+                color: BaseLightTokens.textSubdued,
               ),
             ),
           ),
-          OmsaCard(child: Column(children: children)),
         ],
       ),
     );
   }
+}
 
-  Widget _buildSettingTile({
-    required IconData icon,
-    required String title,
-    String? subtitle,
-    VoidCallback? onTap,
-  }) {
-    final theme = Theme.of(context);
+class _SettingsTile extends StatelessWidget {
+  const _SettingsTile({
+    required this.title,
+    required this.leading,
+    required this.onTap,
+    this.trailing,
+    this.subtitle,
+  });
 
+  final Widget title;
+  final Widget leading;
+  final VoidCallback onTap;
+  final Widget? trailing;
+  final Widget? subtitle;
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-      title: Text(title, style: AppTypography.textMedium),
-      subtitle: subtitle != null
-          ? Text(
-              subtitle,
-              style: AppTypography.textSmall.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            )
-          : null,
-      trailing: Icon(
-        Icons.chevron_right,
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
+      horizontalTitleGap: 8,
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
       onTap: onTap,
-    );
-  }
-
-  Widget _buildSwitchTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    final theme = Theme.of(context);
-
-    return SwitchListTile(
-      secondary: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-      title: Text(title, style: AppTypography.textMedium),
-      subtitle: Text(
-        subtitle,
-        style: AppTypography.textSmall.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      value: value,
-      onChanged: onChanged,
-    );
-  }
-
-  void _showCategoryPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => ListView.builder(
-        shrinkWrap: true,
-        itemCount: _categories.length,
-        itemBuilder: (context, index) {
-          final category = _categories[index];
-          return ListTile(
-            title: Text(category),
-            selected: category == _selectedCategory,
-            onTap: () {
-              setState(() {
-                _selectedCategory = category;
-              });
-              Navigator.pop(context);
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  void _showAgePicker(BuildContext context) {
-    int tempAge = _defaultAge;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Default Age'),
-        content: StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('$tempAge years', style: AppTypography.headlineLarge),
-                Slider(
-                  value: tempAge.toDouble(),
-                  min: 0,
-                  max: 100,
-                  divisions: 100,
-                  onChanged: (value) {
-                    setDialogState(() {
-                      tempAge = value.round();
-                    });
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _defaultAge = tempAge;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPaymentMethodPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => ListView.builder(
-        shrinkWrap: true,
-        itemCount: _paymentMethods.length,
-        itemBuilder: (context, index) {
-          final method = _paymentMethods[index];
-          return ListTile(
-            leading: const Icon(Icons.credit_card),
-            title: Text(method),
-            selected: method == _paymentMethod,
-            onTap: () {
-              setState(() {
-                _paymentMethod = method;
-              });
-              Navigator.pop(context);
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  void _showLanguagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => ListView.builder(
-        shrinkWrap: true,
-        itemCount: _languages.length,
-        itemBuilder: (context, index) {
-          final lang = _languages[index];
-          return ListTile(
-            title: Text(lang),
-            selected: lang == _language,
-            onTap: () {
-              setState(() {
-                _language = lang;
-              });
-              Navigator.pop(context);
-            },
-          );
-        },
-      ),
     );
   }
 }

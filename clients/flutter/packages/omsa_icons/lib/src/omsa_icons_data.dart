@@ -2,9 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 class OmsaIconData {
-  const OmsaIconData(this.assetPath);
+  const OmsaIconData(this.assetPath, {this.preserveOriginalColor = false});
 
   final String assetPath;
+  final bool preserveOriginalColor;
 
   Widget call({
     Key? key,
@@ -23,11 +24,17 @@ class OmsaIconData {
         final effectiveWidth = size ?? width;
         final effectiveHeight = size ?? height;
 
+        // If preserveOriginalColor is true, don't apply any color filter
         // Use explicit color if provided, otherwise inherit from IconTheme
-        final effectiveColor = color ?? IconTheme.of(context).color;
-        final colorFilter = effectiveColor != null
-            ? ColorFilter.mode(effectiveColor, BlendMode.srcIn)
-            : null;
+        final ColorFilter? colorFilter;
+        if (preserveOriginalColor) {
+          colorFilter = null;
+        } else {
+          final effectiveColor = color ?? IconTheme.of(context).color;
+          colorFilter = effectiveColor != null
+              ? ColorFilter.mode(effectiveColor, BlendMode.srcIn)
+              : null;
+        }
 
         return VectorGraphic(
           key: key,

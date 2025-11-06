@@ -34,13 +34,17 @@ class QuickbuyCard extends StatelessWidget {
       dense: true,
       shape: RoundedRectangleBorder(
         side: BorderSide(width: 2, color: BaseLightTokens.strokeSubdued),
-          borderRadius: BorderRadius.all(Radius.circular(4))),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      ),
       leading: OmsaIcons.ValidTicket(),
       horizontalTitleGap: 8,
       title: Text(destinationText, style: AppTypography.textLarge),
       subtitle: Text(
         '$ticketTypeText ⋅ $travellers',
-        style: AppTypography.textMedium.copyWith(color: BaseLightTokens.textSubdued, fontWeight: FontWeight.w400)
+        style: AppTypography.textMedium.copyWith(
+          color: BaseLightTokens.textSubdued,
+          fontWeight: FontWeight.w400,
+        ),
       ),
       trailing: OmsaIcons.RightArrow(),
       onTap: onTap,
