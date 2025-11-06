@@ -21,10 +21,7 @@ class TicketsScreen extends StatelessWidget {
               color: AppTheme.light().colorScheme.primary,
             ),
             const SizedBox(height: 16),
-            Text(
-              'Tickets',
-              style: AppTypography.headlineLarge,
-            ),
+            Text('Tickets', style: AppTypography.headlineLarge),
             const SizedBox(height: 8),
             Text(
               'Your tickets will appear here',

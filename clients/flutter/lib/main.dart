@@ -83,7 +83,7 @@ class _OmsaDemoAppState extends State<OmsaDemoApp> {
       title: 'OMSA Travel Demo',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       home: !_isInitialized
           ? const Scaffold(body: Center(child: CircularProgressIndicator()))
@@ -103,5 +103,3 @@ class _OmsaDemoAppState extends State<OmsaDemoApp> {
     );
   }
 }
-
-
