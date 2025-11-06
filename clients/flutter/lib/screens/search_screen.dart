@@ -10,6 +10,7 @@ import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/widgets/departure_time_drawer.dart';
 import 'package:omsa_demo_app/widgets/traveler_picker_drawer.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
+import 'package:omsa_demo_app/models/traveler_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -21,14 +22,24 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  OmsaDropdownItem<String>? _fromZone;
-  OmsaDropdownItem<String>? _toZone;
+  // Default location: Stavanger Lufthavn Sola (in Nord-Jæren zone)
+  String? _fromZoneId = 'KOL:FareZone:4'; // Nord-Jæren (Stavanger Airport)
+  String? _fromZoneName = 'Nord-Jæren';
+  String? _toZoneId;
+  String? _toZoneName;
+
   TimeType _timeType = TimeType.now;
   DateTime _selectedDateTime = DateTime.now().add(const Duration(minutes: 30));
-  int _adults = 1;
-  int _children = 0;
-  int _infants = 0;
+
+  // Travelers - start with one default traveler (signed-in user mock)
+  late List<Traveler> _travelers;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _travelers = [Traveler.defaultTraveler()];
+  }
 
   final List<Map<String, String>> _zones = [
     {'id': 'KOL:FareZone:1', 'name': 'Haugalandet'},
@@ -67,16 +78,12 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> _openTravelerPicker() async {
     final result = await TravelerPickerDrawer.show(
       context,
-      initialAdults: _adults,
-      initialChildren: _children,
-      initialInfants: _infants,
+      initialTravelers: _travelers,
     );
 
     if (result != null) {
       setState(() {
-        _adults = result.adults;
-        _children = result.children;
-        _infants = result.infants;
+        _travelers = result.travelers;
       });
     }
   }
@@ -130,21 +137,19 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String _getTravelersDisplayText() {
-    final result = TravelerPickerResult(
-      adults: _adults,
-      children: _children,
-      infants: _infants,
-    );
+    final result = TravelerPickerResult(travelers: _travelers);
     return result.displayText;
   }
 
   Future<void> _searchOffers() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_fromZone == null || _toZone == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select both zones')));
+    if (_fromZoneId == null || _toZoneId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select your departure and destination zones'),
+        ),
+      );
       return;
     }
 
@@ -168,17 +173,15 @@ class _SearchScreenState extends State<SearchScreen> {
           break;
       }
 
-      // Use average age of 30 for adults, 12 for children, 3 for infants
-      final avgAge =
-          ((_adults * 30) + (_children * 12) + (_infants * 3)) /
-          (_adults + _children + _infants);
+      // Convert app travelers to API travelers
+      final travellers = OmsaApiService.createTravellersFromModel(_travelers);
 
       final offerCollection = await OmsaApiService.searchOffers(
-        fromZoneId: _fromZone!.value,
-        toZoneId: _toZone!.value,
+        fromZoneId: _fromZoneId!,
+        toZoneId: _toZoneId!,
         startTime: startTime,
         endTime: endTime,
-        travelerAge: avgAge.round(),
+        travellers: travellers,
       );
 
       if (mounted) {
@@ -232,7 +235,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   const SizedBox(height: 16),
 
-                  TravelSearch(zones: _zones),
+                  TravelSearch(
+                    zones: _zones,
+                    initialFromZoneId: _fromZoneId,
+                    initialFromZoneName: _fromZoneName,
+                    initialToZoneId: _toZoneId,
+                    initialToZoneName: _toZoneName,
+                    onChanged: (result) {
+                      setState(() {
+                        _fromZoneId = result.fromZoneId;
+                        _fromZoneName = result.fromZoneName;
+                        _toZoneId = result.toZoneId;
+                        _toZoneName = result.toZoneName;
+                      });
+                    },
+                  ),
 
                   const SizedBox(height: 16),
 

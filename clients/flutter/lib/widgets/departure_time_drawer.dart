@@ -126,24 +126,24 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
     final tomorrow = today.add(const Duration(days: 1));
 
     if (date == today) {
-      return 'I dag';
+      return 'Today';
     } else if (date == tomorrow) {
-      return 'I morgen';
+      return 'Tomorrow';
     } else {
-      final weekdays = ['man.', 'tir.', 'ons.', 'tor.', 'fre.', 'lør.', 'søn.'];
+      final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       final months = [
-        'jan',
-        'feb',
-        'mar',
-        'apr',
-        'mai',
-        'jun',
-        'jul',
-        'aug',
-        'sep',
-        'okt',
-        'nov',
-        'des',
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${weekdays[date.weekday - 1]} ${date.day}. ${months[date.month - 1]}';
     }
@@ -240,7 +240,7 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Dato og tid',
+                  'Date & time',
                   style: AppTypography.textExtraLarge.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -502,11 +502,7 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
             OmsaButton(
               onPressed: _submit,
               width: OmsaButtonWidth.fluid,
-              child: Text(
-                _selectedTimeType == TimeType.now
-                    ? 'Search for travel'
-                    : 'Confirm time',
-              ),
+              child: Text('Confirm time'),
             ),
           ],
         ),

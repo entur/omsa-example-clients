@@ -10,10 +10,22 @@ class Traveller {
   final String type;
   final String id;
   final int age;
+  final List<String>? entitlements;
 
-  Traveller({required this.type, required this.id, required this.age});
+  Traveller({
+    required this.type,
+    required this.id,
+    required this.age,
+    this.entitlements,
+  });
 
-  Map<String, dynamic> toJson() => {'type': type, 'id': id, 'age': age};
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{'type': type, 'id': id, 'age': age};
+    if (entitlements != null && entitlements!.isNotEmpty) {
+      json['entitlements'] = entitlements;
+    }
+    return json;
+  }
 }
 
 class SearchSpecification {

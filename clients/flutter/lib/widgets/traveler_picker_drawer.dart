@@ -1,66 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
+import 'package:omsa_demo_app/models/traveler_model.dart';
 
 class TravelerPickerResult {
-  final int adults;
-  final int youth;
-  final int children;
-  final int infants;
-  final int seniors;
-  final String? discount;
+  final List<Traveler> travelers;
 
-  TravelerPickerResult({
-    this.adults = 1,
-    this.youth = 0,
-    this.children = 0,
-    this.infants = 0,
-    this.seniors = 0,
-    this.discount,
-  });
-
-  int get totalTravelers => adults + youth + children + infants + seniors;
+  TravelerPickerResult({required this.travelers});
 
   String get displayText {
+    if (travelers.isEmpty) return 'No travelers';
+
+    final hasDefault = travelers.any((t) => t.isDefaultTraveler);
+
+    if (travelers.length == 1 && hasDefault) {
+      return 'You (${travelers.first.category.label})';
+    }
+
+    // Group by category
+    final grouped = <TravelerCategory, int>{};
+    for (final traveler in travelers) {
+      grouped[traveler.category] = (grouped[traveler.category] ?? 0) + 1;
+    }
+
     final parts = <String>[];
-    if (adults > 0) parts.add('$adults Adult${adults > 1 ? 's' : ''}');
-    if (youth > 0) parts.add('$youth Youth');
-    if (children > 0) parts.add('$children Child${children > 1 ? 'ren' : ''}');
-    if (infants > 0) parts.add('$infants Infant${infants > 1 ? 's' : ''}');
-    if (seniors > 0) parts.add('$seniors Senior${seniors > 1 ? 's' : ''}');
+    for (final entry in grouped.entries) {
+      final count = entry.value;
+      final label = entry.key.label;
+      parts.add('$count $label${count > 1 ? 's' : ''}');
+    }
+
     return parts.join(', ');
   }
 }
 
 class TravelerPickerDrawer extends StatefulWidget {
-  final int initialAdults;
-  final int initialYouth;
-  final int initialChildren;
-  final int initialInfants;
-  final int initialSeniors;
-  final String? initialDiscount;
+  final List<Traveler> initialTravelers;
 
-  const TravelerPickerDrawer({
-    super.key,
-    this.initialAdults = 1,
-    this.initialYouth = 0,
-    this.initialChildren = 0,
-    this.initialInfants = 0,
-    this.initialSeniors = 0,
-    this.initialDiscount,
-  });
+  const TravelerPickerDrawer({super.key, required this.initialTravelers});
 
   @override
   State<TravelerPickerDrawer> createState() => _TravelerPickerDrawerState();
 
   static Future<TravelerPickerResult?> show(
     BuildContext context, {
-    int initialAdults = 1,
-    int initialYouth = 0,
-    int initialChildren = 0,
-    int initialInfants = 0,
-    int initialSeniors = 0,
-    String? initialDiscount,
+    required List<Traveler> initialTravelers,
   }) {
     return showModalBottomSheet<TravelerPickerResult>(
       context: context,
@@ -68,48 +53,63 @@ class TravelerPickerDrawer extends StatefulWidget {
       isDismissible: true,
       enableDrag: true,
       backgroundColor: context.tokens.frameTint,
-      builder: (context) => TravelerPickerDrawer(
-        initialAdults: initialAdults,
-        initialYouth: initialYouth,
-        initialChildren: initialChildren,
-        initialInfants: initialInfants,
-        initialSeniors: initialSeniors,
-        initialDiscount: initialDiscount,
-      ),
+      builder: (context) =>
+          TravelerPickerDrawer(initialTravelers: initialTravelers),
     );
   }
 }
 
 class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
-  late int _adults;
-  late int _youth;
-  late int _children;
-  late int _infants;
-  late int _seniors;
-  String? _discount;
+  late List<Traveler> _travelers;
+  String? _expandedTravelerId;
 
   @override
   void initState() {
     super.initState();
-    _adults = widget.initialAdults;
-    _youth = widget.initialYouth;
-    _children = widget.initialChildren;
-    _infants = widget.initialInfants;
-    _seniors = widget.initialSeniors;
-    _discount = widget.initialDiscount;
+    _travelers = List.from(widget.initialTravelers);
+  }
+
+  void _addTraveler() {
+    setState(() {
+      final newTraveler = Traveler(age: 22);
+      _travelers.add(newTraveler);
+      _expandedTravelerId = newTraveler.id;
+    });
+  }
+
+  void _removeTraveler(String id) {
+    if (_travelers.length <= 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('At least one traveler is required')),
+      );
+      return;
+    }
+
+    setState(() {
+      _travelers.removeWhere((t) => t.id == id);
+      if (_expandedTravelerId == id) {
+        _expandedTravelerId = null;
+      }
+    });
+  }
+
+  void _updateTraveler(Traveler updated) {
+    setState(() {
+      final index = _travelers.indexWhere((t) => t.id == updated.id);
+      if (index != -1) {
+        _travelers[index] = updated;
+      }
+    });
+  }
+
+  void _toggleExpanded(String id) {
+    setState(() {
+      _expandedTravelerId = _expandedTravelerId == id ? null : id;
+    });
   }
 
   void _submit() {
-    Navigator.of(context).pop(
-      TravelerPickerResult(
-        adults: _adults,
-        youth: _youth,
-        children: _children,
-        infants: _infants,
-        seniors: _seniors,
-        discount: _discount,
-      ),
-    );
+    Navigator.of(context).pop(TravelerPickerResult(travelers: _travelers));
   }
 
   @override
@@ -118,7 +118,12 @@ class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -152,72 +157,36 @@ class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
             ),
             const SizedBox(height: 24),
 
-            _TravelerCounter(
-              label: 'Adults',
-              subtitle: '23+ years',
-              count: _adults,
-              onDecrement: _adults > 0 ? () => setState(() => _adults--) : null,
-              onIncrement: _adults < 9 ? () => setState(() => _adults++) : null,
+            // Traveler list
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _travelers.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final traveler = _travelers[index];
+                final isExpanded = _expandedTravelerId == traveler.id;
+
+                return _TravelerCard(
+                  traveler: traveler,
+                  isExpanded: isExpanded,
+                  canRemove: _travelers.length > 1,
+                  onTap: () => _toggleExpanded(traveler.id),
+                  onRemove: () => _removeTraveler(traveler.id),
+                  onUpdate: _updateTraveler,
+                );
+              },
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            _TravelerCounter(
-              label: 'Youth',
-              subtitle: '15-22 years',
-              count: _youth,
-              onDecrement: _youth > 0 ? () => setState(() => _youth--) : null,
-              onIncrement: _youth < 9 ? () => setState(() => _youth++) : null,
-            ),
-
-            const SizedBox(height: 12),
-
-            _TravelerCounter(
-              label: 'Child',
-              subtitle: '6-15 years',
-              count: _children,
-              onDecrement: _children > 0
-                  ? () => setState(() => _children--)
-                  : null,
-              onIncrement: _children < 9
-                  ? () => setState(() => _children++)
-                  : null,
-            ),
-
-            const SizedBox(height: 12),
-
-            _TravelerCounter(
-              label: 'Infants',
-              subtitle: '0-5 years',
-              count: _infants,
-              onDecrement: _infants > 0
-                  ? () => setState(() => _infants--)
-                  : null,
-              onIncrement: _infants < 9
-                  ? () => setState(() => _infants++)
-                  : null,
-            ),
-
-            const SizedBox(height: 12),
-
-            _TravelerCounter(
-              label: 'Senior',
-              subtitle: '67+ years',
-              count: _seniors,
-              onDecrement: _seniors > 0
-                  ? () => setState(() => _seniors--)
-                  : null,
-              onIncrement: _seniors < 9
-                  ? () => setState(() => _seniors++)
-                  : null,
-            ),
-
-            const SizedBox(height: 24),
-
-            _DiscountSelector(
-              selectedDiscount: _discount,
-              onDiscountChanged: (discount) =>
-                  setState(() => _discount = discount),
+            // Add traveler button
+            OmsaButton(
+              onPressed: _addTraveler,
+              variant: OmsaButtonVariant.secondary,
+              width: OmsaButtonWidth.fluid,
+              leadingIcon: OmsaIcons.Add(size: 20),
+              child: const Text('Add traveler'),
             ),
 
             const SizedBox(height: 32),
@@ -234,99 +203,193 @@ class _TravelerPickerDrawerState extends State<TravelerPickerDrawer> {
   }
 }
 
-class _TravelerCounter extends StatelessWidget {
-  final String label;
-  final String subtitle;
-  final int count;
-  final VoidCallback? onDecrement;
-  final VoidCallback? onIncrement;
+class _TravelerCard extends StatefulWidget {
+  final Traveler traveler;
+  final bool isExpanded;
+  final bool canRemove;
+  final VoidCallback onTap;
+  final VoidCallback onRemove;
+  final ValueChanged<Traveler> onUpdate;
 
-  const _TravelerCounter({
-    required this.label,
-    required this.subtitle,
-    required this.count,
-    this.onDecrement,
-    this.onIncrement,
+  const _TravelerCard({
+    required this.traveler,
+    required this.isExpanded,
+    required this.canRemove,
+    required this.onTap,
+    required this.onRemove,
+    required this.onUpdate,
   });
+
+  @override
+  State<_TravelerCard> createState() => _TravelerCardState();
+}
+
+class _TravelerCardState extends State<_TravelerCard> {
+  late TextEditingController _ageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ageController = TextEditingController(
+      text: widget.traveler.age.toString(),
+    );
+  }
+
+  @override
+  void didUpdateWidget(_TravelerCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.traveler.id != widget.traveler.id) {
+      _ageController.text = widget.traveler.age.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  void _updateAge(String value) {
+    final age = int.tryParse(value);
+    if (age != null && age >= 0 && age <= 120) {
+      widget.onUpdate(widget.traveler.copyWith(age: age));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
+    final category = widget.traveler.category;
 
-    return Row(
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: tokens.strokeSubdued, width: 2)
+        ),
+        child: Column(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTypography.textMedium.copyWith(
-                  fontWeight: FontWeight.w500,
+        InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(4),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.traveler.displayName,
+                        style: AppTypography.textMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.traveler.displaySummary,
+                        style: AppTypography.textSmall.copyWith(
+                          color: tokens.textSubdued,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: AppTypography.textSmall.copyWith(
-                  color: tokens.textSubdued,
-                ),
-              ),
-            ],
+                widget.isExpanded
+                      ? OmsaIcons.UpArrow()
+                      : OmsaIcons.DownArrow(),
+              ],
+            ),
           ),
         ),
-        Row(
-          children: [
-            OmsaSquareButton(
-              icon: OmsaIcons.Subtract(),
-              onPressed: onDecrement,
-            ),
-            SizedBox(
-              width: 48,
-              child: Text(
-                count.toString(),
-                textAlign: TextAlign.center,
-                style: AppTypography.textMedium.copyWith(
-                  fontWeight: FontWeight.w500,
+        if (widget.isExpanded) ...[
+          Divider(height: 1, color: tokens.strokeSubduedAlt, indent: 16, endIndent: 16),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: OmsaTextField(
+                        controller: _ageController,
+                        keyboardType: TextInputType.number,
+                        label: 'Age',
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: _updateAge,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: tokens.frameTint,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category.label,
+                            style: AppTypography.textMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            category.subtitle,
+                            style: AppTypography.textSmall.copyWith(
+                              color: tokens.textSubdued,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+                const SizedBox(height: 16),
+                Text(
+                  'Discounts & entitlements',
+                  style: AppTypography.textMedium.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  spacing: 8,
+                  children: [
+                    OmsaChoiceChip(label: Text("Student"), value: "Student", disabled: true),
+                    OmsaChoiceChip(label: Text("Military"), value: "Military"),
+                    Text("Coming soon...", style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal
+                    ))
+                  ]
+                ),
+                if (widget.canRemove) ...[
+                  const SizedBox(height: 16),
+                  OmsaButton(
+                    onPressed: widget.onRemove,
+                    variant: OmsaButtonVariant.negative,
+                    width: OmsaButtonWidth.fluid,
+                    leadingIcon: OmsaIcons.Delete(size: 20),
+                    child: Text(
+                      widget.traveler.isDefaultTraveler
+                          ? 'Remove (buy for someone else)'
+                          : 'Remove traveler',
+                    ),
+                  ),
+                ],
+              ],
             ),
-            OmsaSquareButton(icon: OmsaIcons.Add(), onPressed: onIncrement),
-          ],
-        ),
+          ),
+        ],
       ],
-    );
-  }
-}
-
-class _DiscountSelector extends StatelessWidget {
-  final String? selectedDiscount;
-  final ValueChanged<String?> onDiscountChanged;
-
-  const _DiscountSelector({
-    required this.selectedDiscount,
-    required this.onDiscountChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return OmsaRadioPanelGroup<String>(
-      value: selectedDiscount,
-      onChanged: (value) {
-        if (value == selectedDiscount) {
-          onDiscountChanged(null);
-        } else {
-          onDiscountChanged(value);
-        }
-      },
-      label: const Text('Discount'),
-      options: const [
-        OmsaRadioPanelOption<String>(value: 'Student', title: Text('Student')),
-        OmsaRadioPanelOption<String>(
-          value: 'Military',
-          title: Text('Military'),
-        ),
-      ],
-    );
+    ));
   }
 }
