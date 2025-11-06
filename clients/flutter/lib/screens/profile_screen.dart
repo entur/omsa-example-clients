@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
-import 'package:omsa_demo_app/screens/widget_design_screen.dart';
 import 'package:omsa_demo_app/providers/theme_provider.dart';
 import 'package:omsa_demo_app/widgets/theme_picker_drawer.dart';
 import 'package:provider/provider.dart';
@@ -16,18 +15,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Traveller settings
-  int _defaultAge = 30;
-  String _selectedCategory = 'Adult';
-  String? _paymentMethod;
-
-  // App preferences
-  bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
-  bool _biometricsEnabled = false;
-  bool _soundEffectsEnabled = true;
-  String _language = 'English';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,15 +185,13 @@ class _SettingsTile extends StatelessWidget {
     required this.title,
     required this.leading,
     required this.onTap,
-    this.trailing,
-    this.subtitle,
   });
 
   final Widget title;
   final Widget leading;
   final VoidCallback onTap;
-  final Widget? trailing;
-  final Widget? subtitle;
+  final Widget? trailing = null;
+  final Widget? subtitle = null;
 
   @override
   Widget build(BuildContext context) {

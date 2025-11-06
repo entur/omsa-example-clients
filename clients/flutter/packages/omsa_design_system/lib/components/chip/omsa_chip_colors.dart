@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/components/shared/component_enums.dart';
-import 'package:omsa_design_system/theme/tokens/base_color_tokens.dart';
 import 'package:omsa_design_system/theme/tokens/base_tokens.dart';
 import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 

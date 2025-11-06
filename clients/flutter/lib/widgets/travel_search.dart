@@ -344,150 +344,143 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                 child: CustomScrollView(
                   controller: scrollController,
                   slivers: [
-              // Recent section - only show when not searching
-              if (!_isSearching) ...[
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      'Recent',
-                      style: AppTypography.textLarge.copyWith(
-                        fontWeight: FontWeight.w600,
+                    // Recent section - only show when not searching
+                    if (!_isSearching) ...[
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'Recent',
+                            style: AppTypography.textLarge.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = recentSearches[index];
-                      return Column(
-                        children: [
-                          ListTile(
-                            leading: OmsaIcons.MapPin(
-                              color: context.wayfareTokens.brandPrimary,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                            ),
-                            title: Text(
-                              item['name']!,
-                              style: AppTypography.textMedium.copyWith(
-                                fontWeight: FontWeight.w500,
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final item = recentSearches[index];
+                          return Column(
+                            children: [
+                              ListTile(
+                                leading: OmsaIcons.MapPin(
+                                  color: context.wayfareTokens.brandPrimary,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                ),
+                                title: Text(
+                                  item['name']!,
+                                  style: AppTypography.textMedium.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Zone ${item['id']!.split(':')[2]}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: tokens.textSubdued,
+                                  ),
+                                ),
+                                onTap: () => _selectZone(item),
                               ),
-                            ),
-                            subtitle: Text(
-                              'Zone ${item['id']!.split(':')[2]}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: tokens.textSubdued,
-                              ),
-                            ),
-                            onTap: () => _selectZone(item),
-                          ),
-                          if (index < recentSearches.length - 1)
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              indent: 16,
-                              endIndent: 16,
-                              color: tokens.strokeSubduedAlt,
-                            ),
-                        ],
-                      );
-                    },
-                    childCount: recentSearches.length,
-                  ),
-                ),
-              ],
-              // Zones section - show heading only when not searching
-              if (!_isSearching)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-                    child: Text(
-                      'Zones',
-                      style: AppTypography.textLarge.copyWith(
-                        fontWeight: FontWeight.w600,
+                              if (index < recentSearches.length - 1)
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  indent: 16,
+                                  endIndent: 16,
+                                  color: tokens.strokeSubduedAlt,
+                                ),
+                            ],
+                          );
+                        }, childCount: recentSearches.length),
                       ),
-                    ),
-                  ),
-                ),
-              // Zones list - show results or empty state
-              if (_filteredZones.isEmpty && _isSearching)
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child:
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/turtle_searching.png',
-                            width: 200,
-                            height: 200,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            "Oops!",
-                            style: AppTypography.titleMedium.copyWith(
-                              fontWeight: FontWeight.bold,
+                    ],
+                    // Zones section - show heading only when not searching
+                    if (!_isSearching)
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                          child: Text(
+                            'Zones',
+                            style: AppTypography.textLarge.copyWith(
+                              fontWeight: FontWeight.w600,
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "We can't find any places with that name...",
-                            style: AppTypography.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                        ),
                       ),
-                  ),
-                )
-              else
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final zone = _filteredZones[index];
-                      return Column(
-                        children: [
-                          ListTile(
-                            leading: OmsaIcons.MapPin(
-                              color: context.wayfareTokens.brandPrimary,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                            ),
-                            title: Text(
-                              zone['name']!,
-                              style: AppTypography.textMedium.copyWith(
-                                fontWeight: FontWeight.w500,
+                    // Zones list - show results or empty state
+                    if (_filteredZones.isEmpty && _isSearching)
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/turtle_searching.png',
+                                width: 200,
+                                height: 200,
                               ),
-                            ),
-                            subtitle: Text(
-                              'Zone ${zone['id']!.split(':')[2]}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: tokens.textSubdued,
+                              const SizedBox(height: 16),
+                              Text(
+                                "Oops!",
+                                style: AppTypography.titleMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                            ),
-                            onTap: () => _selectZone(zone),
+                              const SizedBox(height: 8),
+                              Text(
+                                "We can't find any places with that name...",
+                                style: AppTypography.bodySmall,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                          if (index < _filteredZones.length - 1)
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              indent: 16,
-                              endIndent: 16,
-                              color: tokens.strokeSubduedAlt,
-                            ),
-                        ],
-                      );
-                    },
-                    childCount: _filteredZones.length,
-                  ),
-                ),
+                        ),
+                      )
+                    else
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final zone = _filteredZones[index];
+                          return Column(
+                            children: [
+                              ListTile(
+                                leading: OmsaIcons.MapPin(
+                                  color: context.wayfareTokens.brandPrimary,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                ),
+                                title: Text(
+                                  zone['name']!,
+                                  style: AppTypography.textMedium.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Zone ${zone['id']!.split(':')[2]}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: tokens.textSubdued,
+                                  ),
+                                ),
+                                onTap: () => _selectZone(zone),
+                              ),
+                              if (index < _filteredZones.length - 1)
+                                Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  indent: 16,
+                                  endIndent: 16,
+                                  color: tokens.strokeSubduedAlt,
+                                ),
+                            ],
+                          );
+                        }, childCount: _filteredZones.length),
+                      ),
                   ],
                 ),
               ),
