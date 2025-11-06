@@ -8,6 +8,7 @@ import 'package:omsa_demo_app/screens/offers_screen.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/widgets/departure_time_drawer.dart';
 import 'package:omsa_demo_app/widgets/traveler_picker_drawer.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -232,20 +233,22 @@ class _SearchScreenState extends State<SearchScreen> {
                 onPressed: _openTravelerPicker,
                 variant: OmsaButtonVariant.secondary,
                 contentAlignment: OmsaButtonContentAlignment.spaceBetween,
-                leadingIcon: OmsaIcons.User(color: Color(0xFFE90037)),
+                leadingIcon: OmsaIcons.User(
+                  color: context.wayfareTokens.brandPrimary,
+                ),
                 trailingIcon: Text(
                   "Change",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFFE90037),
+                    color: context.wayfareTokens.brandPrimary,
                   ),
                 ),
                 child: Text(
                   _getTravelersDisplayText(),
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    color: Color(0xFFE90037),
+                    color: context.wayfareTokens.brandPrimary,
                   ),
                 ),
               ),
@@ -256,20 +259,22 @@ class _SearchScreenState extends State<SearchScreen> {
                 onPressed: _openTimePicker,
                 variant: OmsaButtonVariant.secondary,
                 contentAlignment: OmsaButtonContentAlignment.spaceBetween,
-                leadingIcon: OmsaIcons.Clock(color: Color(0xFFE90037)),
+                leadingIcon: OmsaIcons.Clock(
+                  color: context.wayfareTokens.brandPrimary,
+                ),
                 trailingIcon: Text(
                   "Change",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFFE90037),
+                    color: context.wayfareTokens.brandPrimary,
                   ),
                 ),
                 child: Text(
                   _getTimeDisplayText(),
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    color: Color(0xFFE90037),
+                    color: context.wayfareTokens.brandPrimary,
                   ),
                 ),
               ),

@@ -85,9 +85,8 @@ class BaseTokens {
   Color get shapeHelicopterDefault => _isLight
       ? BaseLightTokens.shapeHelicopterDefault
       : BaseDarkTokens.shapeHelicopterDefault;
-  Color get shapeHighlight => _isLight
-      ? BaseLightTokens.shapeHighlight
-      : BaseDarkTokens.shapeHighlight;
+  Color get shapeHighlight =>
+      _isLight ? BaseLightTokens.shapeHighlight : BaseDarkTokens.shapeHighlight;
   Color get shapeLight =>
       _isLight ? BaseLightTokens.shapeLight : BaseDarkTokens.shapeLight;
   Color get shapeMask =>
@@ -192,9 +191,8 @@ class BaseTokens {
       _isLight ? BaseLightTokens.textLight : BaseDarkTokens.textLight;
   Color get textSubdued =>
       _isLight ? BaseLightTokens.textSubdued : BaseDarkTokens.textSubdued;
-  Color get textSubduedAlt => _isLight
-      ? BaseLightTokens.textSubduedAlt
-      : BaseDarkTokens.textSubduedAlt;
+  Color get textSubduedAlt =>
+      _isLight ? BaseLightTokens.textSubduedAlt : BaseDarkTokens.textSubduedAlt;
 }
 
 /// Extension on BuildContext for convenient access to theme-aware base tokens

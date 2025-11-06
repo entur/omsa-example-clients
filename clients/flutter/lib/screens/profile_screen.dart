@@ -6,6 +6,7 @@ import 'package:omsa_demo_app/screens/widget_design_screen.dart';
 import 'package:omsa_demo_app/providers/theme_provider.dart';
 import 'package:omsa_demo_app/widgets/theme_picker_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -39,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Image.asset('assets/turtle_signed_in.png', width: 100),
+                Image.asset('assets/turtle_signed_in.png', width: 130),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -60,8 +61,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       OmsaBadge(
                         variant: OmsaBadgeVariant.neutral,
-                        child: Text('CUSTOMER: 3518474', style: TextStyle(fontWeight: FontWeight.w300, color: Color(0xFFE90037))),
-                      )
+                        child: Text(
+                          'CUSTOMER: 3518474',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: context.wayfareTokens.brandPrimary,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

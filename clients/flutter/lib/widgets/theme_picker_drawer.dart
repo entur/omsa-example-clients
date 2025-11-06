@@ -6,10 +6,7 @@ import 'package:omsa_demo_app/providers/theme_provider.dart';
 class ThemePickerDrawer extends StatefulWidget {
   final AppThemeMode initialThemeMode;
 
-  const ThemePickerDrawer({
-    super.key,
-    required this.initialThemeMode,
-  });
+  const ThemePickerDrawer({super.key, required this.initialThemeMode});
 
   @override
   State<ThemePickerDrawer> createState() => _ThemePickerDrawerState();
@@ -24,9 +21,8 @@ class ThemePickerDrawer extends StatefulWidget {
       isDismissible: true,
       enableDrag: true,
       backgroundColor: context.tokens.frameTint,
-      builder: (context) => ThemePickerDrawer(
-        initialThemeMode: initialThemeMode,
-      ),
+      builder: (context) =>
+          ThemePickerDrawer(initialThemeMode: initialThemeMode),
     );
   }
 }

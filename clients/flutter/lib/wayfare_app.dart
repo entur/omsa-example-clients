@@ -4,6 +4,7 @@ import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/screens/search_screen.dart';
 import 'package:omsa_demo_app/screens/tickets_screen.dart';
 import 'package:omsa_demo_app/screens/profile_screen.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 
 class WayfareApp extends StatefulWidget {
   const WayfareApp({super.key});
@@ -37,7 +38,7 @@ class _WayfareAppState extends State<WayfareApp> {
           <WidgetStatesConstraint, TextStyle>{
             WidgetState.selected: TextStyle(
               fontSize: 12,
-              color: const Color(0xFFE90037),
+              color: context.wayfareTokens.brandPrimary,
               fontWeight: FontWeight.w600,
             ),
             WidgetState.any: TextStyle(
@@ -50,32 +51,29 @@ class _WayfareAppState extends State<WayfareApp> {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: [
           NavigationDestination(
-            icon: OmsaIcons.Search(
-              size: 24,
-              color: context.tokens.textSubdued,
-            ),
+            icon: OmsaIcons.Search(size: 20, color: context.tokens.textSubdued),
             selectedIcon: OmsaIcons.SearchFilled(
-              size: 24,
-              color: const Color(0xFFE90037),
+              size: 20,
+              color: context.wayfareTokens.brandPrimary,
             ),
             label: 'Search',
           ),
           NavigationDestination(
             icon: OmsaIcons.ValidTicket(
-              size: 24,
+              size: 20,
               color: context.tokens.textSubdued,
             ),
             selectedIcon: OmsaIcons.ValidTicketFilled(
-              size: 24,
-              color: const Color(0xFFE90037),
+              size: 20,
+              color: context.wayfareTokens.brandPrimary,
             ),
             label: 'Tickets',
           ),
           NavigationDestination(
-            icon: OmsaIcons.User(size: 24, color: context.tokens.textSubdued),
+            icon: OmsaIcons.User(size: 20, color: context.tokens.textSubdued),
             selectedIcon: OmsaIcons.User(
-              size: 24,
-              color: const Color(0xFFE90037),
+              size: 20,
+              color: context.wayfareTokens.brandPrimary,
             ),
             label: 'Profile',
           ),
