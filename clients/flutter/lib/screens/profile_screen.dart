@@ -3,6 +3,9 @@ import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/screens/widget_design_screen.dart';
+import 'package:omsa_demo_app/providers/theme_provider.dart';
+import 'package:omsa_demo_app/widgets/theme_picker_drawer.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -133,7 +136,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _SettingsTile(
             leading: OmsaIcons.ColorPicker(size: 20),
             title: const Text('Theme', style: AppTypography.titleSmall),
-            onTap: () {},
+            onTap: () async {
+              final themeProvider = context.read<ThemeProvider>();
+              final result = await ThemePickerDrawer.show(
+                context,
+                initialThemeMode: themeProvider.themeMode,
+              );
+              if (result != null) {
+                themeProvider.setThemeMode(result);
+              }
+            },
           ),
           const Divider(
             color: BaseLightTokens.strokeSubduedAlt,

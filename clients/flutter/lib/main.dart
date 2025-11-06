@@ -4,6 +4,7 @@ import 'package:omsa_demo_app/screens/error_screen.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/wayfare_app.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
+import 'package:omsa_demo_app/providers/theme_provider.dart';
 import 'package:omsa_demo_app/services/bff_service.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +13,11 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => OfferSelectionProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => OfferSelectionProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: const OmsaDemoApp(),
     ),
   );
@@ -79,27 +83,31 @@ class _OmsaDemoAppState extends State<OmsaDemoApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wayfare',
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      home: !_isInitialized
-          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-          : _hasError
-          ? ErrorScreen(
-              errorMessage: _errorMessage,
-              onRetry: () {
-                setState(() {
-                  _isInitialized = false;
-                  _hasError = false;
-                  _errorMessage = '';
-                });
-                _initializeApp();
-              },
-            )
-          : const WayfareApp(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          title: 'Wayfare',
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: themeProvider.materialThemeMode,
+          debugShowCheckedModeBanner: false,
+          home: !_isInitialized
+              ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+              : _hasError
+              ? ErrorScreen(
+                  errorMessage: _errorMessage,
+                  onRetry: () {
+                    setState(() {
+                      _isInitialized = false;
+                      _hasError = false;
+                      _errorMessage = '';
+                    });
+                    _initializeApp();
+                  },
+                )
+              : const WayfareApp(),
+        );
+      },
     );
   }
 }
