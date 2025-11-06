@@ -18,23 +18,30 @@ class OmsaIconData {
     bool excludeFromSemantics = false,
     Clip clipBehavior = Clip.hardEdge,
   }) {
-    final effectiveWidth = size ?? width;
-    final effectiveHeight = size ?? height;
-    final colorFilter = color != null
-        ? ColorFilter.mode(color, BlendMode.srcIn)
-        : null;
+    return Builder(
+      builder: (context) {
+        final effectiveWidth = size ?? width;
+        final effectiveHeight = size ?? height;
 
-    return VectorGraphic(
-      key: key,
-      loader: AssetBytesLoader(assetPath, packageName: 'omsa_icons'),
-      width: effectiveWidth,
-      height: effectiveHeight,
-      fit: fit,
-      alignment: alignment,
-      semanticsLabel: semanticsLabel,
-      excludeFromSemantics: excludeFromSemantics,
-      clipBehavior: clipBehavior,
-      colorFilter: colorFilter,
+        // Use explicit color if provided, otherwise inherit from IconTheme
+        final effectiveColor = color ?? IconTheme.of(context).color;
+        final colorFilter = effectiveColor != null
+            ? ColorFilter.mode(effectiveColor, BlendMode.srcIn)
+            : null;
+
+        return VectorGraphic(
+          key: key,
+          loader: AssetBytesLoader(assetPath, packageName: 'omsa_icons'),
+          width: effectiveWidth,
+          height: effectiveHeight,
+          fit: fit,
+          alignment: alignment,
+          semanticsLabel: semanticsLabel,
+          excludeFromSemantics: excludeFromSemantics,
+          clipBehavior: clipBehavior,
+          colorFilter: colorFilter,
+        );
+      },
     );
   }
 }

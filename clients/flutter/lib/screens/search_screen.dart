@@ -200,6 +200,7 @@ class _SearchScreenState extends State<SearchScreen> {
               OmsaButton(
                 onPressed: _openTravelerPicker,
                 variant: OmsaButtonVariant.secondary,
+                contentAlignment: OmsaButtonContentAlignment.spaceBetween,
                 leadingIcon: OmsaIcons.User(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
@@ -216,6 +217,7 @@ class _SearchScreenState extends State<SearchScreen> {
               OmsaButton(
                 onPressed: _openTimePicker,
                 variant: OmsaButtonVariant.secondary,
+                contentAlignment: OmsaButtonContentAlignment.spaceBetween,
                 leadingIcon: OmsaIcons.Clock(color: Color(0xFFE90037)),
                 trailingIcon: Text(
                   "Change",
