@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
 import 'package:omsa_demo_app/screens/ticket_screen.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
+import 'package:omsa_demo_app/widgets/payment_method_picker_drawer.dart';
 
 class PurchaseFlowScreen extends StatefulWidget {
   final Offer offer;
@@ -26,15 +30,13 @@ enum FlowPhase {
   failed,
 }
 
-enum PaymentMethod { visa, vipps }
-
 class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   FlowPhase _phase = FlowPhase.idle;
   bool _isProcessing = false;
   String? _error;
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.visa;
-  final TextEditingController _phoneController = TextEditingController();
-  String? _phoneError;
+  PaymentMethodSelection _paymentMethodSelection = const PaymentMethodSelection(
+    method: PaymentMethodType.newCard,
+  );
 
   PurchaseInitiation? _purchase;
   PaymentSession? _payment;
@@ -44,44 +46,10 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   ConfirmedPackage? _confirmation;
   List<TravelDocument> _documents = [];
 
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    super.dispose();
-  }
-
-  bool _isValidNorwegianPhone(String phone) {
-    // Norwegian phone numbers are 8 digits
-    final phoneRegex = RegExp(r'^\d{8}$');
-    return phoneRegex.hasMatch(phone);
-  }
-
-  String? _validatePhoneNumber() {
-    if (_selectedPaymentMethod == PaymentMethod.vipps) {
-      final phone = _phoneController.text.trim();
-      if (phone.isEmpty) {
-        return 'Phone number is required for Vipps payments';
-      }
-      if (!_isValidNorwegianPhone(phone)) {
-        return 'Please enter a valid 8-digit Norwegian phone number';
-      }
-    }
-    return null;
-  }
-
   Future<void> _startCheckout() async {
-    final phoneValidationError = _validatePhoneNumber();
-    if (phoneValidationError != null) {
-      setState(() {
-        _phoneError = phoneValidationError;
-      });
-      return;
-    }
-
     setState(() {
       _isProcessing = true;
       _error = null;
-      _phoneError = null;
       _phase = FlowPhase.purchasing;
       _purchase = null;
       _payment = null;
@@ -97,9 +65,10 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
         offer: widget.offer,
       );
 
-      final paymentType = _selectedPaymentMethod == PaymentMethod.visa
-          ? 'VISA'
-          : 'VIPPS';
+      final paymentType =
+          _paymentMethodSelection.method == PaymentMethodType.vipps
+          ? 'VIPPS'
+          : 'VISA';
       final payment = await PurchaseFlowService.createPayment(
         purchase: purchase,
         paymentType: paymentType,
@@ -107,7 +76,27 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
 
       if (!mounted) return;
 
-      if (_selectedPaymentMethod == PaymentMethod.visa) {
+      if (_paymentMethodSelection.method == PaymentMethodType.vipps) {
+        final offerName = widget.offer.properties.summary.name.isNotEmpty
+            ? widget.offer.properties.summary.name
+            : 'Travel ticket from Entur';
+
+        final appClaim = await PurchaseFlowService.startAppClaim(
+          session: payment,
+          description: offerName,
+          phoneNumber: _paymentMethodSelection.phoneNumber!,
+          redirectUrl: 'https://entur.no',
+        );
+
+        if (!mounted) return;
+        setState(() {
+          _purchase = purchase;
+          _payment = payment;
+          _appClaim = appClaim;
+          _phase = FlowPhase.appClaimReady;
+          _isProcessing = false;
+        });
+      } else {
         final terminal = await PurchaseFlowService.startTerminal(
           session: payment,
           redirectUrl: 'https://entur.no',
@@ -119,27 +108,6 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
           _payment = payment;
           _terminal = terminal;
           _phase = FlowPhase.terminalReady;
-          _isProcessing = false;
-        });
-      } else {
-        // Use the actual offer name for the Vipps payment description
-        final offerName = widget.offer.properties.summary.name.isNotEmpty
-            ? widget.offer.properties.summary.name
-            : 'Travel ticket from Entur';
-
-        final appClaim = await PurchaseFlowService.startAppClaim(
-          session: payment,
-          description: offerName,
-          phoneNumber: _phoneController.text.trim(),
-          redirectUrl: 'https://entur.no',
-        );
-
-        if (!mounted) return;
-        setState(() {
-          _purchase = purchase;
-          _payment = payment;
-          _appClaim = appClaim;
-          _phase = FlowPhase.appClaimReady;
           _isProcessing = false;
         });
       }
@@ -189,9 +157,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     });
 
     try {
-      // Only capture for VISA payments - VIPPS payments are auto-captured
+      // Only capture for card payments - VIPPS payments are auto-captured
       PaymentCaptureResult? capture;
-      if (_selectedPaymentMethod == PaymentMethod.visa) {
+      if (_paymentMethodSelection.method != PaymentMethodType.vipps) {
         capture = await PurchaseFlowService.capturePayment(session: _payment!);
       }
 
@@ -246,161 +214,150 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     return qrDoc;
   }
 
+  String _getPaymentMethodLabel() {
+    switch (_paymentMethodSelection.method) {
+      case PaymentMethodType.newCard:
+        return 'New card';
+      case PaymentMethodType.savedCard:
+        return 'Saved card (VISA ••1234)';
+      case PaymentMethodType.vipps:
+        return 'Vipps';
+    }
+  }
+
+  String _getPaymentMethodSubtitle() {
+    switch (_paymentMethodSelection.method) {
+      case PaymentMethodType.newCard:
+        return 'Pay with a new credit or debit card';
+      case PaymentMethodType.savedCard:
+        return 'VISA ending in 1234';
+      case PaymentMethodType.vipps:
+        return _paymentMethodSelection.phoneNumber != null
+            ? 'Phone: ${_paymentMethodSelection.phoneNumber}'
+            : 'Pay with your Vipps account';
+    }
+  }
+
+  Future<void> _openPaymentMethodPicker() async {
+    final result = await PaymentMethodPickerDrawer.show(
+      context,
+      initialSelection: _paymentMethodSelection,
+    );
+    if (result != null) {
+      setState(() {
+        _paymentMethodSelection = result;
+      });
+    }
+  }
+
   Widget _buildPaymentMethodSelector() {
-    return OmsaCard(
-      variant: OmsaCardVariant.elevated,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Payment method',
-            style: AppTypography.textLarge.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+    final bool isEnabled =
+        _phase == FlowPhase.idle || _phase == FlowPhase.failed;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Payment method',
+          style: AppTypography.textLarge.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
           ),
-          const SizedBox(height: 12),
-          RadioGroup<PaymentMethod>(
-            groupValue: _selectedPaymentMethod,
-            onChanged: _phase == FlowPhase.idle || _phase == FlowPhase.failed
-                ? (PaymentMethod? value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedPaymentMethod = value;
-                        _phoneError = null; // Clear error when switching
-                      });
-                    }
-                  }
-                : (PaymentMethod? value) {},
-            child: Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<PaymentMethod>(
-                    title: const Text('Card (VISA)'),
-                    value: PaymentMethod.visa,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-                Expanded(
-                  child: RadioListTile<PaymentMethod>(
-                    title: const Text('Vipps'),
-                    value: PaymentMethod.vipps,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-              ],
-            ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: context.tokens.strokeSubdued, width: 1),
           ),
-          if (_selectedPaymentMethod == PaymentMethod.vipps) ...[
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 16),
+          title: Text(_getPaymentMethodLabel()),
+          subtitle: Text(_getPaymentMethodSubtitle()),
+          trailing: Icon(
+            Icons.chevron_right,
+            color: context.tokens.textSubdued,
+          ),
+          onTap: isEnabled ? _openPaymentMethodPicker : null,
+          enabled: isEnabled,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOfferSummary(bool isLight) {
+    final price = widget.offer.properties.price;
+    final summary = widget.offer.properties.summary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Text(
-              'Phone number',
+              summary.name,
               style: AppTypography.textLarge.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            OmsaTextField(
-              controller: _phoneController,
-              label: 'Phone number',
-              hint: '12345678',
-              keyboardType: TextInputType.phone,
-              maxLength: 8,
-              disabled: _phase != FlowPhase.idle && _phase != FlowPhase.failed,
-              feedback: _phoneError,
-              variant: _phoneError != null
-                  ? OmsaTextFieldVariant.negative
-                  : OmsaTextFieldVariant.none,
-              onChanged: (value) {
-                // Clear error when user starts typing
-                if (_phoneError != null) {
-                  setState(() {
-                    _phoneError = null;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 8),
+
             Text(
-              'Please enter the phone number you want to use for Vipps',
-              style: TextStyle(
-                color: BaseLightTokens.textSubdued,
-                fontSize: 12,
+              '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
+              style: AppTypography.textLarge.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOfferSummary() {
-    final price = widget.offer.properties.price;
-    final summary = widget.offer.properties.summary;
-
-    return OmsaCard(
-      variant: OmsaCardVariant.elevated,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        ),
+        if (summary.description.isNotEmpty) ...[
+          const SizedBox(height: 12),
           Text(
-            summary.name,
-            style: AppTypography.textLarge.copyWith(
-              fontWeight: FontWeight.bold,
+            summary.description.replaceAll('\\n', '\n'),
+            style: TextStyle(color: BaseLightTokens.textSubdued),
+          ),
+        ],
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            OmsaActionChip(
+              size: OmsaChipSize.small,
+              label: Text(
+                summary.isRefundable ? 'Refundable' : 'Non-refundable',
+                style: AppTypography.textSmall,
+              ),
+              leadingIcon: summary.isRefundable
+                  ? OmsaIcons.ValidationSuccessFilled(
+                      color: SemanticColorTokens.fillSuccessDeep,
+                    )
+                  : OmsaIcons.ValidationExclamationFilled(
+                      color: SemanticColorTokens.fillWarningDeep,
+                    ),
+              onPressed: () {},
             ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            const SizedBox(width: 8),
+            OmsaActionChip(
+              size: OmsaChipSize.small,
+              label: Text(
+                summary.isExchangeable ? 'Exchangeable' : 'Non-exchangeable',
+                style: AppTypography.textSmall,
               ),
-              Row(
-                children: [
-                  OmsaActionChip(
-                    size: OmsaChipSize.small,
-                    label: Text(
-                      summary.isRefundable ? 'Refundable' : 'Non-refundable',
+              leadingIcon: summary.isExchangeable
+                  ? OmsaIcons.ValidationSuccessFilled(
+                      color: SemanticColorTokens.fillSuccessDeep,
+                    )
+                  : OmsaIcons.ValidationExclamationFilled(
+                      color: SemanticColorTokens.fillWarningDeep,
                     ),
-                    leadingIcon: Icon(
-                      summary.isRefundable ? Icons.check_circle : Icons.cancel,
-                      size: 16,
-                    ),
-                    onPressed: () {},
-                  ),
-                  OmsaActionChip(
-                    size: OmsaChipSize.small,
-                    label: Text(
-                      summary.isExchangeable
-                          ? 'Exchangeable'
-                          : 'Non-exchangeable',
-                    ),
-                    leadingIcon: Icon(
-                      summary.isExchangeable ? Icons.swap_horiz : Icons.block,
-                      size: 16,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (summary.description.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(
-              summary.description.replaceAll('\\n', '\n'),
-              style: TextStyle(color: BaseLightTokens.textSubdued),
+              onPressed: () {},
             ),
           ],
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        isLight
+            ? SvgPicture.asset("assets/wayfare_logo_solid.svg", width: 80)
+            : SvgPicture.asset("assets/wayfare_logo_filled.svg", width: 80),
+      ],
     );
   }
 
@@ -437,134 +394,150 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.brightnessOf(context) == Brightness.light;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Checkout'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        title: Text(
+          'Checkout',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        leading: IconButton(
+          icon: OmsaIcons.BackArrow(
+            size: 20,
+            color: context.wayfareTokens.brandPrimary,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        titleSpacing: 2,
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ).copyWith(top: 16, bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildOfferSummary(),
-            const SizedBox(height: 16),
+            _buildOfferSummary(isLight),
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 24),
             _buildPaymentMethodSelector(),
-            const SizedBox(height: 16),
-            OmsaCard(
-              variant: OmsaCardVariant.elevated,
-              padding: EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'Progress',
-                      style: AppTypography.textLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  _buildStatusTile(
-                    title: 'Purchase offer',
-                    subtitle: _purchase != null
-                        ? 'Package ID: ${_purchase!.packageId}'
-                        : 'Create OMSA order',
-                    completed: _purchase != null,
-                    isActive:
-                        _phase == FlowPhase.purchasing && _purchase == null,
-                  ),
-                  _buildStatusTile(
-                    title: 'Create payment',
-                    subtitle: _payment != null
-                        ? 'Payment ID: ${_payment!.paymentId}'
-                        : 'Prepare payment request',
-                    completed: _payment != null,
-                    isActive:
-                        _phase == FlowPhase.purchasing && _payment == null,
-                  ),
-                  if (_selectedPaymentMethod == PaymentMethod.visa)
-                    _buildStatusTile(
-                      title: 'Open payment terminal',
-                      subtitle: _terminal != null
-                          ? 'Transaction ID: ${_terminal!.transactionId}'
-                          : 'Awaiting terminal URL',
-                      completed:
-                          _terminal != null &&
-                          (_phase == FlowPhase.awaitingCapture ||
-                              _phase == FlowPhase.finished),
-                      isActive: _phase == FlowPhase.terminalReady,
-                    )
-                  else
-                    _buildStatusTile(
-                      title: 'Open Vipps payment',
-                      subtitle: _appClaim != null
-                          ? 'Transaction ID: ${_appClaim!.transactionId}'
-                          : 'Awaiting app-claim URL',
-                      completed:
-                          _appClaim != null &&
-                          (_phase == FlowPhase.awaitingCapture ||
-                              _phase == FlowPhase.finished),
-                      isActive: _phase == FlowPhase.appClaimReady,
-                    ),
-                  if (_selectedPaymentMethod == PaymentMethod.visa)
-                    _buildStatusTile(
-                      title: 'Capture payment',
-                      subtitle: _capture != null
-                          ? 'Status: ${_capture!.status}'
-                          : 'Confirm payment capture',
-                      completed: _capture != null,
-                      isActive:
-                          _phase == FlowPhase.awaitingCapture &&
-                          _capture == null,
-                    )
-                  else
-                    _buildStatusTile(
-                      title: 'Payment confirmed',
-                      subtitle:
-                          _phase == FlowPhase.finished ||
-                              _phase == FlowPhase.awaitingCapture
-                          ? 'Auto-captured by Vipps'
-                          : 'Waiting for Vipps confirmation',
-                      completed:
-                          _phase == FlowPhase.finished ||
-                          _phase == FlowPhase.awaitingCapture,
-                      isActive: false,
-                    ),
-                  _buildStatusTile(
-                    title: 'Confirm package',
-                    subtitle: _confirmation != null
-                        ? 'Package ID: ${_confirmation!.packageId}'
-                        : 'Finalize OMSA package',
-                    completed: _confirmation != null,
-                    isActive:
-                        _phase == FlowPhase.awaitingCapture &&
-                        _confirmation == null,
-                  ),
-                  _buildStatusTile(
-                    title: 'Retrieve tickets',
-                    subtitle: _documents.isNotEmpty
-                        ? 'Received ${_documents.length} document(s)'
-                        : 'Fetch travel documents',
-                    completed: _documents.isNotEmpty,
-                    isActive:
-                        _phase == FlowPhase.awaitingCapture &&
-                        _documents.isEmpty,
-                  ),
-                  if (_error != null)
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        _error!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
-                ],
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 24),
+            Text(
+              'Progress',
+              style: AppTypography.textLarge.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildStatusTile(
+                  title: 'Purchase offer',
+                  subtitle: _purchase != null
+                      ? 'Package ID: ${_purchase!.packageId}'
+                      : 'Create OMSA order',
+                  completed: _purchase != null,
+                  isActive: _phase == FlowPhase.purchasing && _purchase == null,
+                ),
+                _buildStatusTile(
+                  title: 'Create payment',
+                  subtitle: _payment != null
+                      ? 'Payment ID: ${_payment!.paymentId}'
+                      : 'Prepare payment request',
+                  completed: _payment != null,
+                  isActive: _phase == FlowPhase.purchasing && _payment == null,
+                ),
+                if (_paymentMethodSelection.method == PaymentMethodType.vipps)
+                  _buildStatusTile(
+                    title: 'Open Vipps payment',
+                    subtitle: _appClaim != null
+                        ? 'Transaction ID: ${_appClaim!.transactionId}'
+                        : 'Awaiting app-claim URL',
+                    completed:
+                        _appClaim != null &&
+                        (_phase == FlowPhase.awaitingCapture ||
+                            _phase == FlowPhase.finished),
+                    isActive: _phase == FlowPhase.appClaimReady,
+                  )
+                else
+                  _buildStatusTile(
+                    title: 'Open payment terminal',
+                    subtitle: _terminal != null
+                        ? 'Transaction ID: ${_terminal!.transactionId}'
+                        : 'Awaiting terminal URL',
+                    completed:
+                        _terminal != null &&
+                        (_phase == FlowPhase.awaitingCapture ||
+                            _phase == FlowPhase.finished),
+                    isActive: _phase == FlowPhase.terminalReady,
+                  ),
+                if (_paymentMethodSelection.method == PaymentMethodType.vipps)
+                  _buildStatusTile(
+                    title: 'Payment confirmed',
+                    subtitle:
+                        _phase == FlowPhase.finished ||
+                            _phase == FlowPhase.awaitingCapture
+                        ? 'Auto-captured by Vipps'
+                        : 'Waiting for Vipps confirmation',
+                    completed:
+                        _phase == FlowPhase.finished ||
+                        _phase == FlowPhase.awaitingCapture,
+                    isActive: false,
+                  )
+                else
+                  _buildStatusTile(
+                    title: 'Capture payment',
+                    subtitle: _capture != null
+                        ? 'Status: ${_capture!.status}'
+                        : 'Confirm payment capture',
+                    completed: _capture != null,
+                    isActive:
+                        _phase == FlowPhase.awaitingCapture && _capture == null,
+                  ),
+                _buildStatusTile(
+                  title: 'Confirm package',
+                  subtitle: _confirmation != null
+                      ? 'Package ID: ${_confirmation!.packageId}'
+                      : 'Finalize OMSA package',
+                  completed: _confirmation != null,
+                  isActive:
+                      _phase == FlowPhase.awaitingCapture &&
+                      _confirmation == null,
+                ),
+                _buildStatusTile(
+                  title: 'Retrieve tickets',
+                  subtitle: _documents.isNotEmpty
+                      ? 'Received ${_documents.length} document(s)'
+                      : 'Fetch travel documents',
+                  completed: _documents.isNotEmpty,
+                  isActive:
+                      _phase == FlowPhase.awaitingCapture && _documents.isEmpty,
+                ),
+              ],
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _error!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
             if (_phase == FlowPhase.idle || _phase == FlowPhase.failed)
               OmsaButton(

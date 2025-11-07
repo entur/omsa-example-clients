@@ -250,7 +250,10 @@ class OmsaIcons {
   static const Map = OmsaIconData('assets/icons/map.vec');
   static const MapFilled = OmsaIconData('assets/icons/map_filled.vec');
   static const MapPin = OmsaIconData('assets/icons/map_pin.vec');
-  static const Mastercard = OmsaIconData('assets/icons/mastercard.vec');
+  static const Mastercard = OmsaIconData(
+    'assets/icons/mastercard.vec',
+    preserveOriginalColor: true,
+  );
   static const Measure = OmsaIconData('assets/icons/measure.vec');
   static const MeasureFilled = OmsaIconData('assets/icons/measure_filled.vec');
   static const Menu = OmsaIconData('assets/icons/menu.vec');
@@ -537,9 +540,18 @@ class OmsaIcons {
   );
   static const View = OmsaIconData('assets/icons/view.vec');
   static const Vimeo = OmsaIconData('assets/icons/vimeo.vec');
-  static const Vipps = OmsaIconData('assets/icons/vipps.vec');
-  static const VippsLogo = OmsaIconData('assets/icons/vipps_logo.vec');
-  static const Visa = OmsaIconData('assets/icons/visa.vec');
+  static const Vipps = OmsaIconData(
+    'assets/icons/vipps.vec',
+    preserveOriginalColor: true,
+  );
+  static const VippsLogo = OmsaIconData(
+    'assets/icons/vipps_logo.vec',
+    preserveOriginalColor: true,
+  );
+  static const Visa = OmsaIconData(
+    'assets/icons/visa.vec',
+    preserveOriginalColor: true,
+  );
   static const Voi = OmsaIconData('assets/icons/voi.vec');
   static const Vy = OmsaIconData('assets/icons/vy.vec');
   static const WaitingRoom = OmsaIconData('assets/icons/waiting_room.vec');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
@@ -69,12 +70,13 @@ class OffersScreen extends StatelessWidget {
                 summary.isRefundable ? 'Refundable' : 'Non-refundable',
                 style: AppTypography.textSmall,
               ),
-              leadingIcon:
-                summary.isRefundable ? OmsaIcons.ValidationSuccessFilled(
-                  color: SemanticColorTokens.fillSuccessDeep
-                ) : OmsaIcons.ValidationExclamationFilled(
-                  color: SemanticColorTokens.fillWarningDeep
-                ),
+              leadingIcon: summary.isRefundable
+                  ? OmsaIcons.ValidationSuccessFilled(
+                      color: SemanticColorTokens.fillSuccessDeep,
+                    )
+                  : OmsaIcons.ValidationExclamationFilled(
+                      color: SemanticColorTokens.fillWarningDeep,
+                    ),
               onPressed: () {},
             ),
             const SizedBox(width: 8),
@@ -84,24 +86,21 @@ class OffersScreen extends StatelessWidget {
                 summary.isExchangeable ? 'Exchangeable' : 'Non-exchangeable',
                 style: AppTypography.textSmall,
               ),
-              leadingIcon:
-                summary.isExchangeable ? OmsaIcons.ValidationSuccessFilled(
-                  color: SemanticColorTokens.fillSuccessDeep
-                ) : OmsaIcons.ValidationExclamationFilled(
-                  color: SemanticColorTokens.fillWarningDeep
-                ),
+              leadingIcon: summary.isExchangeable
+                  ? OmsaIcons.ValidationSuccessFilled(
+                      color: SemanticColorTokens.fillSuccessDeep,
+                    )
+                  : OmsaIcons.ValidationExclamationFilled(
+                      color: SemanticColorTokens.fillWarningDeep,
+                    ),
               onPressed: () {},
             ),
           ],
         ),
         const SizedBox(height: 16),
-        isLight ? SvgPicture.asset(
-          "assets/wayfare_logo_solid.svg",
-              width: 80,
-        ) : SvgPicture.asset(
-          "assets/wayfare_logo_filled.svg",
-              width: 80,
-        ),
+        isLight
+            ? SvgPicture.asset("assets/wayfare_logo_solid.svg", width: 80)
+            : SvgPicture.asset("assets/wayfare_logo_filled.svg", width: 80),
       ],
     );
   }
@@ -119,6 +118,14 @@ class OffersScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
+        leading: IconButton(
+          icon: OmsaIcons.BackArrow(
+            size: 20,
+            color: context.wayfareTokens.brandPrimary,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        titleSpacing: 2,
         centerTitle: false,
       ),
       body: offers.offers.isEmpty
@@ -172,6 +179,7 @@ class OffersScreen extends StatelessWidget {
                     right: 16,
                     bottom: 24,
                     child: OmsaButton(
+                      variant: OmsaButtonVariant.success,
                       onPressed: () => _handleNext(context),
                       width: OmsaButtonWidth.fluid,
                       child: Row(
