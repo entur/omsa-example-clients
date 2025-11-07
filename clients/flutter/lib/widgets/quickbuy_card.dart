@@ -38,12 +38,21 @@ class QuickbuyCard extends StatelessWidget {
       dense: true,
       tileColor: isLight ? Colors.transparent : tokens.frameTint,
       shape: RoundedRectangleBorder(
-        side: BorderSide(width: 2, color: isLight ? tokens.strokeSubdued : tokens.frameTint),
+        side: BorderSide(
+          width: 2,
+          color: isLight ? tokens.strokeSubdued : tokens.frameTint,
+        ),
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
-      leading: OmsaIcons.ValidTicket(size: 20, color: context.wayfareTokens.brandPrimary),
+      leading: OmsaIcons.ValidTicket(
+        size: 20,
+        color: context.wayfareTokens.brandPrimary,
+      ),
       horizontalTitleGap: 8,
-      title: Text(destinationText, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+      title: Text(
+        destinationText,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
       subtitle: Text(
         '$ticketTypeText ⋅ $travellers',
         style: TextStyle(
@@ -52,7 +61,10 @@ class QuickbuyCard extends StatelessWidget {
           fontWeight: FontWeight.normal,
         ),
       ),
-      trailing: OmsaIcons.RightArrow(size: 20, color: context.wayfareTokens.brandPrimary),
+      trailing: OmsaIcons.RightArrow(
+        size: 20,
+        color: context.wayfareTokens.brandPrimary,
+      ),
       onTap: onTap,
     );
   }

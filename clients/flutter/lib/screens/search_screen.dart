@@ -221,7 +221,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset('assets/wayfare_combined_header.svg'),
-                      OmsaBadge(variant: OmsaBadgeVariant.information, child: "Demo"),
+                      OmsaBadge(
+                        variant: OmsaBadgeVariant.information,
+                        child: "Demo",
+                      ),
                     ],
                   ),
 

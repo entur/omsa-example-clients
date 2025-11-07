@@ -122,7 +122,11 @@ class _TravelSearchState extends State<TravelSearch> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: context.wayfareTokens.brandPrimary),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: context.wayfareTokens.brandPrimary,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -135,7 +139,10 @@ class _TravelSearchState extends State<TravelSearch> {
                 ),
               ],
             ),
-            OmsaIcons.RightArrow(size: 20, color: context.wayfareTokens.brandPrimary),
+            OmsaIcons.RightArrow(
+              size: 20,
+              color: context.wayfareTokens.brandPrimary,
+            ),
           ],
         ),
       ),
@@ -149,7 +156,12 @@ class _TravelSearchState extends State<TravelSearch> {
     return Container(
       decoration: BoxDecoration(
         color: isLight ? Colors.transparent : context.tokens.frameTint,
-        border: Border.all(color: isLight ? context.tokens.strokeSubdued : context.tokens.frameTint, width: 2),
+        border: Border.all(
+          color: isLight
+              ? context.tokens.strokeSubdued
+              : context.tokens.frameTint,
+          width: 2,
+        ),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -165,7 +177,9 @@ class _TravelSearchState extends State<TravelSearch> {
             height: 1,
             indent: 16,
             endIndent: 16,
-            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
+            color: isLight
+                ? context.tokens.strokeSubduedAlt
+                : context.tokens.frameSubdued,
           ),
           _buildLocationButton(
             context: context,
@@ -320,7 +334,10 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                       controller: _searchController,
                       label: 'Search',
                       hint: 'Where do you want to go?',
-                      prepend: OmsaIcons.Search(size: 20, color: tokens.textSubdued),
+                      prepend: OmsaIcons.Search(
+                        size: 20,
+                        color: tokens.textSubdued,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -398,7 +415,9 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                   thickness: 1,
                                   indent: 16,
                                   endIndent: 16,
-                                  color: isLight ? tokens.strokeSubduedAlt : tokens.frameSubdued,
+                                  color: isLight
+                                      ? tokens.strokeSubduedAlt
+                                      : tokens.frameSubdued,
                                 ),
                             ],
                           );
@@ -486,7 +505,9 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                   thickness: 1,
                                   indent: 16,
                                   endIndent: 16,
-                                  color: isLight ? tokens.strokeSubduedAlt : tokens.frameSubdued,
+                                  color: isLight
+                                      ? tokens.strokeSubduedAlt
+                                      : tokens.frameSubdued,
                                 ),
                             ],
                           );

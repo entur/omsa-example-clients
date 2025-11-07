@@ -75,9 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
           _SettingsTile(
             leading: OmsaIcons.ClosedLock(size: 20),
-            title: const Text(
-              'Username and password',
-            ),
+            title: const Text('Username and password'),
             onTap: () {},
           ),
           Divider(
@@ -88,9 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.Banknote(size: 20),
-            title: const Text(
-              'Card and payment',
-            ),
+            title: const Text('Card and payment'),
             onTap: () {},
           ),
           Divider(
@@ -112,9 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.ShoppingCart(size: 20),
-            title: const Text(
-              'Purchases and receipts',
-            ),
+            title: const Text('Purchases and receipts'),
             onTap: () {},
           ),
           Divider(
@@ -195,7 +189,7 @@ class _SettingsTile extends StatelessWidget {
       titleTextStyle: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.normal,
-        color: context.tokens.textAccent
+        color: context.tokens.textAccent,
       ),
       horizontalTitleGap: 8,
       leading: leading,

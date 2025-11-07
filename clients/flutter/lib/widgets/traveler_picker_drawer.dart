@@ -297,8 +297,14 @@ class _TravelerCardState extends State<_TravelerCard> {
                     ),
                   ),
                   widget.isExpanded
-                      ? OmsaIcons.UpArrow(size: 20, color: context.wayfareTokens.brandPrimary)
-                      : OmsaIcons.DownArrow(size: 20, color: context.wayfareTokens.brandPrimary),
+                      ? OmsaIcons.UpArrow(
+                          size: 20,
+                          color: context.wayfareTokens.brandPrimary,
+                        )
+                      : OmsaIcons.DownArrow(
+                          size: 20,
+                          color: context.wayfareTokens.brandPrimary,
+                        ),
                 ],
               ),
             ),
