@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/models/traveler_model.dart';
@@ -262,134 +263,150 @@ class _TravelerCardState extends State<_TravelerCard> {
     final category = widget.traveler.category;
 
     return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: tokens.strokeSubdued, width: 2)
-        ),
-        child: Column(
-      children: [
-        InkWell(
-          onTap: widget.onTap,
-          borderRadius: BorderRadius.circular(4),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: tokens.strokeSubdued, width: 2),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(4),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.traveler.displayName,
+                          style: AppTypography.textMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.traveler.displaySummary,
+                          style: AppTypography.textSmall.copyWith(
+                            color: tokens.textSubdued,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  widget.isExpanded
+                      ? OmsaIcons.UpArrow(size: 20, color: context.wayfareTokens.brandPrimary)
+                      : OmsaIcons.DownArrow(size: 20, color: context.wayfareTokens.brandPrimary),
+                ],
+              ),
+            ),
+          ),
+          if (widget.isExpanded) ...[
+            Divider(
+              height: 1,
+              color: tokens.strokeSubduedAlt,
+              indent: 16,
+              endIndent: 16,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        widget.traveler.displayName,
-                        style: AppTypography.textMedium.copyWith(
-                          fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: OmsaTextField(
+                          controller: _ageController,
+                          keyboardType: TextInputType.number,
+                          label: 'Age',
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: _updateAge,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        widget.traveler.displaySummary,
-                        style: AppTypography.textSmall.copyWith(
-                          color: tokens.textSubdued,
+                      const SizedBox(width: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: tokens.frameTint,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              category.label,
+                              style: AppTypography.textMedium.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              category.subtitle,
+                              style: AppTypography.textSmall.copyWith(
+                                color: tokens.textSubdued,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                widget.isExpanded
-                      ? OmsaIcons.UpArrow()
-                      : OmsaIcons.DownArrow(),
-              ],
-            ),
-          ),
-        ),
-        if (widget.isExpanded) ...[
-          Divider(height: 1, color: tokens.strokeSubduedAlt, indent: 16, endIndent: 16),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: OmsaTextField(
-                        controller: _ageController,
-                        keyboardType: TextInputType.number,
-                        label: 'Age',
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: _updateAge,
-                      ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Discounts & entitlements',
+                    style: AppTypography.textMedium.copyWith(
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(width: 16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    spacing: 8,
+                    children: [
+                      OmsaChoiceChip(
+                        label: Text("Student"),
+                        value: "Student",
+                        disabled: true,
                       ),
-                      decoration: BoxDecoration(
-                        color: tokens.frameTint,
-                        borderRadius: BorderRadius.circular(8),
+                      OmsaChoiceChip(
+                        label: Text("Military"),
+                        value: "Military",
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            category.label,
-                            style: AppTypography.textMedium.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            category.subtitle,
-                            style: AppTypography.textSmall.copyWith(
-                              color: tokens.textSubdued,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "Coming soon...",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (widget.canRemove) ...[
+                    const SizedBox(height: 16),
+                    OmsaButton(
+                      onPressed: widget.onRemove,
+                      variant: OmsaButtonVariant.negative,
+                      width: OmsaButtonWidth.fluid,
+                      leadingIcon: OmsaIcons.Delete(size: 20),
+                      child: Text(
+                        widget.traveler.isDefaultTraveler
+                            ? 'Remove (buy for someone else)'
+                            : 'Remove traveler',
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Discounts & entitlements',
-                  style: AppTypography.textMedium.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  spacing: 8,
-                  children: [
-                    OmsaChoiceChip(label: Text("Student"), value: "Student", disabled: true),
-                    OmsaChoiceChip(label: Text("Military"), value: "Military"),
-                    Text("Coming soon...", style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal
-                    ))
-                  ]
-                ),
-                if (widget.canRemove) ...[
-                  const SizedBox(height: 16),
-                  OmsaButton(
-                    onPressed: widget.onRemove,
-                    variant: OmsaButtonVariant.negative,
-                    width: OmsaButtonWidth.fluid,
-                    leadingIcon: OmsaIcons.Delete(size: 20),
-                    child: Text(
-                      widget.traveler.isDefaultTraveler
-                          ? 'Remove (buy for someone else)'
-                          : 'Remove traveler',
-                    ),
-                  ),
                 ],
-              ],
+              ),
             ),
-          ),
+          ],
         ],
-      ],
-    ));
+      ),
+    );
   }
 }

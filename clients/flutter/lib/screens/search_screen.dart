@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_demo_app/widgets/quickbuy_card.dart';
 import 'package:omsa_demo_app/widgets/travel_search.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
@@ -222,7 +221,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset('assets/wayfare_combined_header.svg'),
-                      DemoBadge(text: "Demo"),
+                      OmsaBadge(variant: OmsaBadgeVariant.information, child: "Demo"),
                     ],
                   ),
 
@@ -264,16 +263,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     trailingIcon: Text(
                       "Change",
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                         color: context.wayfareTokens.brandPrimary,
                       ),
                     ),
                     child: Text(
                       _getTravelersDisplayText(),
                       style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: context.wayfareTokens.brandPrimary,
+                        color: context.tokens.textSubdued,
                       ),
                     ),
                   ),
@@ -291,16 +291,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     trailingIcon: Text(
                       "Change",
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                         color: context.wayfareTokens.brandPrimary,
                       ),
                     ),
                     child: Text(
                       _getTimeDisplayText(),
                       style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: context.wayfareTokens.brandPrimary,
+                        color: context.tokens.textSubdued,
                       ),
                     ),
                   ),

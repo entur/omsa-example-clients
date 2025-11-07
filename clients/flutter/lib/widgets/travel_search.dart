@@ -122,19 +122,20 @@ class _TravelSearchState extends State<TravelSearch> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: context.wayfareTokens.brandPrimary),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: context.wayfareTokens.brandPrimary),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   value,
                   style: TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.normal,
                     color: context.tokens.textSubdued,
                   ),
                 ),
               ],
             ),
-            OmsaIcons.RightArrow(color: context.wayfareTokens.brandPrimary),
+            OmsaIcons.RightArrow(size: 20, color: context.wayfareTokens.brandPrimary),
           ],
         ),
       ),
@@ -143,9 +144,12 @@ class _TravelSearchState extends State<TravelSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: context.tokens.strokeSubdued, width: 2),
+        color: isLight ? Colors.transparent : context.tokens.frameTint,
+        border: Border.all(color: isLight ? context.tokens.strokeSubdued : context.tokens.frameTint, width: 2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -161,7 +165,7 @@ class _TravelSearchState extends State<TravelSearch> {
             height: 1,
             indent: 16,
             endIndent: 16,
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
           ),
           _buildLocationButton(
             context: context,
@@ -255,6 +259,7 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
+    final isLight = Theme.of(context).brightness == Brightness.light;
 
     // Recent searches for demo purposes
     final recentSearches = [
@@ -315,7 +320,7 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                       controller: _searchController,
                       label: 'Search',
                       hint: 'Where do you want to go?',
-                      prepend: OmsaIcons.Search(color: tokens.textSubdued),
+                      prepend: OmsaIcons.Search(size: 20, color: tokens.textSubdued),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -351,7 +356,8 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Text(
                             'Recent',
-                            style: AppTypography.textLarge.copyWith(
+                            style: TextStyle(
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -371,14 +377,16 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                 ),
                                 title: Text(
                                   item['name']!,
-                                  style: AppTypography.textMedium.copyWith(
+                                  style: TextStyle(
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Zone ${item['id']!.split(':')[2]}',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
                                     color: tokens.textSubdued,
                                   ),
                                 ),
@@ -390,7 +398,7 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                   thickness: 1,
                                   indent: 16,
                                   endIndent: 16,
-                                  color: tokens.strokeSubduedAlt,
+                                  color: isLight ? tokens.strokeSubduedAlt : tokens.frameSubdued,
                                 ),
                             ],
                           );
@@ -404,7 +412,8 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                           padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                           child: Text(
                             'Zones',
-                            style: AppTypography.textLarge.copyWith(
+                            style: TextStyle(
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -456,14 +465,16 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                 ),
                                 title: Text(
                                   zone['name']!,
-                                  style: AppTypography.textMedium.copyWith(
+                                  style: TextStyle(
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Zone ${zone['id']!.split(':')[2]}',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
                                     color: tokens.textSubdued,
                                   ),
                                 ),
@@ -475,7 +486,7 @@ class _TravelSearchDrawerState extends State<TravelSearchDrawer> {
                                   thickness: 1,
                                   indent: 16,
                                   endIndent: 16,
-                                  color: tokens.strokeSubduedAlt,
+                                  color: isLight ? tokens.strokeSubduedAlt : tokens.frameSubdued,
                                 ),
                             ],
                           );

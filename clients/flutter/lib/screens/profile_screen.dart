@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:omsa_demo_app/widgets/demo_badge.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/providers/theme_provider.dart';
@@ -69,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text('Your profile', style: AppTypography.headingExtraLarge2),
                 const SizedBox(width: 12),
-                DemoBadge(text: "Demo"),
+                OmsaBadge(variant: OmsaBadgeVariant.information, child: "Demo"),
               ],
             ),
           ),
@@ -78,7 +77,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             leading: OmsaIcons.ClosedLock(size: 20),
             title: const Text(
               'Username and password',
-              style: AppTypography.titleSmall,
             ),
             onTap: () {},
           ),
@@ -92,7 +90,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             leading: OmsaIcons.Banknote(size: 20),
             title: const Text(
               'Card and payment',
-              style: AppTypography.titleSmall,
             ),
             onTap: () {},
           ),
@@ -104,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.Bell(size: 20),
-            title: const Text('Notifications', style: AppTypography.titleSmall),
+            title: const Text('Notifications'),
             onTap: () {},
           ),
           Divider(
@@ -117,7 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             leading: OmsaIcons.ShoppingCart(size: 20),
             title: const Text(
               'Purchases and receipts',
-              style: AppTypography.titleSmall,
             ),
             onTap: () {},
           ),
@@ -129,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.ColorPicker(size: 20),
-            title: const Text('Theme', style: AppTypography.titleSmall),
+            title: const Text('Theme'),
             onTap: () async {
               final themeProvider = context.read<ThemeProvider>();
               final result = await ThemePickerDrawer.show(
@@ -149,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.Value(size: 20),
-            title: const Text('Advantages', style: AppTypography.titleSmall),
+            title: const Text('Advantages'),
             onTap: () {},
           ),
           Divider(
@@ -160,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _SettingsTile(
             leading: OmsaIcons.Norway(size: 20),
-            title: const Text('Language', style: AppTypography.titleSmall),
+            title: const Text('Language'),
             onTap: () {},
           ),
           const SizedBox(height: 32),
@@ -196,6 +192,11 @@ class _SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      titleTextStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: context.tokens.textAccent
+      ),
       horizontalTitleGap: 8,
       leading: leading,
       title: title,
