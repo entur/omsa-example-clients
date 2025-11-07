@@ -362,8 +362,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              Row(
                 children: [
                   OmsaActionChip(
                     size: OmsaChipSize.small,
@@ -376,7 +375,6 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
                     ),
                     onPressed: () {},
                   ),
-                  const SizedBox(height: 4),
                   OmsaActionChip(
                     size: OmsaChipSize.small,
                     label: Text(

@@ -73,7 +73,7 @@ class OmsaTextFieldDecorationBuilder {
       boxShadow: isFocused
           ? [
               BoxShadow(
-                color: colors.border,
+                color: colors.borderInteractive.withOpacity(0.4),
                 spreadRadius: 1.0,
                 blurRadius: 0,
                 offset: Offset.zero,

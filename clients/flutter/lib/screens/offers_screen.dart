@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,6 +34,7 @@ class OffersScreen extends StatelessWidget {
   Widget _buildOfferDetails(BuildContext context, Offer offer) {
     final summary = offer.properties.summary;
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,9 +61,7 @@ class OffersScreen extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 12),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
+        Row(
           children: [
             OmsaActionChip(
               size: OmsaChipSize.small,
@@ -68,25 +69,38 @@ class OffersScreen extends StatelessWidget {
                 summary.isRefundable ? 'Refundable' : 'Non-refundable',
                 style: AppTypography.textSmall,
               ),
-              leadingIcon: Icon(
-                summary.isRefundable ? Icons.check_circle : Icons.cancel,
-                size: 16,
-              ),
+              leadingIcon:
+                summary.isRefundable ? OmsaIcons.ValidationSuccessFilled(
+                  color: SemanticColorTokens.fillSuccessDeep
+                ) : OmsaIcons.ValidationExclamationFilled(
+                  color: SemanticColorTokens.fillWarningDeep
+                ),
               onPressed: () {},
             ),
+            const SizedBox(width: 8),
             OmsaActionChip(
               size: OmsaChipSize.small,
               label: Text(
                 summary.isExchangeable ? 'Exchangeable' : 'Non-exchangeable',
                 style: AppTypography.textSmall,
               ),
-              leadingIcon: Icon(
-                summary.isExchangeable ? Icons.swap_horiz : Icons.block,
-                size: 16,
-              ),
+              leadingIcon:
+                summary.isExchangeable ? OmsaIcons.ValidationSuccessFilled(
+                  color: SemanticColorTokens.fillSuccessDeep
+                ) : OmsaIcons.ValidationExclamationFilled(
+                  color: SemanticColorTokens.fillWarningDeep
+                ),
               onPressed: () {},
             ),
           ],
+        ),
+        const SizedBox(height: 16),
+        isLight ? SvgPicture.asset(
+          "assets/wayfare_logo_solid.svg",
+              width: 80,
+        ) : SvgPicture.asset(
+          "assets/wayfare_logo_filled.svg",
+              width: 80,
         ),
       ],
     );

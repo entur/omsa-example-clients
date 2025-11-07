@@ -16,6 +16,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.brightnessOf(context) == Brightness.light;
+
     return Scaffold(
       body: ListView(
         children: [
@@ -79,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {},
           ),
           Divider(
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -91,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Divider(
             height: 1,
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
           ),
@@ -101,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {},
           ),
           Divider(
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -112,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {},
           ),
           Divider(
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -132,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           Divider(
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
             height: 1,
@@ -143,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {},
           ),
           Divider(
-            color: context.tokens.strokeSubduedAlt,
+            color: isLight ? context.tokens.strokeSubduedAlt : context.tokens.frameSubdued,
             indent: 16,
             endIndent: 16,
             height: 1,
