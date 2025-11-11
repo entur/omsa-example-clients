@@ -28,19 +28,16 @@ class ComponentExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final tokens = context.tokens;
     final backgroundColor = mode == OmsaComponentMode.contrast
-        ? (brightness == Brightness.light
-              ? BaseLightTokens.frameContrast
-              : BaseDarkTokens.frameContrast)
+        ? tokens.frameContrast
         : (brightness == Brightness.light
-              ? BaseLightTokens.frameElevated
-              : BaseDarkTokens.frameDefault);
+              ? tokens.frameElevated
+              : tokens.frameDefault);
 
     final textColor = mode == OmsaComponentMode.contrast
         ? Colors.white
-        : (brightness == Brightness.light
-              ? BaseLightTokens.textAccent
-              : BaseDarkTokens.textAccent);
+        : tokens.textAccent;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

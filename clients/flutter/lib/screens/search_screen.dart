@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:omsa_demo_app/widgets/quickbuy_card.dart';
+import 'package:omsa_demo_app/widgets/travel_search.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
-import 'package:omsa_demo_app/screens/offers_screen.dart';
-import 'package:omsa_demo_app/screens/widget_design_screen.dart';
-
-enum DepartureType { now, leaveAt, arriveBy }
+import 'package:omsa_icons/omsa_icons.dart';
+import 'package:omsa_demo_app/widgets/departure_time_drawer.dart';
+import 'package:omsa_demo_app/widgets/traveler_picker_drawer.dart';
+import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
+import 'package:omsa_demo_app/models/traveler_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -16,12 +21,24 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  OmsaDropdownItem<String>? _fromZone;
-  OmsaDropdownItem<String>? _toZone;
-  DepartureType _departureType = DepartureType.now;
+  // Default location: Stavanger Lufthavn Sola (in Nord-Jæren zone)
+  String? _fromZoneId = 'KOL:FareZone:4'; // Nord-Jæren (Stavanger Airport)
+  String? _fromZoneName = 'Nord-Jæren';
+  String? _toZoneId;
+  String? _toZoneName;
+
+  TimeType _timeType = TimeType.now;
   DateTime _selectedDateTime = DateTime.now().add(const Duration(minutes: 30));
-  int _travelerAge = 30;
+
+  // Travelers - start with one default traveler (signed-in user mock)
+  late List<Traveler> _travelers;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _travelers = [Traveler.defaultTraveler()];
+  }
 
   final List<Map<String, String>> _zones = [
     {'id': 'KOL:FareZone:1', 'name': 'Haugalandet'},
@@ -33,13 +50,105 @@ class _SearchScreenState extends State<SearchScreen> {
     {'id': 'KOL:FareZone:7', 'name': 'Nærsone Egersund'},
   ];
 
+  final List<Map<String, String>> _quickbuyItems = [
+    {
+      'from': 'Haugalandet',
+      'to': 'Ryfylke',
+      'time': 'Now',
+      'travellers': '1 Adult',
+      'ticketType': 'single',
+    },
+    {
+      'from': 'Haugalandet',
+      'to': 'Haugalandet',
+      'time': 'Now',
+      'travellers': '1 Adult',
+      'ticketType': '24H',
+    },
+    {
+      'from': 'Jæren',
+      'to': 'Nord-Jæren',
+      'time': 'Now',
+      'travellers': '1 Adult, 2 children',
+      'ticketType': 'single',
+    },
+  ];
+
+  Future<void> _openTravelerPicker() async {
+    final result = await TravelerPickerDrawer.show(
+      context,
+      initialTravelers: _travelers,
+    );
+
+    if (result != null) {
+      setState(() {
+        _travelers = result.travelers;
+      });
+    }
+  }
+
+  Future<void> _openTimePicker() async {
+    final result = await DepartureTimeDrawer.show(
+      context,
+      initialTimeType: _timeType,
+      initialDateTime: _selectedDateTime,
+    );
+
+    if (result != null) {
+      setState(() {
+        _timeType = result.timeType;
+        if (result.selectedDateTime != null) {
+          _selectedDateTime = result.selectedDateTime!;
+        }
+      });
+    }
+  }
+
+  String _getTimeDisplayText() {
+    if (_timeType == TimeType.now) {
+      return 'Departure now';
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+    final selectedDate = DateTime(
+      _selectedDateTime.year,
+      _selectedDateTime.month,
+      _selectedDateTime.day,
+    );
+
+    String dateStr;
+    if (selectedDate == today) {
+      dateStr = 'today';
+    } else if (selectedDate == tomorrow) {
+      dateStr = 'tomorrow';
+    } else {
+      dateStr = '${_selectedDateTime.day}/${_selectedDateTime.month}';
+    }
+
+    final timeStr =
+        '${_selectedDateTime.hour.toString().padLeft(2, '0')}:${_selectedDateTime.minute.toString().padLeft(2, '0')}';
+
+    return _timeType == TimeType.departure
+        ? 'Departure $dateStr at $timeStr'
+        : 'Arrival $dateStr at $timeStr';
+  }
+
+  String _getTravelersDisplayText() {
+    final result = TravelerPickerResult(travelers: _travelers);
+    return result.displayText;
+  }
+
   Future<void> _searchOffers() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_fromZone == null || _toZone == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select both zones')));
+    if (_fromZoneId == null || _toZoneId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select your departure and destination zones'),
+        ),
+      );
       return;
     }
 
@@ -48,35 +157,34 @@ class _SearchScreenState extends State<SearchScreen> {
     try {
       DateTime startTime, endTime;
 
-      switch (_departureType) {
-        case DepartureType.now:
+      switch (_timeType) {
+        case TimeType.now:
           startTime = DateTime.now();
           endTime = DateTime.now().add(const Duration(hours: 2));
           break;
-        case DepartureType.leaveAt:
+        case TimeType.departure:
           startTime = _selectedDateTime;
           endTime = _selectedDateTime.add(const Duration(hours: 2));
           break;
-        case DepartureType.arriveBy:
+        case TimeType.arrival:
           endTime = _selectedDateTime;
           startTime = _selectedDateTime.subtract(const Duration(hours: 2));
           break;
       }
 
+      // Convert app travelers to API travelers
+      final travellers = OmsaApiService.createTravellersFromModel(_travelers);
+
       final offerCollection = await OmsaApiService.searchOffers(
-        fromZoneId: _fromZone!.value,
-        toZoneId: _toZone!.value,
+        fromZoneId: _fromZoneId!,
+        toZoneId: _toZoneId!,
         startTime: startTime,
         endTime: endTime,
-        travelerAge: _travelerAge,
+        travellers: travellers,
       );
 
       if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => OffersScreen(offers: offerCollection),
-          ),
-        );
+        context.push('/offers', extra: offerCollection);
       }
     } catch (e) {
       if (mounted) {
@@ -91,184 +199,152 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  Future<void> _selectDateTime() async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    if (date == null) return;
-
-    if (mounted) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
-      );
-
-      if (time != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'OMSA',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.palette),
-            tooltip: 'Widget Design Lab',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const WidgetDesignScreen(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Where are you going?',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              OmsaDropdown<String>(
-                label: 'From Zone',
-                selectedItem: _fromZone,
-                items: _zones.map((zone) {
-                  return OmsaDropdownItem(
-                    value: zone['id']!,
-                    label: zone['name']!,
-                  );
-                }).toList(),
-                onChange: (value) => setState(() => _fromZone = value),
-                placeholder: 'Select a zone',
-              ),
-              const SizedBox(height: 16),
-
-              OmsaDropdown<String>(
-                label: 'To Zone',
-                selectedItem: _toZone,
-                items: _zones.map((zone) {
-                  return OmsaDropdownItem(
-                    value: zone['id']!,
-                    label: zone['name']!,
-                  );
-                }).toList(),
-                onChange: (value) => setState(() => _toZone = value),
-                placeholder: 'Select a zone',
-              ),
-              const SizedBox(height: 16),
-
-              Text(
-                'Departure',
-                style: AppTypography.textLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              SegmentedButton<DepartureType>(
-                segments: const [
-                  ButtonSegment(
-                    value: DepartureType.now,
-                    label: Text('Now'),
-                    icon: Icon(Icons.schedule),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/wayfare_combined_header.svg'),
+                      OmsaBadge(
+                        variant: OmsaBadgeVariant.information,
+                        child: "Demo",
+                      ),
+                    ],
                   ),
-                  ButtonSegment(
-                    value: DepartureType.leaveAt,
-                    label: Text('Leave at'),
-                    icon: Icon(Icons.departure_board),
+
+                  const SizedBox(height: 32),
+
+                  Text(
+                    'Where are you going?',
+                    style: AppTypography.textExtraLarge,
                   ),
-                  ButtonSegment(
-                    value: DepartureType.arriveBy,
-                    label: Text('Arrive by'),
-                    icon: Icon(Icons.flag),
+
+                  const SizedBox(height: 16),
+
+                  TravelSearch(
+                    zones: _zones,
+                    initialFromZoneId: _fromZoneId,
+                    initialFromZoneName: _fromZoneName,
+                    initialToZoneId: _toZoneId,
+                    initialToZoneName: _toZoneName,
+                    onChanged: (result) {
+                      setState(() {
+                        _fromZoneId = result.fromZoneId;
+                        _fromZoneName = result.fromZoneName;
+                        _toZoneId = result.toZoneId;
+                        _toZoneName = result.toZoneName;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  OmsaButton(
+                    onPressed: _openTravelerPicker,
+                    variant: OmsaButtonVariant.secondary,
+                    contentAlignment: OmsaButtonContentAlignment.spaceBetween,
+                    leadingIcon: OmsaIcons.User(
+                      size: 20,
+                      color: context.wayfareTokens.brandPrimary,
+                    ),
+                    trailingIcon: Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
+                    child: Text(
+                      _getTravelersDisplayText(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: context.tokens.textSubdued,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  OmsaButton(
+                    onPressed: _openTimePicker,
+                    variant: OmsaButtonVariant.secondary,
+                    contentAlignment: OmsaButtonContentAlignment.spaceBetween,
+                    leadingIcon: OmsaIcons.Clock(
+                      size: 20,
+                      color: context.wayfareTokens.brandPrimary,
+                    ),
+                    trailingIcon: Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: context.wayfareTokens.brandPrimary,
+                      ),
+                    ),
+                    child: Text(
+                      _getTimeDisplayText(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: context.tokens.textSubdued,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  OmsaButton(
+                    onPressed: _isLoading ? null : _searchOffers,
+                    isLoading: _isLoading,
+                    width: OmsaButtonWidth.fluid,
+                    leadingIcon: OmsaIcons.Search(size: 20),
+                    child: const Text('Search'),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  Text('Quickbuy', style: AppTypography.textExtraLarge),
+
+                  const SizedBox(height: 16),
+
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _quickbuyItems.length,
+                    itemBuilder: (context, index) {
+                      return QuickbuyCard(
+                        key: ValueKey<int>(index),
+                        onTap: () {
+                          // Navigate to the quickbuy screen
+                        },
+                        travellers: _quickbuyItems[index]['travellers'] ?? '',
+                        from: _quickbuyItems[index]['from'] ?? '',
+                        to: _quickbuyItems[index]['to'] ?? '',
+                        time: _quickbuyItems[index]['time'] ?? '',
+                        ticketType: _quickbuyItems[index]['ticketType'] ?? '',
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(height: 8);
+                    },
                   ),
                 ],
-                selected: {_departureType},
-                onSelectionChanged: (value) {
-                  setState(() {
-                    _departureType = value.first;
-                  });
-                },
               ),
-              const SizedBox(height: 16),
-
-              if (_departureType != DepartureType.now) ...[
-                ListTile(
-                  title: Text(
-                    _departureType == DepartureType.leaveAt
-                        ? 'Departure Time'
-                        : 'Arrival Time',
-                  ),
-                  subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
-                  trailing: const Icon(Icons.access_time),
-                  onTap: _selectDateTime,
-                  tileColor: BaseLightTokens.frameElevatedAlt,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              OmsaTextField(
-                label: 'Traveler Age',
-                keyboardType: TextInputType.number,
-                initialValue: _travelerAge.toString(),
-                validator: (value) {
-                  if (value == null || value.isEmpty) return 'Required';
-                  final age = int.tryParse(value);
-                  if (age == null || age < 0 || age > 120) {
-                    return 'Enter valid age';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  final age = int.tryParse(value);
-                  if (age != null) _travelerAge = age;
-                },
-              ),
-              const SizedBox(height: 32),
-
-              OmsaButton(
-                onPressed: _isLoading ? null : _searchOffers,
-                isLoading: _isLoading,
-                width: OmsaButtonWidth.fluid,
-                size: OmsaButtonSize.large,
-                child: const Text('Search Offers'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

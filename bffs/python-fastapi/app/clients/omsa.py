@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any, Dict
@@ -10,6 +11,8 @@ from fastapi import HTTPException, status
 
 from ..config import Settings
 from ..models.search import SearchOfferRequest
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -132,9 +135,12 @@ class OMSAClient:
         return self._handle_response(response, "purchase offers")
 
     async def confirm_package(self, body: Dict[str, Any]) -> Dict[str, Any]:
+        json_body = self._ensure_json(body)
+        logger.info(f"Confirm package request body: {json_body}")
+
         response = await self._client.post(
             f"{self.base_url}/processes/confirm-package/execute",
-            json=self._ensure_json(body),
+            json=json_body,
             headers={
                 **await self._authorized_headers(),
                 **self._entur_headers(),

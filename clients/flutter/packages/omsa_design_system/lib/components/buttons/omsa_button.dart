@@ -9,6 +9,8 @@ enum OmsaButtonSize { small, medium, large }
 
 enum OmsaButtonWidth { fluid, auto }
 
+enum OmsaButtonContentAlignment { center, spaceBetween }
+
 /// Button component following EDS design system with support for variants,
 /// sizes, loading and disabled states.
 class OmsaButton extends StatefulWidget {
@@ -23,6 +25,7 @@ class OmsaButton extends StatefulWidget {
     this.isLoading = false,
     this.leadingIcon,
     this.trailingIcon,
+    this.contentAlignment = OmsaButtonContentAlignment.center,
   });
 
   final VoidCallback? onPressed;
@@ -34,6 +37,7 @@ class OmsaButton extends StatefulWidget {
   final bool isLoading;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
+  final OmsaButtonContentAlignment contentAlignment;
 
   @override
   State<OmsaButton> createState() => _OmsaButtonState();
@@ -332,27 +336,54 @@ class _OmsaButtonState extends State<OmsaButton> {
     Widget content = widget.child;
 
     if (widget.leadingIcon != null || widget.trailingIcon != null) {
-      content = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (widget.leadingIcon != null) ...[
-            IconTheme(
-              data: IconThemeData(color: colors.text),
-              child: widget.leadingIcon!,
+      if (widget.contentAlignment == OmsaButtonContentAlignment.spaceBetween) {
+        content = Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.leadingIcon != null) ...[
+                  IconTheme(
+                    data: IconThemeData(color: colors.text),
+                    child: widget.leadingIcon!,
+                  ),
+                  const SizedBox(width: 12.0),
+                ],
+                content,
+              ],
             ),
-            const SizedBox(width: 12.0), // 0.75rem
+            if (widget.trailingIcon != null)
+              IconTheme(
+                data: IconThemeData(color: colors.text),
+                child: widget.trailingIcon!,
+              ),
           ],
-          content,
-          if (widget.trailingIcon != null) ...[
-            const SizedBox(width: 12.0), // 0.75rem
-            IconTheme(
-              data: IconThemeData(color: colors.text),
-              child: widget.trailingIcon!,
-            ),
+        );
+      } else {
+        content = Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (widget.leadingIcon != null) ...[
+              IconTheme(
+                data: IconThemeData(color: colors.text),
+                child: widget.leadingIcon!,
+              ),
+              const SizedBox(width: 12.0), // 0.75rem
+            ],
+            content,
+            if (widget.trailingIcon != null) ...[
+              const SizedBox(width: 12.0), // 0.75rem
+              IconTheme(
+                data: IconThemeData(color: colors.text),
+                child: widget.trailingIcon!,
+              ),
+            ],
           ],
-        ],
-      );
+        );
+      }
     }
 
     if (widget.isLoading) {

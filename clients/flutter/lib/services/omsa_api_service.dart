@@ -83,8 +83,12 @@ class OmsaApiService {
     required String toZoneId,
     required DateTime startTime,
     required DateTime endTime,
-    int travelerAge = 30,
+    required List<Traveller> travellers,
   }) async {
+    if (travellers.isEmpty) {
+      throw ArgumentError('At least one traveller must be provided');
+    }
+
     final searchRequest = SearchOfferRequest(
       inputs: SearchOfferInputs(
         type: 'search_offer',
@@ -95,13 +99,7 @@ class OmsaApiService {
           startTime: startTime.toUtc().toIso8601String(),
           endTime: endTime.toUtc().toIso8601String(),
         ),
-        travellers: [
-          Traveller(
-            type: 'individual_traveller',
-            id: _generateTravellerUuid(),
-            age: travelerAge,
-          ),
-        ],
+        travellers: travellers,
       ),
     );
 
@@ -160,5 +158,23 @@ class OmsaApiService {
 
   static String _generateTravellerUuid() {
     return _uuid.v4();
+  }
+
+  /// Creates a list of API travellers from the app's Traveler model
+  static List<Traveller> createTravellersFromModel(List<dynamic> travelers) {
+    return travelers.map((traveler) {
+      // Extract age and entitlements from the traveler model
+      final age = traveler.age as int;
+      final entitlements = (traveler.entitlements as List)
+          .cast<String>()
+          .toList();
+
+      return Traveller(
+        type: 'individual_traveller',
+        id: _generateTravellerUuid(),
+        age: age,
+        entitlements: entitlements.isEmpty ? null : entitlements,
+      );
+    }).toList();
   }
 }

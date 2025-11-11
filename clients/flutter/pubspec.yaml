@@ -40,6 +40,12 @@ dependencies:
   # State Management
   provider: ^6.1.2
 
+  # Routing & Navigation
+  go_router: ^17.0.0
+
+  # Local Storage
+  shared_preferences: ^2.3.3
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -49,6 +55,9 @@ dependencies:
   url_launcher: ^6.3.0
   qr_flutter: ^4.1.0
   flutter_markdown_plus: ^1.0.5
+  lottie: ^3.2.0
+  flutter_native_splash: ^2.4.3
+  flutter_svg: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +69,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +83,17 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/animated_wayfare_logo.lottie
+    - assets/wayfare_icon_logo.svg
+    - assets/wayfare_logo.svg
+    - assets/wayfare_logo_solid.svg
+    - assets/wayfare_omsa_logo.svg
+    - assets/wayfare_logo_filled.svg
+    - assets/wayfare_combined_header.svg
+    - assets/turtle_signed_in.png
+    - assets/ninja_turtle.png
+    - assets/turtle_searching.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

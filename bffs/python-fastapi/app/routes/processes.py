@@ -63,7 +63,11 @@ async def confirm_package(
     settings: Settings = Depends(get_app_settings),
     http_client=Depends(get_http_client),
 ):
+    import logging
+    logger = logging.getLogger(__name__)
+
+    dumped = confirm_request.model_dump(by_alias=True, exclude_none=True)
+    logger.info(f"Received confirm package request: {dumped}")
+
     client = OMSAClient(http_client, settings)
-    return await client.confirm_package(
-        confirm_request.model_dump(by_alias=True, exclude_none=True)
-    )
+    return await client.confirm_package(dumped)
