@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:omsa_demo_app/screens/error_screen.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
-import 'package:omsa_demo_app/wayfare_app.dart';
+import 'package:omsa_demo_app/router.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/providers/theme_provider.dart';
 import 'package:omsa_demo_app/services/bff_service.dart';
@@ -85,27 +85,34 @@ class _OmsaDemoAppState extends State<OmsaDemoApp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'Wayfare',
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),
           themeMode: themeProvider.materialThemeMode,
           debugShowCheckedModeBanner: false,
-          home: !_isInitialized
-              ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-              : _hasError
-              ? ErrorScreen(
-                  errorMessage: _errorMessage,
-                  onRetry: () {
-                    setState(() {
-                      _isInitialized = false;
-                      _hasError = false;
-                      _errorMessage = '';
-                    });
-                    _initializeApp();
-                  },
-                )
-              : const WayfareApp(),
+          routerConfig: appRouter,
+          builder: (context, child) {
+            if (!_isInitialized) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            if (_hasError) {
+              return ErrorScreen(
+                errorMessage: _errorMessage,
+                onRetry: () {
+                  setState(() {
+                    _isInitialized = false;
+                    _hasError = false;
+                    _errorMessage = '';
+                  });
+                  _initializeApp();
+                },
+              );
+            }
+            return child ?? const SizedBox.shrink();
+          },
         );
       },
     );

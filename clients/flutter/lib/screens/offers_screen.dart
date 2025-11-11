@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
-import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,11 +24,7 @@ class OffersScreen extends StatelessWidget {
     if (selectedOffer != null) {
       provider.clearSelection();
 
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PurchaseFlowScreen(offer: selectedOffer),
-        ),
-      );
+      context.push('/purchase', extra: selectedOffer);
     }
   }
 

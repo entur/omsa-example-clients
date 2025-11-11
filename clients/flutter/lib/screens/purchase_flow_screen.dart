@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_icons/omsa_icons.dart';
@@ -7,7 +9,6 @@ import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
-import 'package:omsa_demo_app/screens/ticket_screen.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_demo_app/widgets/payment_method_picker_drawer.dart';
 
@@ -21,18 +22,17 @@ class PurchaseFlowScreen extends StatefulWidget {
 }
 
 enum FlowPhase {
-  idle,
-  purchasing,
-  terminalReady,
-  appClaimReady,
-  awaitingCapture,
-  finished,
+  selectingPayment, // User is choosing payment method
+  processing, // Backend calls happening
+  awaitingPayment, // External payment app/terminal opened
+  completing, // Final confirmation
+  success, // Done
   failed,
 }
 
-class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
-  FlowPhase _phase = FlowPhase.idle;
-  bool _isProcessing = false;
+class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
+    with WidgetsBindingObserver {
+  FlowPhase _phase = FlowPhase.selectingPayment;
   String? _error;
   PaymentMethodSelection _paymentMethodSelection = const PaymentMethodSelection(
     method: PaymentMethodType.newCard,
@@ -42,29 +42,81 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   PaymentSession? _payment;
   PaymentTerminalSession? _terminal;
   PaymentAppClaimSession? _appClaim;
-  PaymentCaptureResult? _capture;
-  ConfirmedPackage? _confirmation;
-  List<TravelDocument> _documents = [];
 
-  Future<void> _startCheckout() async {
+  bool _hasLaunchedPayment = false;
+  bool _hasReturnedFromPayment = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  Future<void> _savePendingPayment(
+    int paymentId,
+    int transactionId,
+    String packageId,
+    String paymentType,
+    int orderVersion,
+    double totalAmount,
+    String currencyCode,
+  ) async {
+    debugPrint(
+      'Saving pending payment: paymentId=$paymentId, transactionId=$transactionId, packageId=$packageId, type=$paymentType',
+    );
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('pending_payment_id', paymentId.toString());
+    await prefs.setString('pending_transaction_id', transactionId.toString());
+    await prefs.setString('pending_package_id', packageId);
+    await prefs.setString('pending_payment_type', paymentType);
+    await prefs.setString('pending_order_version', orderVersion.toString());
+    await prefs.setString('pending_total_amount', totalAmount.toString());
+    await prefs.setString('pending_currency_code', currencyCode);
+    debugPrint('Pending payment saved successfully');
+  }
+
+  Future<void> _clearPendingPayment() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('pending_payment_id');
+    await prefs.remove('pending_transaction_id');
+    await prefs.remove('pending_package_id');
+    await prefs.remove('pending_payment_type');
+    await prefs.remove('pending_order_version');
+    await prefs.remove('pending_total_amount');
+    await prefs.remove('pending_currency_code');
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Detect when user returns from external payment app
+    if (state == AppLifecycleState.resumed &&
+        _phase == FlowPhase.awaitingPayment &&
+        _hasLaunchedPayment &&
+        !_hasReturnedFromPayment) {
+      _hasReturnedFromPayment = true;
+      _completePayment();
+    }
+  }
+
+  Future<void> _startPurchaseFlow() async {
     setState(() {
-      _isProcessing = true;
+      _phase = FlowPhase.processing;
       _error = null;
-      _phase = FlowPhase.purchasing;
-      _purchase = null;
-      _payment = null;
-      _terminal = null;
-      _appClaim = null;
-      _capture = null;
-      _confirmation = null;
-      _documents = [];
     });
 
     try {
+      // Step 1: Initiate purchase
       final purchase = await PurchaseFlowService.initiatePurchase(
         offer: widget.offer,
       );
 
+      // Step 2: Create payment
       final paymentType =
           _paymentMethodSelection.method == PaymentMethodType.vipps
           ? 'VIPPS'
@@ -76,6 +128,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
 
       if (!mounted) return;
 
+      // Step 3: Start terminal or app claim
       if (_paymentMethodSelection.method == PaymentMethodType.vipps) {
         final offerName = widget.offer.properties.summary.name.isNotEmpty
             ? widget.offer.properties.summary.name
@@ -85,7 +138,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
           session: payment,
           description: offerName,
           phoneNumber: _paymentMethodSelection.phoneNumber!,
-          redirectUrl: 'https://entur.no',
+          redirectUrl: 'wayfareapp://payment-return',
         );
 
         if (!mounted) return;
@@ -93,13 +146,26 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
           _purchase = purchase;
           _payment = payment;
           _appClaim = appClaim;
-          _phase = FlowPhase.appClaimReady;
-          _isProcessing = false;
+          _phase = FlowPhase.awaitingPayment;
         });
+
+        // Save state in case app is killed
+        await _savePendingPayment(
+          payment.paymentId,
+          appClaim.transactionId,
+          purchase.packageId,
+          'VIPPS',
+          purchase.orderVersion,
+          purchase.totalAmount,
+          purchase.currencyCode,
+        );
+
+        // Auto-launch Vipps
+        _launchAppClaim();
       } else {
         final terminal = await PurchaseFlowService.startTerminal(
           session: payment,
-          redirectUrl: 'https://entur.no',
+          redirectUrl: 'wayfareapp://payment-return',
         );
 
         if (!mounted) return;
@@ -107,43 +173,59 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
           _purchase = purchase;
           _payment = payment;
           _terminal = terminal;
-          _phase = FlowPhase.terminalReady;
-          _isProcessing = false;
+          _phase = FlowPhase.awaitingPayment;
         });
+
+        // Save state in case app is killed
+        await _savePendingPayment(
+          payment.paymentId,
+          terminal.transactionId,
+          purchase.packageId,
+          'VISA',
+          purchase.orderVersion,
+          purchase.totalAmount,
+          purchase.currencyCode,
+        );
+
+        // Auto-launch payment terminal
+        _launchTerminal();
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _error = e.toString();
         _phase = FlowPhase.failed;
-        _isProcessing = false;
       });
     }
   }
 
-  Future<void> _openTerminal() async {
+  Future<void> _launchTerminal() async {
     final uri = _terminal?.terminalUri;
     if (uri == null || uri.isEmpty) return;
 
+    _hasLaunchedPayment = true;
     final launchUri = Uri.parse(uri);
     if (!await launchUrl(launchUri, mode: LaunchMode.externalApplication)) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open payment terminal link')),
-      );
+      setState(() {
+        _error = 'Could not open payment terminal';
+        _phase = FlowPhase.failed;
+      });
     }
   }
 
-  Future<void> _openAppClaim() async {
+  Future<void> _launchAppClaim() async {
     final uri = _appClaim?.appClaimUri;
     if (uri == null || uri.isEmpty) return;
 
+    _hasLaunchedPayment = true;
     final launchUri = Uri.parse(uri);
     if (!await launchUrl(launchUri, mode: LaunchMode.externalApplication)) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open VIPPS payment link')),
-      );
+      setState(() {
+        _error = 'Could not open Vipps payment';
+        _phase = FlowPhase.failed;
+      });
     }
   }
 
@@ -151,16 +233,14 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     if (_payment == null || _purchase == null) return;
 
     setState(() {
-      _isProcessing = true;
+      _phase = FlowPhase.completing;
       _error = null;
-      _phase = FlowPhase.awaitingCapture;
     });
 
     try {
       // Only capture for card payments - VIPPS payments are auto-captured
-      PaymentCaptureResult? capture;
       if (_paymentMethodSelection.method != PaymentMethodType.vipps) {
-        capture = await PurchaseFlowService.capturePayment(session: _payment!);
+        await PurchaseFlowService.capturePayment(session: _payment!);
       }
 
       final confirmation = await PurchaseFlowService.confirmPackage(
@@ -172,23 +252,25 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
 
       if (!mounted) return;
       setState(() {
-        _capture = capture;
-        _confirmation = confirmation;
-        _documents = documents;
-        _phase = FlowPhase.finished;
-        _isProcessing = false;
+        _phase = FlowPhase.success;
       });
 
+      // Clear pending payment state
+      await _clearPendingPayment();
+
+      // Navigate to confirmation screen
       if (documents.isNotEmpty) {
         final primaryTicket = _selectPrimaryTicket(documents);
         if (!mounted) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TicketScreen(
-              documents: documents,
-              primaryTicket: primaryTicket,
-            ),
-          ),
+
+        // Use replace to prevent back navigation to purchase screen
+        context.pushReplacement(
+          '/purchase-confirmation',
+          extra: {
+            'documents': documents,
+            'primaryTicket': primaryTicket,
+            'packageId': confirmation.packageId,
+          },
         );
       }
     } catch (e) {
@@ -196,8 +278,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
       setState(() {
         _error = e.toString();
         _phase = FlowPhase.failed;
-        _isProcessing = false;
       });
+      // Clear pending payment on error too
+      await _clearPendingPayment();
     }
   }
 
@@ -252,7 +335,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
 
   Widget _buildPaymentMethodSelector() {
     final bool isEnabled =
-        _phase == FlowPhase.idle || _phase == FlowPhase.failed;
+        _phase == FlowPhase.selectingPayment || _phase == FlowPhase.failed;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +384,6 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               ),
             ),
             const SizedBox(height: 8),
-
             Text(
               '${price.amount.toStringAsFixed(2)} ${price.currencyCode}',
               style: AppTypography.textLarge.copyWith(
@@ -361,34 +443,20 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
     );
   }
 
-  Widget _buildStatusTile({
-    required String title,
-    required String subtitle,
-    required bool completed,
-    bool isActive = false,
-  }) {
-    return Builder(
-      builder: (context) {
-        final theme = Theme.of(context);
-
-        final icon = completed
-            ? Icons.check_circle
-            : isActive
-            ? Icons.timelapse
-            : Icons.radio_button_unchecked;
-        final color = completed
-            ? Colors
-                  .green // Success color for completed
-            : isActive
-            ? theme.colorScheme.primary
-            : BaseLightTokens.shapeDisabled;
-
-        return ListTile(
-          leading: Icon(icon, color: color),
-          title: Text(title),
-          subtitle: Text(subtitle),
-        );
-      },
+  Widget _buildLoadingScreen(String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 24),
+          Text(
+            message,
+            style: AppTypography.textLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 
@@ -396,6 +464,105 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
   Widget build(BuildContext context) {
     final isLight = Theme.brightnessOf(context) == Brightness.light;
 
+    // Show different screens based on phase
+    if (_phase == FlowPhase.processing) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Processing',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
+        body: _buildLoadingScreen('Preparing your payment...'),
+      );
+    }
+
+    if (_phase == FlowPhase.awaitingPayment) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Payment',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.payment,
+                  size: 80,
+                  color: context.wayfareTokens.brandPrimary,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  _paymentMethodSelection.method == PaymentMethodType.vipps
+                      ? 'Complete payment in Vipps'
+                      : 'Complete payment in terminal',
+                  style: AppTypography.headingExtraLarge2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Return to this app when you\'re done',
+                  style: TextStyle(color: BaseLightTokens.textSubdued),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                OmsaButton(
+                  onPressed:
+                      _paymentMethodSelection.method == PaymentMethodType.vipps
+                      ? _launchAppClaim
+                      : _launchTerminal,
+                  width: OmsaButtonWidth.fluid,
+                  variant: OmsaButtonVariant.secondary,
+                  leadingIcon: const Icon(Icons.open_in_new),
+                  child: Text(
+                    _paymentMethodSelection.method == PaymentMethodType.vipps
+                        ? 'Reopen Vipps'
+                        : 'Reopen terminal',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                OmsaButton(
+                  onPressed: _completePayment,
+                  width: OmsaButtonWidth.fluid,
+                  leadingIcon: const Icon(Icons.check),
+                  child: const Text('I\'ve completed payment'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (_phase == FlowPhase.completing) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Finalizing',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
+        body: _buildLoadingScreen('Fetching your ticket...'),
+      );
+    }
+
+    // Main checkout screen (selectingPayment or failed)
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -427,105 +594,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
             const Divider(),
             const SizedBox(height: 24),
             _buildPaymentMethodSelector(),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 24),
-            Text(
-              'Progress',
-              style: AppTypography.textLarge.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatusTile(
-                  title: 'Purchase offer',
-                  subtitle: _purchase != null
-                      ? 'Package ID: ${_purchase!.packageId}'
-                      : 'Create OMSA order',
-                  completed: _purchase != null,
-                  isActive: _phase == FlowPhase.purchasing && _purchase == null,
-                ),
-                _buildStatusTile(
-                  title: 'Create payment',
-                  subtitle: _payment != null
-                      ? 'Payment ID: ${_payment!.paymentId}'
-                      : 'Prepare payment request',
-                  completed: _payment != null,
-                  isActive: _phase == FlowPhase.purchasing && _payment == null,
-                ),
-                if (_paymentMethodSelection.method == PaymentMethodType.vipps)
-                  _buildStatusTile(
-                    title: 'Open Vipps payment',
-                    subtitle: _appClaim != null
-                        ? 'Transaction ID: ${_appClaim!.transactionId}'
-                        : 'Awaiting app-claim URL',
-                    completed:
-                        _appClaim != null &&
-                        (_phase == FlowPhase.awaitingCapture ||
-                            _phase == FlowPhase.finished),
-                    isActive: _phase == FlowPhase.appClaimReady,
-                  )
-                else
-                  _buildStatusTile(
-                    title: 'Open payment terminal',
-                    subtitle: _terminal != null
-                        ? 'Transaction ID: ${_terminal!.transactionId}'
-                        : 'Awaiting terminal URL',
-                    completed:
-                        _terminal != null &&
-                        (_phase == FlowPhase.awaitingCapture ||
-                            _phase == FlowPhase.finished),
-                    isActive: _phase == FlowPhase.terminalReady,
-                  ),
-                if (_paymentMethodSelection.method == PaymentMethodType.vipps)
-                  _buildStatusTile(
-                    title: 'Payment confirmed',
-                    subtitle:
-                        _phase == FlowPhase.finished ||
-                            _phase == FlowPhase.awaitingCapture
-                        ? 'Auto-captured by Vipps'
-                        : 'Waiting for Vipps confirmation',
-                    completed:
-                        _phase == FlowPhase.finished ||
-                        _phase == FlowPhase.awaitingCapture,
-                    isActive: false,
-                  )
-                else
-                  _buildStatusTile(
-                    title: 'Capture payment',
-                    subtitle: _capture != null
-                        ? 'Status: ${_capture!.status}'
-                        : 'Confirm payment capture',
-                    completed: _capture != null,
-                    isActive:
-                        _phase == FlowPhase.awaitingCapture && _capture == null,
-                  ),
-                _buildStatusTile(
-                  title: 'Confirm package',
-                  subtitle: _confirmation != null
-                      ? 'Package ID: ${_confirmation!.packageId}'
-                      : 'Finalize OMSA package',
-                  completed: _confirmation != null,
-                  isActive:
-                      _phase == FlowPhase.awaitingCapture &&
-                      _confirmation == null,
-                ),
-                _buildStatusTile(
-                  title: 'Retrieve tickets',
-                  subtitle: _documents.isNotEmpty
-                      ? 'Received ${_documents.length} document(s)'
-                      : 'Fetch travel documents',
-                  completed: _documents.isNotEmpty,
-                  isActive:
-                      _phase == FlowPhase.awaitingCapture && _documents.isEmpty,
-                ),
-              ],
-            ),
             if (_error != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -539,110 +609,12 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen> {
               ),
             ],
             const SizedBox(height: 24),
-            if (_phase == FlowPhase.idle || _phase == FlowPhase.failed)
-              OmsaButton(
-                onPressed: _isProcessing ? null : _startCheckout,
-                isLoading: _isProcessing,
-                width: OmsaButtonWidth.fluid,
-                leadingIcon: const Icon(Icons.shopping_cart_checkout),
-                child: const Text('Purchase offer and prepare payment'),
-              ),
-            if (_phase == FlowPhase.terminalReady) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Text(
-                  'Complete the payment in the terminal, then manually switch back to this app to confirm your order.',
-                  style: TextStyle(
-                    color: BaseLightTokens.textSubdued,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 8),
-              OmsaButton(
-                onPressed: _isProcessing ? null : _openTerminal,
-                width: OmsaButtonWidth.fluid,
-                variant: OmsaButtonVariant.secondary,
-                leadingIcon: const Icon(Icons.open_in_new),
-                child: const Text('Open payment terminal'),
-              ),
-              const SizedBox(height: 12),
-              OmsaButton(
-                onPressed: _isProcessing ? null : _completePayment,
-                isLoading: _isProcessing,
-                width: OmsaButtonWidth.fluid,
-                leadingIcon: const Icon(Icons.check),
-                child: const Text('Capture payment and fetch ticket'),
-              ),
-              if (_terminal?.terminalUri.isNotEmpty ?? false) ...[
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: _isProcessing ? null : _openTerminal,
-                  child: Text(
-                    _terminal!.terminalUri,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ],
-            ],
-            if (_phase == FlowPhase.appClaimReady) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Text(
-                  'Complete the payment in Vipps, then manually switch back to this app to confirm your order.',
-                  style: TextStyle(
-                    color: BaseLightTokens.textSubdued,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 8),
-              OmsaButton(
-                onPressed: _isProcessing ? null : _openAppClaim,
-                width: OmsaButtonWidth.fluid,
-                variant: OmsaButtonVariant.secondary,
-                leadingIcon: const Icon(Icons.open_in_new),
-                child: const Text('Open Vipps payment'),
-              ),
-              const SizedBox(height: 12),
-              OmsaButton(
-                onPressed: _isProcessing ? null : _completePayment,
-                isLoading: _isProcessing,
-                width: OmsaButtonWidth.fluid,
-                leadingIcon: const Icon(Icons.check),
-                child: const Text('Confirm order and fetch ticket'),
-              ),
-              if (_appClaim?.appClaimUri.isNotEmpty ?? false) ...[
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: _isProcessing ? null : _openAppClaim,
-                  child: Text(
-                    _appClaim!.appClaimUri,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ],
-            ],
-            if (_phase == FlowPhase.finished)
-              OmsaButton(
-                onPressed: () {
-                  if (_documents.isEmpty) return;
-                  final doc = _selectPrimaryTicket(_documents);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => TicketScreen(
-                        documents: _documents,
-                        primaryTicket: doc,
-                      ),
-                    ),
-                  );
-                },
-                width: OmsaButtonWidth.fluid,
-                leadingIcon: const Icon(Icons.qr_code),
-                child: const Text('View ticket'),
-              ),
+            OmsaButton(
+              onPressed: _startPurchaseFlow,
+              width: OmsaButtonWidth.fluid,
+              leadingIcon: const Icon(Icons.shopping_cart_checkout),
+              child: const Text('Pay now'),
+            ),
           ],
         ),
       ),

@@ -24,11 +24,11 @@ class TicketScreen extends StatelessWidget {
         title: const Text('Your Travel Ticket'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: documents.isEmpty
-            ? const Center(child: Text('No travel documents available'))
-            : Column(
+      body: documents.isEmpty
+          ? const Center(child: Text('No travel documents available'))
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   OmsaCard(
@@ -52,11 +52,13 @@ class TicketScreen extends StatelessWidget {
                                 _buildValidityChip(
                                   'Valid from',
                                   displayTicket!.startValidity!,
+                                  context: context,
                                 ),
                               if (displayTicket?.endValidity != null)
                                 _buildValidityChip(
                                   'Valid until',
                                   displayTicket!.endValidity!,
+                                  context: context,
                                 ),
                             ],
                           ),
@@ -65,12 +67,13 @@ class TicketScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Expanded(
-                    child: OmsaCard(
+                  if (documents.length > 1)
+                    OmsaCard(
                       variant: OmsaCardVariant.elevated,
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             'Travel documents',
@@ -79,13 +82,14 @@ class TicketScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          Expanded(
-                            child: ListView.separated(
-                              itemCount: documents.length,
-                              separatorBuilder: (context, _) => const Divider(),
-                              itemBuilder: (context, index) {
-                                final doc = documents[index];
-                                return ListTile(
+                          ...documents.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final doc = entry.value;
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (index > 0) const Divider(),
+                                ListTile(
                                   leading: Icon(
                                     doc.isQrCode
                                         ? Icons.qr_code
@@ -116,27 +120,33 @@ class TicketScreen extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                );
-                              },
-                            ),
-                          ),
+                                ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
                     ),
-                  ),
                 ],
               ),
-      ),
+            ),
     );
   }
 
-  Widget _buildValidityChip(String label, DateTime value) {
-    return OmsaActionChip(
-      size: OmsaChipSize.small,
-      label: Column(
+  Widget _buildValidityChip(String label, DateTime value, {required BuildContext context}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: context.tokens.frameElevated,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: context.tokens.strokeSubdued),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(label, style: AppTypography.textSmall),
+          const SizedBox(height: 2),
           Text(
             value.toLocal().toString().substring(0, 16),
             style: AppTypography.textSmall.copyWith(
@@ -145,7 +155,6 @@ class TicketScreen extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () {},
     );
   }
 }

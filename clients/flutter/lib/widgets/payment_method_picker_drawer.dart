@@ -216,7 +216,9 @@ class _PaymentMethodPickerDrawerState extends State<PaymentMethodPickerDrawer> {
                                 });
                               },
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
@@ -274,9 +276,12 @@ class _PaymentMethodPickerDrawerState extends State<PaymentMethodPickerDrawer> {
                                   });
                                 },
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
                                   minimumSize: Size.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: const Text('Use saved'),
                               ),

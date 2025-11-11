@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:omsa_demo_app/widgets/quickbuy_card.dart';
 import 'package:omsa_demo_app/widgets/travel_search.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
-import 'package:omsa_demo_app/screens/offers_screen.dart';
 import 'package:omsa_icons/omsa_icons.dart';
 import 'package:omsa_demo_app/widgets/departure_time_drawer.dart';
 import 'package:omsa_demo_app/widgets/traveler_picker_drawer.dart';
@@ -184,11 +184,7 @@ class _SearchScreenState extends State<SearchScreen> {
       );
 
       if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => OffersScreen(offers: offerCollection),
-          ),
-        );
+        context.push('/offers', extra: offerCollection);
       }
     } catch (e) {
       if (mounted) {
