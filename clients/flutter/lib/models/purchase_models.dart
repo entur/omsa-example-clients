@@ -274,6 +274,8 @@ class TravelDocument {
 
   bool get hasAnimationDetails => animation != null;
 
+  bool get isDailyAnimation => _isAnimation;
+
   bool get _isAnimation =>
       contentType.toLowerCase().contains('dailyanim') && animation != null;
 
@@ -284,6 +286,23 @@ class TravelDocument {
   String? get qrPayloadString {
     if (!_isQrCode) return null;
     return base64Data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'type': type,
+      'properties': {
+        'type': type,
+        'travelDocumentType': travelDocumentType,
+        'contentType': contentType,
+        'base64': base64Data,
+        if (startValidity != null)
+          'startvalidity': startValidity!.toUtc().toIso8601String(),
+        if (endValidity != null)
+          'endvalidity': endValidity!.toUtc().toIso8601String(),
+      },
+    };
   }
 
   static Uint8List? _parseBinaryPayload(

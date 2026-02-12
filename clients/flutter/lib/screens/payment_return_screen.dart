@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ class PaymentReturnScreen extends StatefulWidget {
 }
 
 class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
+  static final Logger _logger = Logger();
   @override
   void initState() {
     super.initState();
@@ -29,8 +31,12 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     final pendingOrderVersion = prefs.getString('pending_order_version');
     final pendingTotalAmount = prefs.getString('pending_total_amount');
     final pendingCurrencyCode = prefs.getString('pending_currency_code');
+    final pendingPackageName = prefs.getString('pending_package_name');
+    final pendingPackageDescription = prefs.getString(
+      'pending_package_description',
+    );
 
-    debugPrint(
+    _logger.d(
       'PaymentReturn: paymentId=$pendingPaymentId, transactionId=$pendingTransactionId, packageId=$pendingPackageId, type=$pendingPaymentType',
     );
 
@@ -41,14 +47,14 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
         pendingTotalAmount == null ||
         pendingCurrencyCode == null) {
       // No pending payment, go home
-      debugPrint('PaymentReturn: No pending payment found, navigating to home');
+      _logger.i('PaymentReturn: No pending payment found, navigating to home');
       if (!mounted) return;
       context.go('/');
       return;
     }
 
     try {
-      debugPrint('PaymentReturn: Starting payment completion');
+      _logger.i('PaymentReturn: Starting payment completion');
       final paymentIdInt = int.parse(pendingPaymentId);
       final transactionIdInt = int.parse(pendingTransactionId);
       final purchase = PurchaseInitiation(
@@ -66,19 +72,30 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
       );
 
       if (pendingPaymentType == 'VIPPS') {
-        debugPrint('PaymentReturn: Skipping capture for Vipps app-claim');
+        _logger.i('PaymentReturn: Vipps flow detected, skipping capture call');
       } else {
-        debugPrint('PaymentReturn: Capturing card payment');
+        _logger.i('PaymentReturn: Capturing card payment');
         await PurchaseFlowService.capturePayment(session: payment);
-        debugPrint('PaymentReturn: Card payment captured');
+        _logger.i('PaymentReturn: Card payment captured');
       }
-      await PurchaseFlowService.waitForCaptureCompletion(session: payment);
+      await PurchaseFlowService.waitForCaptureCompletion(
+        session: payment,
+        maxAttempts: pendingPaymentType == 'VIPPS' ? 60 : 15,
+      );
 
-      debugPrint('PaymentReturn: Confirming package with retry');
+      _logger.i('PaymentReturn: Confirming package with retry');
       final confirmation = await PurchaseFlowService.confirmPackageWithRetry(
         purchase: purchase,
       );
-      debugPrint('PaymentReturn: Package confirmed: ${confirmation.packageId}');
+      _logger.i('PaymentReturn: Package confirmed: ${confirmation.packageId}');
+      await PurchaseFlowService.cacheConfirmedPackage(
+        packageId: confirmation.packageId,
+        packageName: pendingPackageName,
+        packageDescription: pendingPackageDescription,
+        totalAmount: double.tryParse(pendingTotalAmount),
+        currencyCode: pendingCurrencyCode,
+        status: confirmation.status,
+      );
 
       // Clear pending payment state
       await prefs.remove('pending_payment_id');
@@ -88,23 +105,34 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
       await prefs.remove('pending_order_version');
       await prefs.remove('pending_total_amount');
       await prefs.remove('pending_currency_code');
+      await prefs.remove('pending_package_name');
+      await prefs.remove('pending_package_description');
 
       if (!mounted) return;
 
       // Navigate to confirmation screen.
-      debugPrint('PaymentReturn: Navigating to confirmation screen');
-      final encodedPackageId = Uri.encodeComponent(confirmation.packageId);
-      context.pushReplacement('/purchase-confirmation/$encodedPackageId');
+      _logger.i('PaymentReturn: Navigating to tickets');
+      context.go('/tickets');
+    } on PaymentPendingException catch (e) {
+      _logger.w('PaymentReturn: Payment still pending', error: e);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment still processing. Please try again.')),
+      );
+      context.go('/');
     } catch (e) {
-      debugPrint('PaymentReturn: Error completing payment: $e');
-      // Clear pending payment on error
-      await prefs.remove('pending_payment_id');
-      await prefs.remove('pending_transaction_id');
-      await prefs.remove('pending_package_id');
-      await prefs.remove('pending_payment_type');
-      await prefs.remove('pending_order_version');
-      await prefs.remove('pending_total_amount');
-      await prefs.remove('pending_currency_code');
+      _logger.e('PaymentReturn: Error completing payment', error: e);
+      if (e is PaymentFailedException) {
+        await prefs.remove('pending_payment_id');
+        await prefs.remove('pending_transaction_id');
+        await prefs.remove('pending_package_id');
+        await prefs.remove('pending_payment_type');
+        await prefs.remove('pending_order_version');
+        await prefs.remove('pending_total_amount');
+        await prefs.remove('pending_currency_code');
+        await prefs.remove('pending_package_name');
+        await prefs.remove('pending_package_description');
+      }
 
       if (!mounted) return;
 
