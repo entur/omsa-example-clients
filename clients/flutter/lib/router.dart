@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:omsa_demo_app/models/purchase_models.dart';
-import 'package:omsa_demo_app/models/travel_models.dart';
+import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/screens/error_screen.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
 import 'package:omsa_demo_app/screens/payment_return_screen.dart';
@@ -11,11 +8,9 @@ import 'package:omsa_demo_app/screens/purchase_confirmation_screen.dart';
 import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
 import 'package:omsa_demo_app/screens/ticket_screen.dart';
 import 'package:omsa_demo_app/wayfare_app.dart';
+import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
-
-// Stream controller to handle deep links
-final _deepLinkController = StreamController<Uri>.broadcast();
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -43,7 +38,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/offers',
       builder: (context, state) {
-        final offers = state.extra as OfferCollection?;
+        final offers = context.read<OfferSelectionProvider>().offerCollection;
         if (offers == null) {
           return ErrorScreen(
             errorMessage: 'Missing offer data',
@@ -54,9 +49,19 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/purchase',
+      path: '/purchase/:offerId',
       builder: (context, state) {
-        final offer = state.extra as Offer?;
+        final rawOfferId = state.pathParameters['offerId'];
+        if (rawOfferId == null || rawOfferId.isEmpty) {
+          return ErrorScreen(
+            errorMessage: 'Missing offer id',
+            onRetry: () => context.go('/'),
+          );
+        }
+        final offerId = Uri.decodeComponent(rawOfferId);
+        final offer = context.read<OfferSelectionProvider>().findOfferById(
+          offerId,
+        );
         if (offer == null) {
           return ErrorScreen(
             errorMessage: 'Missing offer data',
@@ -67,54 +72,31 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/purchase-confirmation',
+      path: '/purchase-confirmation/:packageId',
       builder: (context, state) {
-        final extras = state.extra as Map<String, dynamic>?;
-        if (extras == null) {
+        final rawPackageId = state.pathParameters['packageId'];
+        if (rawPackageId == null || rawPackageId.isEmpty) {
           return ErrorScreen(
-            errorMessage: 'Missing confirmation data',
+            errorMessage: 'Missing package id',
             onRetry: () => context.go('/'),
           );
         }
-        final documents = extras['documents'] as List<TravelDocument>?;
-        final primaryTicket = extras['primaryTicket'] as TravelDocument?;
-        final packageId = extras['packageId'] as String?;
-
-        if (documents == null || documents.isEmpty || packageId == null) {
-          return ErrorScreen(
-            errorMessage: 'Invalid confirmation data',
-            onRetry: () => context.go('/'),
-          );
-        }
-
-        return PurchaseConfirmationScreen(
-          documents: documents,
-          primaryTicket: primaryTicket,
-          packageId: packageId,
-        );
+        final packageId = Uri.decodeComponent(rawPackageId);
+        return PurchaseConfirmationScreen(packageId: packageId);
       },
     ),
     GoRoute(
-      path: '/ticket',
+      path: '/ticket/:packageId',
       builder: (context, state) {
-        final extras = state.extra as Map<String, dynamic>?;
-        if (extras == null) {
+        final rawPackageId = state.pathParameters['packageId'];
+        if (rawPackageId == null || rawPackageId.isEmpty) {
           return ErrorScreen(
-            errorMessage: 'Missing ticket data',
+            errorMessage: 'Missing package id',
             onRetry: () => context.go('/'),
           );
         }
-        final documents = extras['documents'] as List<TravelDocument>?;
-        final primaryTicket = extras['primaryTicket'] as TravelDocument?;
-
-        if (documents == null || documents.isEmpty) {
-          return ErrorScreen(
-            errorMessage: 'No documents provided',
-            onRetry: () => context.go('/'),
-          );
-        }
-
-        return TicketScreen(documents: documents, primaryTicket: primaryTicket);
+        final packageId = Uri.decodeComponent(rawPackageId);
+        return TicketScreen(packageId: packageId);
       },
     ),
     // Deep link route for payment return

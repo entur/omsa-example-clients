@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
-import 'package:omsa_demo_app/models/purchase_models.dart';
 
 class PurchaseConfirmationScreen extends StatelessWidget {
-  final List<TravelDocument> documents;
-  final TravelDocument? primaryTicket;
   final String packageId;
 
-  const PurchaseConfirmationScreen({
-    super.key,
-    required this.documents,
-    required this.primaryTicket,
-    required this.packageId,
-  });
+  const PurchaseConfirmationScreen({super.key, required this.packageId});
 
   @override
   Widget build(BuildContext context) {
@@ -70,30 +62,15 @@ class PurchaseConfirmationScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   _buildInfoRow('Package ID', packageId),
                   const SizedBox(height: 8),
-                  _buildInfoRow(
-                    'Documents',
-                    '${documents.length} ticket${documents.length != 1 ? 's' : ''}',
-                  ),
-                  if (primaryTicket != null) ...[
-                    const SizedBox(height: 8),
-                    _buildInfoRow(
-                      'Primary ticket',
-                      primaryTicket!.travelDocumentType,
-                    ),
-                  ],
+                  _buildInfoRow('Status', 'Ready for retrieval'),
                 ],
               ),
             ),
             const SizedBox(height: 32),
             OmsaButton(
               onPressed: () {
-                context.pushReplacement(
-                  '/ticket',
-                  extra: {
-                    'documents': documents,
-                    'primaryTicket': primaryTicket
-                  },
-                );
+                final encodedPackageId = Uri.encodeComponent(packageId);
+                context.pushReplacement('/ticket/$encodedPackageId');
               },
               width: OmsaButtonWidth.fluid,
               leadingIcon: const Icon(Icons.qr_code_scanner),

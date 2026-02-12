@@ -93,3 +93,15 @@ class SalesClient:
             },
         )
         return self._handle_response(response, "capture transaction")
+
+    async def get_transaction(
+        self, payment_id: str, transaction_id: str
+    ) -> Dict[str, Any]:
+        response = await self._client.get(
+            f"{self.base_url}/payments/{payment_id}/transactions/{transaction_id}",
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+            },
+        )
+        return self._handle_response(response, "get transaction")

@@ -182,6 +182,13 @@ class OMSAClient:
         try:
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            logger.error(
+                "OMSA %s failed with status=%s url=%s body=%s",
+                action,
+                exc.response.status_code,
+                str(exc.request.url),
+                exc.response.text,
+            )
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail=f"Failed to {action}: {exc.response.text}",
