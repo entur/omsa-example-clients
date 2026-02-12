@@ -6,6 +6,25 @@ import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/services/omsa_api_service.dart';
 import 'package:omsa_demo_app/services/payment_service.dart';
+import 'package:omsa_demo_app/services/ticket_wallet_service.dart';
+
+class PaymentPendingException implements Exception {
+  final String message;
+
+  PaymentPendingException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class PaymentFailedException implements Exception {
+  final String message;
+
+  PaymentFailedException(this.message);
+
+  @override
+  String toString() => message;
+}
 
 class PurchaseFlowService {
   PurchaseFlowService._();
@@ -143,9 +162,17 @@ class PurchaseFlowService {
     Duration pollInterval = const Duration(seconds: 2),
   }) async {
     String remaining = 'unknown';
+    String status = 'UNKNOWN';
 
     for (var attempt = 1; attempt <= maxAttempts; attempt++) {
       final transaction = await getPaymentTransaction(session: session);
+      status = _extractTransactionStatus(transaction);
+      if (_isTerminalPaymentFailure(status)) {
+        throw PaymentFailedException(
+          'Payment failed with status=$status for paymentId=${session.paymentId}, transactionId=${session.transactionId}.',
+        );
+      }
+
       if (_isCaptureCompleted(
         transaction,
         expectedAmountRaw: session.totalAmount,
@@ -161,15 +188,15 @@ class PurchaseFlowService {
         remaining = remainingValue.toStringAsFixed(2);
       }
       _logger.i(
-        'Capture pending for paymentId=${session.paymentId}, transactionId=${session.transactionId}. Attempt $attempt/$maxAttempts, remainingAmountToCapture=$remaining.',
+        'Capture pending for paymentId=${session.paymentId}, transactionId=${session.transactionId}. status=$status. Attempt $attempt/$maxAttempts, remainingAmountToCapture=$remaining.',
       );
       if (attempt < maxAttempts) {
         await Future.delayed(pollInterval);
       }
     }
 
-    throw Exception(
-      'Payment was not captured in time (remainingAmountToCapture=$remaining).',
+    throw PaymentPendingException(
+      'Payment is still processing (status=$status, remainingAmountToCapture=$remaining). Please wait and try again shortly.',
     );
   }
 
@@ -239,6 +266,42 @@ class PurchaseFlowService {
     }
 
     return [];
+  }
+
+  static Future<void> cacheConfirmedPackage({
+    required String packageId,
+    String? packageName,
+    String? packageDescription,
+    double? totalAmount,
+    String? currencyCode,
+    String? status,
+  }) async {
+    await TicketWalletService.rememberPackage(
+      packageId: packageId,
+      packageName: packageName,
+      packageDescription: packageDescription,
+      totalAmount: totalAmount,
+      currencyCode: currencyCode,
+      status: status,
+    );
+    try {
+      final documents = await fetchTravelDocuments(packageId: packageId);
+      await TicketWalletService.upsertPackage(
+        packageId: packageId,
+        documents: documents,
+        packageName: packageName,
+        packageDescription: packageDescription,
+        totalAmount: totalAmount,
+        currencyCode: currencyCode,
+        status: status,
+      );
+    } catch (error, stackTrace) {
+      _logger.w(
+        'Failed to cache travel documents for packageId=$packageId: $error',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   static bool _isLockedPackageError(String message) {
@@ -340,5 +403,19 @@ class PurchaseFlowService {
       return null;
     }
     return double.tryParse(raw.replaceAll(',', '.'));
+  }
+
+  static String _extractTransactionStatus(Map<String, dynamic> transaction) {
+    return (transaction['status']?.toString() ?? 'UNKNOWN').toUpperCase();
+  }
+
+  static bool _isTerminalPaymentFailure(String status) {
+    return status == 'ABORTED' ||
+        status == 'CANCELLED' ||
+        status == 'CANCELED' ||
+        status == 'DECLINED' ||
+        status == 'FAILED' ||
+        status == 'REJECTED' ||
+        status == 'EXPIRED';
   }
 }
