@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
@@ -32,6 +33,7 @@ enum FlowPhase {
 
 class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
     with WidgetsBindingObserver {
+  static final Logger _logger = Logger();
   FlowPhase _phase = FlowPhase.selectingPayment;
   String? _error;
   PaymentMethodSelection _paymentMethodSelection = const PaymentMethodSelection(
@@ -60,8 +62,10 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
     int orderVersion,
     double totalAmount,
     String currencyCode,
+    String packageName,
+    String packageDescription,
   ) async {
-    debugPrint(
+    _logger.d(
       'Saving pending payment: paymentId=$paymentId, transactionId=$transactionId, packageId=$packageId, type=$paymentType',
     );
     final prefs = await SharedPreferences.getInstance();
@@ -72,7 +76,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
     await prefs.setString('pending_order_version', orderVersion.toString());
     await prefs.setString('pending_total_amount', totalAmount.toString());
     await prefs.setString('pending_currency_code', currencyCode);
-    debugPrint('Pending payment saved successfully');
+    await prefs.setString('pending_package_name', packageName);
+    await prefs.setString('pending_package_description', packageDescription);
+    _logger.d('Pending payment saved successfully');
   }
 
   Future<void> _clearPendingPayment() async {
@@ -84,6 +90,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
     await prefs.remove('pending_order_version');
     await prefs.remove('pending_total_amount');
     await prefs.remove('pending_currency_code');
+    await prefs.remove('pending_package_name');
+    await prefs.remove('pending_package_description');
   }
 
   @override
@@ -158,6 +166,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
           purchase.orderVersion,
           purchase.totalAmount,
           purchase.currencyCode,
+          widget.offer.properties.summary.name,
+          widget.offer.properties.summary.description,
         );
 
         // Auto-launch Vipps
@@ -185,6 +195,8 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
           purchase.orderVersion,
           purchase.totalAmount,
           purchase.currencyCode,
+          widget.offer.properties.summary.name,
+          widget.offer.properties.summary.description,
         );
 
         // Auto-launch payment terminal
@@ -230,7 +242,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
   }
 
   Future<void> _completePayment() async {
-    if (_payment == null || _purchase == null) return;
+    final payment = _payment;
+    final purchase = _purchase;
+    if (payment == null || purchase == null) return;
 
     setState(() {
       _phase = FlowPhase.completing;
@@ -239,15 +253,28 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
 
     try {
       if (_paymentMethodSelection.method == PaymentMethodType.vipps) {
-        // Vipps app-claim is captured asynchronously by the provider.
-        // Do not call explicit capture for this path.
+        // Vipps app-claim capture is handled asynchronously by the provider.
+        // Poll transaction state only.
       } else {
-        await PurchaseFlowService.capturePayment(session: _payment!);
+        await PurchaseFlowService.capturePayment(session: payment);
       }
-      await PurchaseFlowService.waitForCaptureCompletion(session: _payment!);
+      await PurchaseFlowService.waitForCaptureCompletion(
+        session: payment,
+        maxAttempts: _paymentMethodSelection.method == PaymentMethodType.vipps
+            ? 60
+            : 15,
+      );
 
       final confirmation = await PurchaseFlowService.confirmPackageWithRetry(
-        purchase: _purchase!,
+        purchase: purchase,
+      );
+      await PurchaseFlowService.cacheConfirmedPackage(
+        packageId: confirmation.packageId,
+        packageName: widget.offer.properties.summary.name,
+        packageDescription: widget.offer.properties.summary.description,
+        totalAmount: purchase.totalAmount,
+        currencyCode: purchase.currencyCode,
+        status: confirmation.status,
       );
 
       if (!mounted) return;
@@ -259,16 +286,23 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
       await _clearPendingPayment();
 
       if (!mounted) return;
-      final encodedPackageId = Uri.encodeComponent(confirmation.packageId);
-      context.pushReplacement('/purchase-confirmation/$encodedPackageId');
+      context.go('/tickets');
+    } on PaymentPendingException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+        _phase = FlowPhase.awaitingPayment;
+      });
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _error = e.toString();
         _phase = FlowPhase.failed;
       });
-      // Clear pending payment on error too
-      await _clearPendingPayment();
+      final isTerminalFailure = e is PaymentFailedException;
+      if (isTerminalFailure) {
+        await _clearPendingPayment();
+      }
     }
   }
 
@@ -493,6 +527,24 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
                   style: TextStyle(color: BaseLightTokens.textSubdued),
                   textAlign: TextAlign.center,
                 ),
+                if (_error != null) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 32),
                 OmsaButton(
                   onPressed:
