@@ -123,7 +123,9 @@ class OmsaApiService {
       'inputs': {
         'type': 'purchase_offers',
         if (timestamp != null) 'timestamp': timestamp.toUtc().toIso8601String(),
-        'offerIds': [offerId],
+        'selections': [
+          {'offerId': offerId},
+        ],
       },
       'subscriber': {'successUri': resolvedSuccessUri},
     };

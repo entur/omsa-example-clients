@@ -20,24 +20,6 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     _handlePaymentReturn();
   }
 
-  List<TravelDocument> _createMockTravelDocuments() {
-    final now = DateTime.now();
-    final startValidity = now;
-    final endValidity = now.add(const Duration(days: 30));
-
-    return [
-      TravelDocument(
-        id: 'mock-qr-1',
-        type: 'QRCODE',
-        travelDocumentType: 'QRCODE',
-        contentType: 'text/plain',
-        base64Data: 'DEMO-TICKET-${DateTime.now().millisecondsSinceEpoch}',
-        startValidity: startValidity,
-        endValidity: endValidity,
-      ),
-    ];
-  }
-
   Future<void> _handlePaymentReturn() async {
     final prefs = await SharedPreferences.getInstance();
     final pendingPaymentId = prefs.getString('pending_payment_id');
@@ -69,47 +51,34 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
       debugPrint('PaymentReturn: Starting payment completion');
       final paymentIdInt = int.parse(pendingPaymentId);
       final transactionIdInt = int.parse(pendingTransactionId);
+      final purchase = PurchaseInitiation(
+        packageId: pendingPackageId,
+        orderVersion: int.parse(pendingOrderVersion),
+        totalAmount: double.parse(pendingTotalAmount),
+        currencyCode: pendingCurrencyCode,
+      );
+      final payment = PaymentSession(
+        paymentId: paymentIdInt,
+        transactionId: transactionIdInt,
+        totalAmount: pendingTotalAmount,
+        currency: pendingCurrencyCode,
+        status: 'UNKNOWN',
+      );
 
-      // Only capture for card payments - VIPPS payments are auto-captured
-      if (pendingPaymentType != 'VIPPS') {
+      if (pendingPaymentType == 'VIPPS') {
+        debugPrint('PaymentReturn: Skipping capture for Vipps app-claim');
+      } else {
         debugPrint('PaymentReturn: Capturing card payment');
-        // Create a minimal payment session just for the capture call
-        final payment = PaymentSession(
-          paymentId: paymentIdInt,
-          transactionId: transactionIdInt,
-          totalAmount: '0', // Not needed for capture
-          currency: 'NOK', // Not needed for capture
-          status: 'RESERVED', // Not needed for capture
-        );
         await PurchaseFlowService.capturePayment(session: payment);
         debugPrint('PaymentReturn: Card payment captured');
-      } else {
-        debugPrint('PaymentReturn: Skipping capture for Vipps payment');
       }
+      await PurchaseFlowService.waitForCaptureCompletion(session: payment);
 
-      // Wait for payment to be processed by the provider
-      debugPrint('PaymentReturn: Waiting for payment to settle...');
-      await Future.delayed(const Duration(seconds: 4));
-
-      // TODO: Confirm package and fetch documents when backend is ready
-      // Create the purchase object with real values from saved state
-      // debugPrint('PaymentReturn: Confirming package');
-      // final purchase = PurchaseInitiation(
-      //   packageId: pendingPackageId,
-      //   orderVersion: int.parse(pendingOrderVersion),
-      //   totalAmount: double.parse(pendingTotalAmount),
-      //   currencyCode: pendingCurrencyCode,
-      // );
-      //
-      // final confirmation = await PurchaseFlowService.confirmPackage(
-      //   purchase: purchase,
-      // );
-      // debugPrint('PaymentReturn: Package confirmed: ${confirmation.packageId}');
-      //
-      // final documents = await PurchaseFlowService.fetchTravelDocuments(
-      //   packageId: confirmation.packageId,
-      // );
-      // debugPrint('PaymentReturn: Fetched ${documents.length} documents');
+      debugPrint('PaymentReturn: Confirming package with retry');
+      final confirmation = await PurchaseFlowService.confirmPackageWithRetry(
+        purchase: purchase,
+      );
+      debugPrint('PaymentReturn: Package confirmed: ${confirmation.packageId}');
 
       // Clear pending payment state
       await prefs.remove('pending_payment_id');
@@ -122,19 +91,10 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
 
       if (!mounted) return;
 
-      // Navigate to confirmation screen with mock data
+      // Navigate to confirmation screen.
       debugPrint('PaymentReturn: Navigating to confirmation screen');
-      final mockDocuments = _createMockTravelDocuments();
-      context.pushReplacement(
-        '/purchase-confirmation',
-        extra: <String, dynamic>{
-          'documents': mockDocuments,
-          'primaryTicket': mockDocuments.isNotEmpty
-              ? mockDocuments.first
-              : null,
-          'packageId': pendingPackageId,
-        },
-      );
+      final encodedPackageId = Uri.encodeComponent(confirmation.packageId);
+      context.pushReplacement('/purchase-confirmation/$encodedPackageId');
     } catch (e) {
       debugPrint('PaymentReturn: Error completing payment: $e');
       // Clear pending payment on error

@@ -10,6 +10,8 @@ import 'package:omsa_demo_app/widgets/departure_time_drawer.dart';
 import 'package:omsa_demo_app/widgets/traveler_picker_drawer.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_demo_app/models/traveler_model.dart';
+import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -184,7 +186,10 @@ class _SearchScreenState extends State<SearchScreen> {
       );
 
       if (mounted) {
-        context.push('/offers', extra: offerCollection);
+        context.read<OfferSelectionProvider>().setOfferCollection(
+          offerCollection,
+        );
+        context.push('/offers');
       }
     } catch (e) {
       if (mounted) {

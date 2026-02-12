@@ -22,9 +22,9 @@ class OffersScreen extends StatelessWidget {
     );
     final selectedOffer = provider.selectedOffer;
     if (selectedOffer != null) {
+      final encodedOfferId = Uri.encodeComponent(selectedOffer.id);
       provider.clearSelection();
-
-      context.push('/purchase', extra: selectedOffer);
+      context.push('/purchase/$encodedOfferId');
     }
   }
 

@@ -94,13 +94,13 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Detect when user returns from external payment app
+    // Detect return from external payment app but don't auto-complete.
+    // For Vipps this can resume before the downstream payment state is ready.
     if (state == AppLifecycleState.resumed &&
         _phase == FlowPhase.awaitingPayment &&
         _hasLaunchedPayment &&
         !_hasReturnedFromPayment) {
       _hasReturnedFromPayment = true;
-      _completePayment();
     }
   }
 
@@ -238,16 +238,16 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
     });
 
     try {
-      // Only capture for card payments - VIPPS payments are auto-captured
-      if (_paymentMethodSelection.method != PaymentMethodType.vipps) {
+      if (_paymentMethodSelection.method == PaymentMethodType.vipps) {
+        // Vipps app-claim is captured asynchronously by the provider.
+        // Do not call explicit capture for this path.
+      } else {
         await PurchaseFlowService.capturePayment(session: _payment!);
       }
+      await PurchaseFlowService.waitForCaptureCompletion(session: _payment!);
 
-      final confirmation = await PurchaseFlowService.confirmPackage(
+      final confirmation = await PurchaseFlowService.confirmPackageWithRetry(
         purchase: _purchase!,
-      );
-      final documents = await PurchaseFlowService.fetchTravelDocuments(
-        packageId: confirmation.packageId,
       );
 
       if (!mounted) return;
@@ -258,21 +258,9 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
       // Clear pending payment state
       await _clearPendingPayment();
 
-      // Navigate to confirmation screen
-      if (documents.isNotEmpty) {
-        final primaryTicket = _selectPrimaryTicket(documents);
-        if (!mounted) return;
-
-        // Use replace to prevent back navigation to purchase screen
-        context.pushReplacement(
-          '/purchase-confirmation',
-          extra: {
-            'documents': documents,
-            'primaryTicket': primaryTicket,
-            'packageId': confirmation.packageId,
-          },
-        );
-      }
+      if (!mounted) return;
+      final encodedPackageId = Uri.encodeComponent(confirmation.packageId);
+      context.pushReplacement('/purchase-confirmation/$encodedPackageId');
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -282,19 +270,6 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
       // Clear pending payment on error too
       await _clearPendingPayment();
     }
-  }
-
-  TravelDocument? _selectPrimaryTicket(List<TravelDocument> documents) {
-    TravelDocument? qrDoc = documents.firstWhere(
-      (doc) => doc.travelDocumentType.toUpperCase() == 'QRCODE',
-      orElse: () => documents.first,
-    );
-
-    if (qrDoc.travelDocumentType.toUpperCase() != 'QRCODE') {
-      qrDoc = documents.first;
-    }
-
-    return qrDoc;
   }
 
   String _getPaymentMethodLabel() {

@@ -80,6 +80,33 @@ class PaymentService {
     }
   }
 
+  static Future<Map<String, dynamic>> _getJson({required Uri url}) async {
+    _logger.i('GET $url');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: const {'Accept': 'application/json'},
+      );
+
+      _logger.i('Response ${response.statusCode} from $url');
+      _logger.d('Response body: ${response.body}');
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return response.body.isNotEmpty
+            ? jsonDecode(response.body) as Map<String, dynamic>
+            : <String, dynamic>{};
+      }
+
+      throw Exception(
+        'Request to $url failed: ${response.statusCode} - ${response.body}',
+      );
+    } catch (e) {
+      _logger.e('Network error calling $url: $e');
+      rethrow;
+    }
+  }
+
   static Future<Map<String, dynamic>> createPayment({
     required String orderId,
     required int orderVersion,
@@ -147,5 +174,13 @@ class PaymentService {
       '/payments/$paymentId/transactions/$transactionId/capture',
     );
     return _put(url: url);
+  }
+
+  static Future<Map<String, dynamic>> getTransaction({
+    required String paymentId,
+    required String transactionId,
+  }) {
+    final url = _resolve('/payments/$paymentId/transactions/$transactionId');
+    return _getJson(url: url);
   }
 }

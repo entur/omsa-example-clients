@@ -59,3 +59,14 @@ async def capture_transaction(
 ):
     client = SalesClient(http_client, settings)
     return await client.capture_transaction(payment_id, transaction_id)
+
+
+@router.get("/{payment_id}/transactions/{transaction_id}")
+async def get_transaction(
+    payment_id: str,
+    transaction_id: str,
+    settings: Settings = Depends(get_app_settings),
+    http_client=Depends(get_http_client),
+):
+    client = SalesClient(http_client, settings)
+    return await client.get_transaction(payment_id, transaction_id)
