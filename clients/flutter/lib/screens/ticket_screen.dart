@@ -596,14 +596,16 @@ class _TicketVisual extends StatelessWidget {
       return _placeholder(context, fallbackTypeLabel);
     }
 
-    final animation = document!.animation;
-    if (document!.isDailyAnimation &&
-        animation != null &&
-        animation.imageBytes.isNotEmpty) {
-      return _DailyAnimationTicket(
-        animation: animation,
-        size: visualSize,
-        fallbackBackgroundColor: context.tokens.frameSubdued,
+    if (document!.isDailyAnimation) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.memory(
+          document!.binaryPayload!,
+          fit: BoxFit.contain,
+          width: visualSize,
+          height: visualSize,
+          semanticLabel: 'Valid control image',
+        ),
       );
     }
 
@@ -661,101 +663,3 @@ class _TicketVisual extends StatelessWidget {
   }
 }
 
-class _DailyAnimationTicket extends StatefulWidget {
-  final TravelAnimation animation;
-  final double size;
-  final Color fallbackBackgroundColor;
-
-  const _DailyAnimationTicket({
-    required this.animation,
-    required this.size,
-    required this.fallbackBackgroundColor,
-  });
-
-  @override
-  State<_DailyAnimationTicket> createState() => _DailyAnimationTicketState();
-}
-
-class _DailyAnimationTicketState extends State<_DailyAnimationTicket>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _opacity;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: _duration());
-    _opacity = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 0, end: 1), weight: 50),
-      TweenSequenceItem(tween: Tween<double>(begin: 1, end: 0), weight: 50),
-    ]).animate(_controller);
-    _controller.repeat();
-  }
-
-  @override
-  void didUpdateWidget(covariant _DailyAnimationTicket oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.animation.speed != widget.animation.speed) {
-      _controller
-        ..duration = _duration()
-        ..repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Duration _duration() {
-    final speed = widget.animation.speed ?? 50;
-    final milliseconds = (speed * 20).clamp(200, 60000).toInt();
-    return Duration(milliseconds: milliseconds);
-  }
-
-  Color _backgroundColor() {
-    final raw = widget.animation.color?.trim() ?? '';
-    if (raw.isEmpty) {
-      return widget.fallbackBackgroundColor;
-    }
-
-    final normalized = raw.replaceFirst('#', '');
-    final parsed = int.tryParse(normalized, radix: 16);
-    if (parsed == null) {
-      return widget.fallbackBackgroundColor;
-    }
-
-    if (normalized.length <= 6) {
-      return Color(0xFF000000 | parsed);
-    }
-    return Color(parsed);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: widget.size,
-      height: widget.size,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: _backgroundColor(),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: AnimatedBuilder(
-        animation: _opacity,
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Image.memory(
-            widget.animation.imageBytes,
-            fit: BoxFit.contain,
-            semanticLabel: 'Valid control image',
-          ),
-        ),
-        builder: (context, child) {
-          return Opacity(opacity: _opacity.value, child: child);
-        },
-      ),
-    );
-  }
-}
