@@ -264,12 +264,15 @@ class _TicketScreenState extends State<TicketScreen> {
                             left: isFirst ? 16 : 0,
                             right: isLast ? 16 : 8,
                           ),
-                          child: _TravelDocumentPage(
-                            document: document,
-                            index: index,
-                            totalCount: _documents.length,
-                            isActive: isActive,
-                            surfaceColor: _surfaceSecondary(context),
+                          child: TickerMode(
+                            enabled: isActive,
+                            child: _TravelDocumentPage(
+                              document: document,
+                              index: index,
+                              totalCount: _documents.length,
+                              isActive: isActive,
+                              surfaceColor: _surfaceSecondary(context),
+                            ),
                           ),
                         );
                       },
@@ -593,9 +596,12 @@ class _TicketVisual extends StatelessWidget {
       return _placeholder(context, fallbackTypeLabel);
     }
 
-    if (document!.isDailyAnimation && document!.animation != null) {
+    final animation = document!.animation;
+    if (document!.isDailyAnimation &&
+        animation != null &&
+        animation.imageBytes.isNotEmpty) {
       return _DailyAnimationTicket(
-        animation: document!.animation!,
+        animation: animation,
         size: visualSize,
         fallbackBackgroundColor: context.tokens.frameSubdued,
       );

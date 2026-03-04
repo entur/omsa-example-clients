@@ -34,6 +34,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
     required bool refreshFromBackend,
     bool isInitialLoad = false,
   }) async {
+    if (_isRefreshing && !isInitialLoad) return;
+
     if (mounted) {
       setState(() {
         if (isInitialLoad) _isLoading = true;
@@ -58,20 +60,22 @@ class _TicketsScreenState extends State<TicketsScreen> {
         _isRefreshing = true;
       });
 
-      for (final package in packages) {
-        try {
-          final documents = await PurchaseFlowService.fetchTravelDocuments(
-            packageId: package.packageId,
-          );
-          await TicketWalletService.upsertPackage(
-            packageId: package.packageId,
-            purchasedAt: package.purchasedAt,
-            documents: documents,
-          );
-        } catch (_) {
-          // Keep stale package data when backend refresh fails.
-        }
-      }
+      await Future.wait(
+        packages.map((package) async {
+          try {
+            final documents = await PurchaseFlowService.fetchTravelDocuments(
+              packageId: package.packageId,
+            );
+            await TicketWalletService.upsertPackage(
+              packageId: package.packageId,
+              purchasedAt: package.purchasedAt,
+              documents: documents,
+            );
+          } catch (_) {
+            // Keep stale package data when backend refresh fails.
+          }
+        }),
+      );
 
       final refreshedPackages = await TicketWalletService.getPackages();
       if (!mounted) return;

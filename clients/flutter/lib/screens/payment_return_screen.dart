@@ -22,6 +22,18 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     _handlePaymentReturn();
   }
 
+  Future<void> _clearPendingPaymentState(SharedPreferences prefs) async {
+    await prefs.remove('pending_payment_id');
+    await prefs.remove('pending_transaction_id');
+    await prefs.remove('pending_package_id');
+    await prefs.remove('pending_payment_type');
+    await prefs.remove('pending_order_version');
+    await prefs.remove('pending_total_amount');
+    await prefs.remove('pending_currency_code');
+    await prefs.remove('pending_package_name');
+    await prefs.remove('pending_package_description');
+  }
+
   Future<void> _handlePaymentReturn() async {
     final prefs = await SharedPreferences.getInstance();
     final pendingPaymentId = prefs.getString('pending_payment_id');
@@ -53,14 +65,31 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
       return;
     }
 
+    final paymentIdInt = int.tryParse(pendingPaymentId);
+    final transactionIdInt = int.tryParse(pendingTransactionId);
+    final orderVersionInt = int.tryParse(pendingOrderVersion);
+    final totalAmountDouble = double.tryParse(pendingTotalAmount);
+
+    if (paymentIdInt == null ||
+        transactionIdInt == null ||
+        orderVersionInt == null ||
+        totalAmountDouble == null ||
+        pendingPaymentType == null) {
+      _logger.w(
+        'PaymentReturn: Malformed pending payment data, clearing state',
+      );
+      await _clearPendingPaymentState(prefs);
+      if (!mounted) return;
+      context.go('/');
+      return;
+    }
+
     try {
       _logger.i('PaymentReturn: Starting payment completion');
-      final paymentIdInt = int.parse(pendingPaymentId);
-      final transactionIdInt = int.parse(pendingTransactionId);
       final purchase = PurchaseInitiation(
         packageId: pendingPackageId,
-        orderVersion: int.parse(pendingOrderVersion),
-        totalAmount: double.parse(pendingTotalAmount),
+        orderVersion: orderVersionInt,
+        totalAmount: totalAmountDouble,
         currencyCode: pendingCurrencyCode,
       );
       final payment = PaymentSession(
@@ -97,16 +126,7 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
         status: confirmation.status,
       );
 
-      // Clear pending payment state
-      await prefs.remove('pending_payment_id');
-      await prefs.remove('pending_transaction_id');
-      await prefs.remove('pending_package_id');
-      await prefs.remove('pending_payment_type');
-      await prefs.remove('pending_order_version');
-      await prefs.remove('pending_total_amount');
-      await prefs.remove('pending_currency_code');
-      await prefs.remove('pending_package_name');
-      await prefs.remove('pending_package_description');
+      await _clearPendingPaymentState(prefs);
 
       if (!mounted) return;
 
@@ -123,15 +143,7 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     } catch (e) {
       _logger.e('PaymentReturn: Error completing payment', error: e);
       if (e is PaymentFailedException) {
-        await prefs.remove('pending_payment_id');
-        await prefs.remove('pending_transaction_id');
-        await prefs.remove('pending_package_id');
-        await prefs.remove('pending_payment_type');
-        await prefs.remove('pending_order_version');
-        await prefs.remove('pending_total_amount');
-        await prefs.remove('pending_currency_code');
-        await prefs.remove('pending_package_name');
-        await prefs.remove('pending_package_description');
+        await _clearPendingPaymentState(prefs);
       }
 
       if (!mounted) return;
