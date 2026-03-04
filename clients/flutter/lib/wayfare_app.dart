@@ -7,20 +7,28 @@ import 'package:omsa_demo_app/screens/profile_screen.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 
 class WayfareApp extends StatefulWidget {
-  const WayfareApp({super.key});
+  final int initialTabIndex;
+
+  const WayfareApp({super.key, this.initialTabIndex = 0});
 
   @override
   State<WayfareApp> createState() => _WayfareAppState();
 }
 
 class _WayfareAppState extends State<WayfareApp> {
-  int _currentIndex = 0;
+  late int _currentIndex;
 
   final List<Widget> _screens = const [
     SearchScreen(),
     TicketsScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialTabIndex.clamp(0, _screens.length - 1);
+  }
 
   @override
   Widget build(BuildContext context) {

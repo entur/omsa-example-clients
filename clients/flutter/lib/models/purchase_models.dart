@@ -1,39 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-class TravelAnimation {
-  final Uint8List imageBytes;
-  final String? keyVersion;
-  final String? color;
-  final int? speed;
-
-  TravelAnimation({
-    required this.imageBytes,
-    this.keyVersion,
-    this.color,
-    this.speed,
-  });
-
-  factory TravelAnimation.fromPayload(String payload) {
-    final normalized = payload.trim();
-    String jsonString = normalized;
-    if (normalized.startsWith('{') && normalized.contains("'")) {
-      jsonString = normalized.replaceAll("'", '"');
-    }
-    final Map<String, dynamic> data =
-        json.decode(jsonString) as Map<String, dynamic>;
-    final imageField = data['image']?.toString() ?? '';
-    return TravelAnimation(
-      imageBytes: imageField.isNotEmpty
-          ? base64Decode(imageField)
-          : Uint8List(0),
-      keyVersion: data['keyVersion']?.toString(),
-      color: data['color']?.toString(),
-      speed: data['speed'] is num ? (data['speed'] as num).toInt() : null,
-    );
-  }
-}
-
 class PurchaseInitiation {
   final String packageId;
   final int orderVersion;
@@ -208,7 +175,6 @@ class TravelDocument {
   final DateTime? startValidity;
   final DateTime? endValidity;
   final Uint8List? binaryPayload;
-  final TravelAnimation? animation;
 
   TravelDocument({
     required this.id,
@@ -219,7 +185,6 @@ class TravelDocument {
     required this.startValidity,
     required this.endValidity,
     this.binaryPayload,
-    this.animation,
   });
 
   factory TravelDocument.fromMap(Map<String, dynamic> map) {
@@ -239,43 +204,26 @@ class TravelDocument {
       endValidity: parseDate(properties['endvalidity']),
       binaryPayload: _parseBinaryPayload(
         properties['base64']?.toString() ?? '',
-        properties['travelDocumentType']?.toString() ?? '',
-        properties['contentType']?.toString() ?? '',
-      ),
-      animation: _parseAnimation(
-        properties['base64']?.toString() ?? '',
-        properties['contentType']?.toString() ?? '',
       ),
     );
   }
 
   bool get isDisplayableImage {
-    if (_isAnimation) {
-      return animation?.imageBytes.isNotEmpty ?? false;
-    }
-    if (_isQrCode) {
-      return false;
-    }
-    return contentType.contains('png') || contentType.contains('jpeg');
+    if (_isQrCode) return false;
+    return binaryPayload != null && binaryPayload!.isNotEmpty;
   }
 
   Uint8List? get displayableImageBytes {
-    if (_isAnimation) {
-      final bytes = animation?.imageBytes;
-      if (bytes != null && bytes.isNotEmpty) {
-        return bytes;
-      }
-    }
-    if (contentType.contains('png') || contentType.contains('jpeg')) {
+    if (binaryPayload != null && binaryPayload!.isNotEmpty) {
       return binaryPayload;
     }
     return null;
   }
 
-  bool get hasAnimationDetails => animation != null;
-
-  bool get _isAnimation =>
-      contentType.toLowerCase().contains('dailyanim') && animation != null;
+  bool get isDailyAnimation =>
+      contentType.toLowerCase().contains('dailyanim') &&
+      binaryPayload != null &&
+      binaryPayload!.isNotEmpty;
 
   bool get _isQrCode => travelDocumentType.toUpperCase() == 'QRCODE';
 
@@ -286,43 +234,30 @@ class TravelDocument {
     return base64Data;
   }
 
-  static Uint8List? _parseBinaryPayload(
-    String base64Data,
-    String travelDocumentType,
-    String contentType,
-  ) {
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'type': type,
+      'properties': {
+        'type': type,
+        'travelDocumentType': travelDocumentType,
+        'contentType': contentType,
+        'base64': base64Data,
+        if (startValidity != null)
+          'startvalidity': startValidity!.toUtc().toIso8601String(),
+        if (endValidity != null)
+          'endvalidity': endValidity!.toUtc().toIso8601String(),
+      },
+    };
+  }
+
+  static Uint8List? _parseBinaryPayload(String base64Data) {
     if (base64Data.isEmpty) return null;
     try {
-      if (contentType.toLowerCase().contains('dailyanim')) {
-        final decoded = utf8.decode(base64Decode(base64Data));
-        final normalized = decoded.contains("'")
-            ? decoded.replaceAll("'", '"')
-            : decoded;
-        final Map<String, dynamic> jsonData =
-            json.decode(normalized) as Map<String, dynamic>;
-        final imageBase64 = jsonData['image']?.toString() ?? '';
-        if (imageBase64.isNotEmpty) {
-          return base64Decode(imageBase64);
-        }
-        return null;
-      }
       return base64Decode(base64Data);
     } catch (_) {
       return null;
     }
   }
 
-  static TravelAnimation? _parseAnimation(
-    String base64Data,
-    String contentType,
-  ) {
-    if (!contentType.toLowerCase().contains('dailyanim')) return null;
-    if (base64Data.isEmpty) return null;
-    try {
-      final raw = utf8.decode(base64Decode(base64Data));
-      return TravelAnimation.fromPayload(raw);
-    } catch (_) {
-      return null;
-    }
-  }
 }

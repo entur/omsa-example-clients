@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:omsa_demo_app/providers/offer_selection_provider.dart';
 import 'package:omsa_demo_app/screens/error_screen.dart';
 import 'package:omsa_demo_app/screens/offers_screen.dart';
 import 'package:omsa_demo_app/screens/payment_return_screen.dart';
-import 'package:omsa_demo_app/screens/purchase_confirmation_screen.dart';
 import 'package:omsa_demo_app/screens/purchase_flow_screen.dart';
 import 'package:omsa_demo_app/screens/ticket_screen.dart';
 import 'package:omsa_demo_app/wayfare_app.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+final Logger _logger = Logger();
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -18,7 +19,7 @@ final GoRouter appRouter = GoRouter(
   debugLogDiagnostics: true,
   redirect: (context, state) {
     final uri = state.uri;
-    debugPrint(
+    _logger.d(
       'GoRouter redirect: location=${state.matchedLocation}, fullPath=${state.fullPath}, uri=$uri',
     );
 
@@ -27,7 +28,7 @@ final GoRouter appRouter = GoRouter(
       // Extract the path from the custom scheme URL
       // wayfareapp://payment-return -> /payment-return
       final path = '/${uri.host}${uri.path}';
-      debugPrint('GoRouter: Redirecting custom scheme to path: $path');
+      _logger.d('GoRouter: Redirecting custom scheme to path: $path');
       return path;
     }
 
@@ -35,6 +36,10 @@ final GoRouter appRouter = GoRouter(
   },
   routes: [
     GoRoute(path: '/', builder: (context, state) => const WayfareApp()),
+    GoRoute(
+      path: '/tickets',
+      builder: (context, state) => const WayfareApp(initialTabIndex: 1),
+    ),
     GoRoute(
       path: '/offers',
       builder: (context, state) {
@@ -69,20 +74,6 @@ final GoRouter appRouter = GoRouter(
           );
         }
         return PurchaseFlowScreen(offer: offer);
-      },
-    ),
-    GoRoute(
-      path: '/purchase-confirmation/:packageId',
-      builder: (context, state) {
-        final rawPackageId = state.pathParameters['packageId'];
-        if (rawPackageId == null || rawPackageId.isEmpty) {
-          return ErrorScreen(
-            errorMessage: 'Missing package id',
-            onRetry: () => context.go('/'),
-          );
-        }
-        final packageId = Uri.decodeComponent(rawPackageId);
-        return PurchaseConfirmationScreen(packageId: packageId);
       },
     ),
     GoRoute(
