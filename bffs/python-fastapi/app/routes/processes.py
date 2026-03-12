@@ -1,14 +1,18 @@
+import logging
+
 from fastapi import APIRouter, Depends, Response
 
 from ..clients.omsa import OMSAClient
 from ..config import Settings
-from ..dependencies import get_app_settings, get_http_client, get_offer_cache
+from ..dependencies import get_app_settings, get_offer_cache, get_omsa_client
 from ..models import (
     ConfirmPackageRequest,
     PurchaseOffersRequest,
     SearchOfferRequest,
 )
 from ..services.cache import OfferCache
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/processes", tags=["processes"])
 
@@ -19,7 +23,7 @@ async def search_offers(
     response: Response,
     settings: Settings = Depends(get_app_settings),
     cache: OfferCache = Depends(get_offer_cache),
-    http_client=Depends(get_http_client),
+    client: OMSAClient = Depends(get_omsa_client),
 ):
     """Proxy OMSA offer search with lightweight caching."""
 
@@ -34,7 +38,6 @@ async def search_offers(
         response.headers["x-omsa-base-url"] = settings.resolved_omsa_base_url
         return cached_entry.data
 
-    client = OMSAClient(http_client, settings)
     offers = await client.search_offers(search_request)
 
     source_label = "omsa-local" if settings.omsa_mode == "local" else "omsa-remote"
@@ -48,10 +51,8 @@ async def search_offers(
 @router.post("/purchase-offers/execute")
 async def purchase_offers(
     purchase_request: PurchaseOffersRequest,
-    settings: Settings = Depends(get_app_settings),
-    http_client=Depends(get_http_client),
+    client: OMSAClient = Depends(get_omsa_client),
 ):
-    client = OMSAClient(http_client, settings)
     return await client.purchase_offers(
         purchase_request.model_dump(by_alias=True, exclude_none=True)
     )
@@ -60,14 +61,8 @@ async def purchase_offers(
 @router.post("/confirm-package/execute")
 async def confirm_package(
     confirm_request: ConfirmPackageRequest,
-    settings: Settings = Depends(get_app_settings),
-    http_client=Depends(get_http_client),
+    client: OMSAClient = Depends(get_omsa_client),
 ):
-    import logging
-    logger = logging.getLogger(__name__)
-
     dumped = confirm_request.model_dump(by_alias=True, exclude_none=True)
-    logger.info(f"Received confirm package request: {dumped}")
-
-    client = OMSAClient(http_client, settings)
+    logger.debug("Confirming package: %s", dumped.get("inputs", {}).get("packageId"))
     return await client.confirm_package(dumped)

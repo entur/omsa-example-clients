@@ -189,7 +189,7 @@ class _DepartureTimeDrawerState extends State<DepartureTimeDrawer> {
 
     // Reset flag after animation completes
     Future.delayed(const Duration(milliseconds: 350), () {
-      _isAnimatingToNow = false;
+      if (mounted) _isAnimatingToNow = false;
     });
   }
 

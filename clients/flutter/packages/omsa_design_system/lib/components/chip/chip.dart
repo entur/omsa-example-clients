@@ -1,4 +1,5 @@
 export 'omsa_chip_size.dart';
+export 'omsa_chip_colors.dart';
 export 'omsa_action_chip.dart';
 export 'omsa_choice_chip.dart';
 export 'omsa_choice_chip_group.dart';

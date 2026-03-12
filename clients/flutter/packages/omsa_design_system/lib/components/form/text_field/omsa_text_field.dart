@@ -30,7 +30,6 @@ class OmsaTextField extends StatefulWidget {
     this.required = false,
     this.clearable = false,
     this.disableLabelAnimation = false,
-    this.labelTooltip,
     this.maxLines = 1,
     this.maxLength,
     this.keyboardType,
@@ -63,8 +62,6 @@ class OmsaTextField extends StatefulWidget {
   final bool clearable;
   final bool disableLabelAnimation;
 
-  /// TODO: Add support for labelTooltip
-  final String? labelTooltip;
   final int? maxLines;
   final int? maxLength;
   final TextInputType? keyboardType;

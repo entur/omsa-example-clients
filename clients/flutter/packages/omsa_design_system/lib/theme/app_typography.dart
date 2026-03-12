@@ -151,49 +151,55 @@ class AppTypography {
     fontWeight: fontWeightsHeading,
   );
 
-  // Material 3 compatible mappings for theme integration
-  /// Maps to Material 3's displayLarge
+  // Material 3 compatible mappings for theme integration.
+  //
+  // The design system has fewer size steps than M3's 13 slots, so some
+  // adjacent M3 levels share a size but differ in weight to preserve
+  // visual hierarchy (heading styles use fontWeightsHeading, body styles
+  // use fontWeightsBody).
+
+  /// Maps to Material 3's displayLarge — 40px heading
   static const TextStyle displayLarge = headingExtraLarge5;
 
-  /// Maps to Material 3's displayMedium
+  /// Maps to Material 3's displayMedium — 32px heading
   static const TextStyle displayMedium = headingExtraLarge4;
 
-  /// Maps to Material 3's displaySmall
+  /// Maps to Material 3's displaySmall — 28px heading
   static const TextStyle displaySmall = headingExtraLarge3;
 
-  /// Maps to Material 3's headlineLarge
-  static const TextStyle headlineLarge = headingExtraLarge4;
+  /// Maps to Material 3's headlineLarge — 24px heading
+  static const TextStyle headlineLarge = headingExtraLarge2;
 
-  /// Maps to Material 3's headlineMedium
-  static const TextStyle headlineMedium = headingExtraLarge3;
+  /// Maps to Material 3's headlineMedium — 20px body weight
+  static const TextStyle headlineMedium = textExtraLarge;
 
-  /// Maps to Material 3's headlineSmall
-  static const TextStyle headlineSmall = headingExtraLarge2;
+  /// Maps to Material 3's headlineSmall — 16px body weight
+  static const TextStyle headlineSmall = textLarge;
 
-  /// Maps to Material 3's titleLarge
+  /// Maps to Material 3's titleLarge — 20px body weight
   static const TextStyle titleLarge = textExtraLarge;
 
-  /// Maps to Material 3's titleMedium
+  /// Maps to Material 3's titleMedium — 16px body weight
   static const TextStyle titleMedium = textLarge;
 
-  /// Maps to Material 3's titleSmall
+  /// Maps to Material 3's titleSmall — 14px body weight
   static const TextStyle titleSmall = textMedium;
 
-  /// Maps to Material 3's bodyLarge
+  /// Maps to Material 3's bodyLarge — 16px body weight
   static const TextStyle bodyLarge = textLarge;
 
-  /// Maps to Material 3's bodyMedium
+  /// Maps to Material 3's bodyMedium — 14px body weight
   static const TextStyle bodyMedium = textMedium;
 
-  /// Maps to Material 3's bodySmall
+  /// Maps to Material 3's bodySmall — 12px body weight
   static const TextStyle bodySmall = textSmall;
 
-  /// Maps to Material 3's labelLarge
+  /// Maps to Material 3's labelLarge — 14px body weight
   static const TextStyle labelLarge = textMedium;
 
-  /// Maps to Material 3's labelMedium
+  /// Maps to Material 3's labelMedium — 12px body weight
   static const TextStyle labelMedium = textSmall;
 
-  /// Maps to Material 3's labelSmall
+  /// Maps to Material 3's labelSmall — 10px body weight
   static const TextStyle labelSmall = textExtraSmall;
 }

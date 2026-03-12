@@ -88,10 +88,15 @@ class OAuthTokenManager:
 class OMSAClient:
     """Typed HTTP client for interacting with the OMSA API."""
 
-    def __init__(self, client: httpx.AsyncClient, settings: Settings) -> None:
+    def __init__(
+        self,
+        client: httpx.AsyncClient,
+        settings: Settings,
+        token_manager: OAuthTokenManager,
+    ) -> None:
         self._client = client
         self._settings = settings
-        self._token_manager = OAuthTokenManager(settings)
+        self._token_manager = token_manager
 
     @property
     def base_url(self) -> str:
@@ -136,7 +141,7 @@ class OMSAClient:
 
     async def confirm_package(self, body: Dict[str, Any]) -> Dict[str, Any]:
         json_body = self._ensure_json(body)
-        logger.info(f"Confirm package request body: {json_body}")
+        logger.debug("Confirm package request for package: %s", body.get("inputs", {}).get("packageId"))
 
         response = await self._client.post(
             f"{self.base_url}/processes/confirm-package/execute",
