@@ -5,6 +5,7 @@ import 'package:omsa_design_system/omsa_design_system.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
+import 'package:omsa_demo_app/services/pending_payment_keys.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
 
 class PaymentReturnScreen extends StatefulWidget {
@@ -22,30 +23,18 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     _handlePaymentReturn();
   }
 
-  Future<void> _clearPendingPaymentState(SharedPreferences prefs) async {
-    await prefs.remove('pending_payment_id');
-    await prefs.remove('pending_transaction_id');
-    await prefs.remove('pending_package_id');
-    await prefs.remove('pending_payment_type');
-    await prefs.remove('pending_order_version');
-    await prefs.remove('pending_total_amount');
-    await prefs.remove('pending_currency_code');
-    await prefs.remove('pending_package_name');
-    await prefs.remove('pending_package_description');
-  }
-
   Future<void> _handlePaymentReturn() async {
     final prefs = await SharedPreferences.getInstance();
-    final pendingPaymentId = prefs.getString('pending_payment_id');
-    final pendingTransactionId = prefs.getString('pending_transaction_id');
-    final pendingPackageId = prefs.getString('pending_package_id');
-    final pendingPaymentType = prefs.getString('pending_payment_type');
-    final pendingOrderVersion = prefs.getString('pending_order_version');
-    final pendingTotalAmount = prefs.getString('pending_total_amount');
-    final pendingCurrencyCode = prefs.getString('pending_currency_code');
-    final pendingPackageName = prefs.getString('pending_package_name');
+    final pendingPaymentId = prefs.getString(PendingPaymentKeys.paymentId);
+    final pendingTransactionId = prefs.getString(PendingPaymentKeys.transactionId);
+    final pendingPackageId = prefs.getString(PendingPaymentKeys.packageId);
+    final pendingPaymentType = prefs.getString(PendingPaymentKeys.paymentType);
+    final pendingOrderVersion = prefs.getString(PendingPaymentKeys.orderVersion);
+    final pendingTotalAmount = prefs.getString(PendingPaymentKeys.totalAmount);
+    final pendingCurrencyCode = prefs.getString(PendingPaymentKeys.currencyCode);
+    final pendingPackageName = prefs.getString(PendingPaymentKeys.packageName);
     final pendingPackageDescription = prefs.getString(
-      'pending_package_description',
+      PendingPaymentKeys.packageDescription,
     );
 
     _logger.d(
@@ -78,7 +67,7 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
       _logger.w(
         'PaymentReturn: Malformed pending payment data, clearing state',
       );
-      await _clearPendingPaymentState(prefs);
+      await PendingPaymentKeys.clear(prefs);
       if (!mounted) return;
       context.go('/');
       return;
@@ -126,7 +115,7 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
         status: confirmation.status,
       );
 
-      await _clearPendingPaymentState(prefs);
+      await PendingPaymentKeys.clear(prefs);
 
       if (!mounted) return;
 
@@ -143,7 +132,7 @@ class _PaymentReturnScreenState extends State<PaymentReturnScreen> {
     } catch (e) {
       _logger.e('PaymentReturn: Error completing payment', error: e);
       if (e is PaymentFailedException) {
-        await _clearPendingPaymentState(prefs);
+        await PendingPaymentKeys.clear(prefs);
       }
 
       if (!mounted) return;

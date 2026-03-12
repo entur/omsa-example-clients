@@ -23,7 +23,6 @@ class OffersScreen extends StatelessWidget {
     final selectedOffer = provider.selectedOffer;
     if (selectedOffer != null) {
       final encodedOfferId = Uri.encodeComponent(selectedOffer.id);
-      provider.clearSelection();
       context.push('/purchase/$encodedOfferId');
     }
   }
@@ -42,7 +41,7 @@ class OffersScreen extends StatelessWidget {
             data: summary.description.replaceAll('\\n', '\n'),
             styleSheet: MarkdownStyleSheet(
               p: AppTypography.textMedium.copyWith(
-                color: BaseLightTokens.textSubdued,
+                color: context.tokens.textSubdued,
                 height: 1.3,
               ),
               a: AppTypography.textMedium.copyWith(
@@ -129,7 +128,7 @@ class OffersScreen extends StatelessWidget {
               child: Text(
                 'No offers found',
                 style: AppTypography.textLarge.copyWith(
-                  color: BaseLightTokens.textSubdued,
+                  color: context.tokens.textSubdued,
                 ),
               ),
             )

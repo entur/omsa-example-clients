@@ -204,7 +204,7 @@ class _PaymentMethodPickerDrawerState extends State<PaymentMethodPickerDrawer> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Phone: ${_phoneController.text.replaceRange(4, 8, '••••')}',
+                                'Phone: ${_phoneController.text.length >= 8 ? _phoneController.text.replaceRange(4, 8, '••••') : _phoneController.text}',
                                 style: AppTypography.textMedium,
                               ),
                             ),
@@ -261,7 +261,7 @@ class _PaymentMethodPickerDrawerState extends State<PaymentMethodPickerDrawer> {
                               child: Text(
                                 'Enter your Norwegian phone number for Vipps payment',
                                 style: TextStyle(
-                                  color: BaseLightTokens.textSubdued,
+                                  color: context.tokens.textSubdued,
                                   fontSize: 12,
                                 ),
                               ),

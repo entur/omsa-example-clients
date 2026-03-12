@@ -1,4 +1,4 @@
-from functools import cached_property, lru_cache
+from functools import lru_cache
 from typing import List, Literal, Optional
 
 from pydantic import Field
@@ -14,7 +14,7 @@ class Settings(BaseSettings):
         default="remote", alias="OMSA_MODE"
     )
     omsa_remote_base_url: str = Field(
-        default="https://api.dev.entur.io/omsa", alias="OMSA_REMOTE_BASE_URL"
+        default="https://api.dev.entur.io/omsa/v1", alias="OMSA_REMOTE_BASE_URL"
     )
     omsa_local_base_url: str = Field(
         default="http://localhost:8080", alias="OMSA_LOCAL_BASE_URL"
@@ -75,7 +75,7 @@ class Settings(BaseSettings):
             "Entur-POS": self.entur_pos,
         }
 
-    @cached_property
+    @property
     def cors_allow_origins(self) -> List[str]:
         raw = self.cors_allow_origins_raw
         if raw is None:

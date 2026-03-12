@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict
 
 import httpx
@@ -8,14 +9,21 @@ from fastapi import HTTPException, status
 from ..config import Settings
 from .omsa import OAuthTokenManager
 
+logger = logging.getLogger(__name__)
+
 
 class SalesClient:
     """HTTP client for Entur Sales (payments) API."""
 
-    def __init__(self, client: httpx.AsyncClient, settings: Settings) -> None:
+    def __init__(
+        self,
+        client: httpx.AsyncClient,
+        settings: Settings,
+        token_manager: OAuthTokenManager,
+    ) -> None:
         self._client = client
         self._settings = settings
-        self._token_manager = OAuthTokenManager(settings)
+        self._token_manager = token_manager
 
     @property
     def base_url(self) -> str:
@@ -36,9 +44,15 @@ class SalesClient:
         try:
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            logger.error(
+                "Sales %s failed with status=%s url=%s",
+                action,
+                exc.response.status_code,
+                str(exc.request.url),
+            )
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"Failed to {action}: {exc.response.text}",
+                detail=f"Failed to {action}",
             ) from exc
         return response.json() if response.content else {}
 

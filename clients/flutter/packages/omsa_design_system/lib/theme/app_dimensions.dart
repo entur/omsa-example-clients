@@ -22,8 +22,8 @@ class AppDimensions {
   /// 1px - Small border radius
   static const double borderRadiusesSmall = 1.0;
 
-  /// 1px - Default border radius
-  static const double borderRadiusesDefault = 1.0;
+  /// 4px - Default border radius (matches medium, the most commonly used radius)
+  static const double borderRadiusesDefault = borderRadiusesMedium;
 
   /// 4px - Medium border radius
   static const double borderRadiusesMedium = 4.0;
@@ -36,7 +36,7 @@ class AppDimensions {
   static BorderRadius get borderRadiusSmall =>
       BorderRadius.circular(borderRadiusesSmall);
 
-  /// BorderRadius with default radius (1px)
+  /// BorderRadius with default radius (4px)
   static BorderRadius get borderRadiusDefault =>
       BorderRadius.circular(borderRadiusesDefault);
 
