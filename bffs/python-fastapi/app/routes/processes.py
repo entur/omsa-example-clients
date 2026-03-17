@@ -14,7 +14,7 @@ from ..services.cache import OfferCache
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/processes", tags=["processes"])
+router = APIRouter(prefix=f"{Settings().api_base_path}/processes", tags=["processes"])
 
 
 @router.post("/search-offers/execute")
@@ -35,7 +35,6 @@ async def search_offers(
         response.headers["x-cache-hit"] = "true"
         response.headers["x-cache-source"] = cached_entry.source
         response.headers["x-omsa-mode"] = settings.omsa_mode
-        response.headers["x-omsa-base-url"] = settings.resolved_omsa_base_url
         return cached_entry.data
 
     offers = await client.search_offers(search_request)
@@ -44,7 +43,6 @@ async def search_offers(
     await cache.set(cache_key, offers, source=source_label)
     response.headers["x-cache-hit"] = "false"
     response.headers["x-omsa-mode"] = settings.omsa_mode
-    response.headers["x-omsa-base-url"] = settings.resolved_omsa_base_url
     return offers
 
 

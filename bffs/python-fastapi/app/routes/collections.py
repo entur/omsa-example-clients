@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, Query
 
 from ..clients.omsa import OMSAClient
+from ..config import Settings
 from ..dependencies import get_omsa_client
 
-router = APIRouter(prefix="/api/v1/collections", tags=["collections"])
+router = APIRouter(prefix=f"{Settings().api_base_path}/collections", tags=["collections"])
 
 
 @router.get("/travel-documents/items")

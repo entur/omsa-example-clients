@@ -154,9 +154,8 @@ class AppTypography {
   // Material 3 compatible mappings for theme integration.
   //
   // The design system has fewer size steps than M3's 13 slots, so some
-  // adjacent M3 levels share a size but differ in weight to preserve
-  // visual hierarchy (heading styles use fontWeightsHeading, body styles
-  // use fontWeightsBody).
+  // adjacent M3 levels share the same text style to preserve visual hierarchy
+  // (e.g. titleMedium and bodyLarge both use textLarge w500).
 
   /// Maps to Material 3's displayLarge — 40px heading
   static const TextStyle displayLarge = headingExtraLarge5;

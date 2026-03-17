@@ -35,7 +35,7 @@ class PurchaseOffersInputs(BaseModel):
 class Subscriber(BaseModel):
     success_uri: Optional[str] = Field(default=None, alias="successUri")
 
-    model_config = {"populate_by_name": True, "extra": "allow"}
+    model_config = {"populate_by_name": True, "extra": "ignore"}
 
 
 class PurchaseOffersRequest(BaseModel):

@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
 
 from ..clients.sales import SalesClient
+from ..config import Settings
 from ..dependencies import get_sales_client
 from ..models import PaymentRequest, PaymentTerminalRequest, PaymentAppClaimRequest
 
-router = APIRouter(prefix="/api/v1/payments", tags=["payments"])
+router = APIRouter(prefix=f"{Settings().api_base_path}/payments", tags=["payments"])
 
 
 @router.post("")
