@@ -57,7 +57,11 @@ class GeojsonFeatureGeometry {
       return GeojsonFeatureGeometry(
         coordinates: json[r'coordinates'] is List
           ? (json[r'coordinates'] as List).map((e) =>
-              List.listFromJson(json[r'coordinates'])
+              (e as List).map((f) =>
+                (f as List).map((g) =>
+                  (g as List).map((h) => (h as num).toDouble()).toList()
+                ).toList()
+              ).toList()
             ).toList()
           :  const [],
       );

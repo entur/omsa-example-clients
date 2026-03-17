@@ -12,15 +12,14 @@ part of openapi.api;
 
 class MetadataOneOf1Value {
   /// Returns a new [MetadataOneOf1Value] instance.
-  MetadataOneOf1Value({
-  });
+  MetadataOneOf1Value();
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MetadataOneOf1Value &&
+  bool operator ==(Object other) => identical(this, other) || other is MetadataOneOf1Value;
 
   @override
-  int get hashCode =>
-    // ignore: unnecessary_parenthesis
+  int get hashCode => runtimeType.hashCode;
+
 
   @override
   String toString() => 'MetadataOneOf1Value[]';

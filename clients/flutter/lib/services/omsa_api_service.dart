@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
+import 'package:omsa_api/api.dart' as omsa;
 import 'package:omsa_demo_app/models/travel_models.dart';
 import 'package:omsa_demo_app/models/traveler_model.dart';
 import 'package:omsa_demo_app/config.dart';
@@ -79,26 +80,28 @@ class OmsaApiService {
     }
   }
 
+  /// Search for offers using generated OMSA API models for request construction.
+  /// The response is still parsed into custom [OfferCollection] for UI compatibility.
   static Future<OfferCollection> searchOffers({
     required String fromZoneId,
     required String toZoneId,
     required DateTime startTime,
     required DateTime endTime,
-    required List<Traveller> travellers,
+    required List<omsa.IndividualTraveller> travellers,
   }) async {
     if (travellers.isEmpty) {
       throw ArgumentError('At least one traveller must be provided');
     }
 
-    final searchRequest = SearchOfferRequest(
-      inputs: SearchOfferInputs(
+    final searchRequest = omsa.SearchOfferHandlerRequest(
+      inputs: omsa.SearchOfferInput(
         type: 'search_offer',
-        timestamp: DateTime.now().toUtc().toIso8601String(),
-        specification: SearchSpecification(
-          from: Place(placeId: fromZoneId),
-          to: Place(placeId: toZoneId),
-          startTime: startTime.toUtc().toIso8601String(),
-          endTime: endTime.toUtc().toIso8601String(),
+        timestamp: DateTime.now().toUtc(),
+        specification: omsa.TravelSpecification(
+          from: omsa.PlaceReference(placeId: fromZoneId),
+          to: omsa.PlaceReference(placeId: toZoneId),
+          startTime: startTime.toUtc(),
+          endTime: endTime.toUtc(),
         ),
         travellers: travellers,
       ),
@@ -120,18 +123,19 @@ class OmsaApiService {
   }) async {
     final url = _resolveApi('/processes/purchase-offers/execute');
     final resolvedSuccessUri = successUri ?? 'https://example.com';
-    final payload = <String, dynamic>{
-      'inputs': {
-        'type': 'purchase_offers',
-        if (timestamp != null) 'timestamp': timestamp.toUtc().toIso8601String(),
-        'selections': [
-          {'offerId': offerId},
-        ],
-      },
-      'subscriber': {'successUri': resolvedSuccessUri},
-    };
 
-    return _postJson(url: url, body: payload);
+    final request = omsa.PurchaseOffersProcessHandlerRequest(
+      inputs: omsa.PurchaseOffersInput(
+        type: 'purchase_offers',
+        timestamp: timestamp?.toUtc(),
+        selections: [
+          omsa.SelectOffersInputSelectionsInner(offerId: offerId),
+        ],
+      ),
+      subscriber: omsa.Subscriber(successUri: resolvedSuccessUri),
+    );
+
+    return _postJson(url: url, body: request.toJson());
   }
 
   static Future<Map<String, dynamic>> confirmPackage({
@@ -139,15 +143,15 @@ class OmsaApiService {
     DateTime? timestamp,
   }) async {
     final url = _resolveApi('/processes/confirm-package/execute');
-    final payload = <String, dynamic>{
-      'inputs': {
-        'packageId': packageId,
-        'type': 'package_input',
-        if (timestamp != null) 'timestamp': timestamp.toUtc().toIso8601String(),
-      },
-    };
+    final request = omsa.PurchasePackageProcessHandlerRequest(
+      inputs: omsa.PackageInput(
+        packageId: packageId,
+        type: 'package_input',
+        timestamp: timestamp?.toUtc(),
+      ),
+    );
 
-    return _postJson(url: url, body: payload);
+    return _postJson(url: url, body: request.toJson());
   }
 
   static Future<dynamic> fetchTravelDocuments({
@@ -163,18 +167,15 @@ class OmsaApiService {
     return _uuid.v4();
   }
 
-  /// Creates a list of API travellers from the app's Traveler model
-  static List<Traveller> createTravellersFromModel(List<Traveler> travelers) {
+  /// Creates a list of generated [omsa.IndividualTraveller] from the app's UI [Traveler] model.
+  static List<omsa.IndividualTraveller> createTravellersFromModel(
+    List<Traveler> travelers,
+  ) {
     return travelers.map((traveler) {
-      final entitlements = traveler.entitlements
-          .map((e) => e.name.toUpperCase())
-          .toList();
-
-      return Traveller(
+      return omsa.IndividualTraveller(
         type: 'individual_traveller',
         id: _generateTravellerUuid(),
         age: traveler.age,
-        entitlements: entitlements.isEmpty ? null : entitlements,
       );
     }).toList();
   }

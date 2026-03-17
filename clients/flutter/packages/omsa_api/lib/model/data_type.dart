@@ -12,15 +12,14 @@ part of openapi.api;
 
 class DataType {
   /// Returns a new [DataType] instance.
-  DataType({
-  });
+  DataType();
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DataType &&
+  bool operator ==(Object other) => identical(this, other) || other is DataType;
 
   @override
-  int get hashCode =>
-    // ignore: unnecessary_parenthesis
+  int get hashCode => runtimeType.hashCode;
+
 
   @override
   String toString() => 'DataType[]';
