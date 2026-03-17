@@ -9,6 +9,7 @@ import 'package:omsa_icons/omsa_icons.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
+import 'package:omsa_demo_app/services/pending_payment_keys.dart';
 import 'package:omsa_demo_app/services/purchase_flow_service.dart';
 import 'package:omsa_demo_app/theme/wayfare_tokens.dart';
 import 'package:omsa_demo_app/widgets/payment_method_picker_drawer.dart';
@@ -69,29 +70,21 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
       'Saving pending payment: paymentId=$paymentId, transactionId=$transactionId, packageId=$packageId, type=$paymentType',
     );
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('pending_payment_id', paymentId.toString());
-    await prefs.setString('pending_transaction_id', transactionId.toString());
-    await prefs.setString('pending_package_id', packageId);
-    await prefs.setString('pending_payment_type', paymentType);
-    await prefs.setString('pending_order_version', orderVersion.toString());
-    await prefs.setString('pending_total_amount', totalAmount.toString());
-    await prefs.setString('pending_currency_code', currencyCode);
-    await prefs.setString('pending_package_name', packageName);
-    await prefs.setString('pending_package_description', packageDescription);
+    await prefs.setString(PendingPaymentKeys.paymentId, paymentId.toString());
+    await prefs.setString(PendingPaymentKeys.transactionId, transactionId.toString());
+    await prefs.setString(PendingPaymentKeys.packageId, packageId);
+    await prefs.setString(PendingPaymentKeys.paymentType, paymentType);
+    await prefs.setString(PendingPaymentKeys.orderVersion, orderVersion.toString());
+    await prefs.setString(PendingPaymentKeys.totalAmount, totalAmount.toString());
+    await prefs.setString(PendingPaymentKeys.currencyCode, currencyCode);
+    await prefs.setString(PendingPaymentKeys.packageName, packageName);
+    await prefs.setString(PendingPaymentKeys.packageDescription, packageDescription);
     _logger.d('Pending payment saved successfully');
   }
 
   Future<void> _clearPendingPayment() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('pending_payment_id');
-    await prefs.remove('pending_transaction_id');
-    await prefs.remove('pending_package_id');
-    await prefs.remove('pending_payment_type');
-    await prefs.remove('pending_order_version');
-    await prefs.remove('pending_total_amount');
-    await prefs.remove('pending_currency_code');
-    await prefs.remove('pending_package_name');
-    await prefs.remove('pending_package_description');
+    await PendingPaymentKeys.clear(prefs);
   }
 
   @override
@@ -138,6 +131,16 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
 
       // Step 3: Start terminal or app claim
       if (_paymentMethodSelection.method == PaymentMethodType.vipps) {
+        final phoneNumber = _paymentMethodSelection.phoneNumber;
+        if (phoneNumber == null || phoneNumber.isEmpty) {
+          if (!mounted) return;
+          setState(() {
+            _error = 'Phone number is required for Vipps';
+            _phase = FlowPhase.failed;
+          });
+          return;
+        }
+
         final offerName = widget.offer.properties.summary.name.isNotEmpty
             ? widget.offer.properties.summary.name
             : 'Travel ticket from Entur';
@@ -145,7 +148,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
         final appClaim = await PurchaseFlowService.startAppClaim(
           session: payment,
           description: offerName,
-          phoneNumber: _paymentMethodSelection.phoneNumber!,
+          phoneNumber: phoneNumber,
           redirectUrl: 'wayfareapp://payment-return',
         );
 
@@ -405,7 +408,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
           const SizedBox(height: 12),
           Text(
             summary.description.replaceAll('\\n', '\n'),
-            style: TextStyle(color: BaseLightTokens.textSubdued),
+            style: TextStyle(color: context.tokens.textSubdued),
           ),
         ],
         const SizedBox(height: 12),
@@ -524,7 +527,7 @@ class _PurchaseFlowScreenState extends State<PurchaseFlowScreen>
                 const SizedBox(height: 16),
                 Text(
                   'Return to this app when you\'re done',
-                  style: TextStyle(color: BaseLightTokens.textSubdued),
+                  style: TextStyle(color: context.tokens.textSubdued),
                   textAlign: TextAlign.center,
                 ),
                 if (_error != null) ...[

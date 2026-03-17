@@ -13,7 +13,6 @@ async def health(settings: Settings = Depends(get_app_settings)) -> HealthStatus
 
     details = {
         "omsa_mode": settings.omsa_mode,
-        "omsa_base_url": settings.resolved_omsa_base_url,
     }
     missing_credentials = []
     if not settings.client_id:

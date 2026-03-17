@@ -7,6 +7,8 @@ import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .clients.omsa import OMSAClient, OAuthTokenManager
+from .clients.sales import SalesClient
 from .config import get_settings
 from .routes import api_router
 from .services.cache import OfferCache
@@ -22,6 +24,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.offer_cache = OfferCache(
             ttl_seconds=settings.cache_ttl_seconds, max_size=settings.cache_max_size
         )  # type: ignore[attr-defined]
+
+        token_manager = OAuthTokenManager(settings)
+        app.state.omsa_client = OMSAClient(client, settings, token_manager)  # type: ignore[attr-defined]
+        app.state.sales_client = SalesClient(client, settings, token_manager)  # type: ignore[attr-defined]
         yield
 
 

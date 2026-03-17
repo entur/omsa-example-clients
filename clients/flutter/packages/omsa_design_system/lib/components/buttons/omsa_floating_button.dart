@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:omsa_design_system/theme/tokens/component_color_tokens.dart';
 
 /// Floating button size: standard = 48px, small = 32px
 enum OmsaFloatingButtonSize { standard, small }
@@ -106,36 +107,51 @@ class _OmsaFloatingButtonState extends State<OmsaFloatingButton> {
   }
 
   FloatingButtonColors _getColors(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final isLight = brightness == Brightness.light;
+    final isLight = Theme.of(context).brightness == Brightness.light;
 
     if (_isDisabled && !widget.isLoading) {
       return FloatingButtonColors(
-        background: isLight ? const Color(0xFFCFD2D4) : const Color(0x1AD0D2D4),
-        text: isLight ? const Color(0xFF515254) : const Color(0xFFB6B8BA),
+        background: isLight
+            ? ComponentLightTokens.buttonDisabledStandardFill
+            : ComponentDarkTokens.buttonDisabledStandardFill,
+        text: isLight
+            ? ComponentLightTokens.buttonDisabledStandardTextDisabled
+            : ComponentDarkTokens.buttonDisabledStandardTextDisabled,
         shadowColor: Colors.black.withValues(alpha: 0.25),
       );
     }
 
     if (_isPressed) {
       return FloatingButtonColors(
-        background: isLight ? const Color(0xFF11143C) : const Color(0xFF8794D4),
-        text: isLight ? const Color(0xFFFFFFFF) : const Color(0xFF08091C),
+        background: isLight
+            ? ComponentLightTokens.buttonFloatingStandardActive
+            : ComponentDarkTokens.buttonFloatingStandardActive,
+        text: isLight
+            ? ComponentLightTokens.buttonFloatingStandardText
+            : ComponentDarkTokens.buttonFloatingStandardText,
         shadowColor: Colors.black.withValues(alpha: 0.25),
       );
     }
 
     if (_isHovered) {
       return FloatingButtonColors(
-        background: isLight ? const Color(0xFF393D79) : const Color(0xFFC7CDEB),
-        text: isLight ? const Color(0xFFFFFFFF) : const Color(0xFF08091C),
+        background: isLight
+            ? ComponentLightTokens.buttonFloatingStandardHover
+            : ComponentDarkTokens.buttonFloatingStandardHover,
+        text: isLight
+            ? ComponentLightTokens.buttonFloatingStandardText
+            : ComponentDarkTokens.buttonFloatingStandardText,
         shadowColor: Colors.black.withValues(alpha: 0.25),
       );
     }
 
     return FloatingButtonColors(
-      background: isLight ? const Color(0xFF181C56) : const Color(0xFFAEB7E2),
-      text: isLight ? const Color(0xFFFFFFFF) : const Color(0xFF08091C),
+      background: isLight
+          ? ComponentLightTokens.buttonFloatingStandardDefault
+          : ComponentDarkTokens.buttonFloatingStandardDefault,
+      text: isLight
+          ? ComponentLightTokens.buttonFloatingStandardText
+          : ComponentDarkTokens.buttonFloatingStandardText,
       shadowColor: Colors.black.withValues(alpha: 0.25),
     );
   }

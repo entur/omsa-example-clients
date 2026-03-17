@@ -15,11 +15,12 @@ class AppSpacing {
   /// 12px
   static const double spaceSmall = 12.0;
 
-  /// 16px
+  /// 16px — the standard spacing unit
   static const double spaceDefault = 16.0;
 
-  /// 16px
-  static const double spaceMedium = 16.0;
+  /// 16px — alias for [spaceDefault]
+  @Deprecated('Use spaceDefault instead for consistency')
+  static const double spaceMedium = spaceDefault;
 
   /// 24px
   static const double spaceLarge = 24.0;

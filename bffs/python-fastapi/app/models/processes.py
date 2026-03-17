@@ -35,14 +35,14 @@ class PurchaseOffersInputs(BaseModel):
 class Subscriber(BaseModel):
     success_uri: Optional[str] = Field(default=None, alias="successUri")
 
-    model_config = {"populate_by_name": True, "extra": "allow"}
+    model_config = {"populate_by_name": True, "extra": "ignore"}
 
 
 class PurchaseOffersRequest(BaseModel):
     inputs: PurchaseOffersInputs
     subscriber: Optional[Subscriber] = None
 
-    model_config = {"populate_by_name": True, "extra": "allow"}
+    model_config = {"populate_by_name": True, "extra": "ignore"}
 
 
 class PackageInputs(BaseModel):
@@ -56,4 +56,4 @@ class PackageInputs(BaseModel):
 class ConfirmPackageRequest(BaseModel):
     inputs: PackageInputs
 
-    model_config = {"populate_by_name": True, "extra": "allow"}
+    model_config = {"populate_by_name": True, "extra": "ignore"}

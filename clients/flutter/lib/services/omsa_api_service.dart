@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:omsa_demo_app/models/travel_models.dart';
+import 'package:omsa_demo_app/models/traveler_model.dart';
 import 'package:omsa_demo_app/config.dart';
 
 class OmsaApiService {
@@ -163,18 +164,16 @@ class OmsaApiService {
   }
 
   /// Creates a list of API travellers from the app's Traveler model
-  static List<Traveller> createTravellersFromModel(List<dynamic> travelers) {
+  static List<Traveller> createTravellersFromModel(List<Traveler> travelers) {
     return travelers.map((traveler) {
-      // Extract age and entitlements from the traveler model
-      final age = traveler.age as int;
-      final entitlements = (traveler.entitlements as List)
-          .cast<String>()
+      final entitlements = traveler.entitlements
+          .map((e) => e.name.toUpperCase())
           .toList();
 
       return Traveller(
         type: 'individual_traveller',
         id: _generateTravellerUuid(),
-        age: age,
+        age: traveler.age,
         entitlements: entitlements.isEmpty ? null : entitlements,
       );
     }).toList();
