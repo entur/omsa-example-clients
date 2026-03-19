@@ -36,6 +36,9 @@ dependencies:
     path: packages/omsa_design_system
   omsa_icons:
     path: packages/omsa_icons
+  # OMSA API Client
+  omsa_api:
+    path: packages/omsa_api
 
   # State Management
   provider: ^6.1.2

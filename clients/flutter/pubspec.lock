@@ -240,6 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.4"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   json_annotation:
     dependency: transitive
     description:
@@ -343,6 +351,13 @@ packages:
       sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
       url: "https://pub.dev"
     source: hosted
+    version: "1.0.0"
+  omsa_api:
+    dependency: "direct main"
+    description:
+      path: "packages/omsa_api"
+      relative: true
+    source: path
     version: "1.0.0"
   omsa_design_system:
     dependency: "direct main"
