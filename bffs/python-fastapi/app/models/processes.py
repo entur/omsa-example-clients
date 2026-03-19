@@ -7,7 +7,6 @@ from .omsa import (
     Subscriber,
     PurchaseOffersInput,
     PackageInput,
-    PackageReference
 )
 
 

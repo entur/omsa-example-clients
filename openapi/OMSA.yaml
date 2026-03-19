@@ -2275,7 +2275,7 @@ components:
         _ABENDED_ the leg is abnormally ended (e.g. due to an issue)
       enum:
         [
-          NOT_started,
+          NOT_STARTED,
           PREPARING,
           PREPARED,
           IN_USE,

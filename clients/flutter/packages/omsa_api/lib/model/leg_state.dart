@@ -23,7 +23,7 @@ class LegState {
 
   String toJson() => value;
 
-  static const nOTStarted = LegState._(r'NOT_started');
+  static const NOT_STARTED = LegState._(r'NOT_STARTED');
   static const PREPARING = LegState._(r'PREPARING');
   static const PREPARED = LegState._(r'PREPARED');
   static const IN_USE = LegState._(r'IN_USE');
@@ -35,7 +35,7 @@ class LegState {
 
   /// List of all possible values in this [enum][LegState].
   static const values = <LegState>[
-    nOTStarted,
+    NOT_STARTED,
     PREPARING,
     PREPARED,
     IN_USE,
@@ -82,7 +82,7 @@ class LegStateTypeTransformer {
   LegState? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'NOT_started': return LegState.nOTStarted;
+        case r'NOT_STARTED': return LegState.NOT_STARTED;
         case r'PREPARING': return LegState.PREPARING;
         case r'PREPARED': return LegState.PREPARED;
         case r'IN_USE': return LegState.IN_USE;
