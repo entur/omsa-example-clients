@@ -52,7 +52,7 @@ async def purchase_offers(
     client: OMSAClient = Depends(get_omsa_client),
 ):
     return await client.purchase_offers(
-        purchase_request.model_dump(by_alias=True, exclude_none=True)
+        purchase_request.model_dump(by_alias=True, exclude_none=True, mode="json")
     )
 
 
@@ -61,6 +61,6 @@ async def confirm_package(
     confirm_request: ConfirmPackageRequest,
     client: OMSAClient = Depends(get_omsa_client),
 ):
-    dumped = confirm_request.model_dump(by_alias=True, exclude_none=True)
+    dumped = confirm_request.model_dump(by_alias=True, exclude_none=True, mode="json")
     logger.debug("Confirming package: %s", dumped.get("inputs", {}).get("packageId"))
     return await client.confirm_package(dumped)
