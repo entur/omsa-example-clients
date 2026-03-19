@@ -13,13 +13,12 @@ part of openapi.api;
 class PurchaseOffersInput {
   /// Returns a new [PurchaseOffersInput] instance.
   PurchaseOffersInput({
-    this.selections = const [],
+    this.offerIds = const [],
     required this.type,
     this.timestamp,
   });
 
-  /// Component-based selection of offers and their ancillaries.
-  List<SelectOffersInputSelectionsInner> selections;
+  List<String> offerIds;
 
   String type;
 
@@ -34,23 +33,23 @@ class PurchaseOffersInput {
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PurchaseOffersInput &&
-    _deepEquality.equals(other.selections, selections) &&
+    _deepEquality.equals(other.offerIds, offerIds) &&
     other.type == type &&
     other.timestamp == timestamp;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (selections.hashCode) +
+    (offerIds.hashCode) +
     (type.hashCode) +
     (timestamp == null ? 0 : timestamp!.hashCode);
 
   @override
-  String toString() => 'PurchaseOffersInput[selections=$selections, type=$type, timestamp=$timestamp]';
+  String toString() => 'PurchaseOffersInput[offerIds=$offerIds, type=$type, timestamp=$timestamp]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'selections'] = this.selections;
+      json[r'offerIds'] = this.offerIds;
       json[r'type'] = this.type;
     if (this.timestamp != null) {
       json[r'timestamp'] = this.timestamp!.toUtc().toIso8601String();
@@ -79,7 +78,9 @@ class PurchaseOffersInput {
       }());
 
       return PurchaseOffersInput(
-        selections: SelectOffersInputSelectionsInner.listFromJson(json[r'selections']),
+        offerIds: json[r'offerIds'] is Iterable
+            ? (json[r'offerIds'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
         type: mapValueOfType<String>(json, r'type')!,
         timestamp: mapDateTime(json, r'timestamp', r''),
       );
@@ -129,7 +130,7 @@ class PurchaseOffersInput {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'selections',
+    'offerIds',
     'type',
   };
 }

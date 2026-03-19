@@ -384,8 +384,6 @@ class ApiClient {
           return SelectOffersHandlerRequest.fromJson(value);
         case 'SelectOffersInput':
           return SelectOffersInput.fromJson(value);
-        case 'SelectOffersInputSelectionsInner':
-          return SelectOffersInputSelectionsInner.fromJson(value);
         case 'ServiceParameter':
           return ServiceParameter.fromJson(value);
         case 'SpotReservationParameter':

@@ -22,6 +22,11 @@ npx -y @openapitools/openapi-generator-cli generate \
 echo "Running pub get in generated package..."
 cd "$OUTPUT_DIR"
 flutter pub get
+
+echo "Applying manual fixes to generated models..."
+python3 "$DIR/fix_generated_models.py"
+
 flutter format . || true 
+cd "$DIR"
 
 echo "Done generating Dart OMSA package at $OUTPUT_DIR"

@@ -20,7 +20,6 @@ class MetadataOneOf1Value {
   @override
   int get hashCode => runtimeType.hashCode;
 
-
   @override
   String toString() => 'MetadataOneOf1Value[]';
 

@@ -56,9 +56,9 @@ class GeojsonPolygon {
 
       return GeojsonPolygon(
         coordinates: json[r'coordinates'] is List
-          ? (json[r'coordinates'] as List).map((e) =>
-              (e as List).map((f) =>
-                (f as List).map((g) => (g as num).toDouble()).toList()
+          ? (json[r'coordinates'] as List).map<List<List<double>>>((e) =>
+              (e as List).map<List<double>>((e) =>
+                (e as List).cast<double>().toList()
               ).toList()
             ).toList()
           :  const [],

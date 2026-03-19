@@ -108,9 +108,31 @@ class OmsaApiService {
     );
 
     final url = _resolveApi('/processes/search-offers/execute');
+    final jsonBody = searchRequest.toJson();
+
+    // The generated toJson() does not recursively convert nested objects to Maps.
+    // We manually convert 'inputs' to a Map if it's present so we can manipulate it.
+    if (searchRequest.inputs != null) {
+      final inputs = searchRequest.inputs!.toJson();
+      jsonBody['inputs'] = inputs;
+
+      // Strip empty lists to avoid validation errors for optional fields
+      if (inputs['travellers'] is List &&
+          (inputs['travellers'] as List).isEmpty) {
+        inputs.remove('travellers');
+      }
+      if (inputs['profiles'] is List && (inputs['profiles'] as List).isEmpty) {
+        inputs.remove('profiles');
+      }
+      if (inputs['travellingAssets'] is List &&
+          (inputs['travellingAssets'] as List).isEmpty) {
+        inputs.remove('travellingAssets');
+      }
+    }
+
     final responseBody = await _postJson(
       url: url,
-      body: searchRequest.toJson(),
+      body: jsonBody,
     );
     _logger.i('Successfully parsed offer collection from BFF');
     return OfferCollection.fromJson(responseBody);
@@ -128,9 +150,7 @@ class OmsaApiService {
       inputs: omsa.PurchaseOffersInput(
         type: 'purchase_offers',
         timestamp: timestamp?.toUtc(),
-        selections: [
-          omsa.SelectOffersInputSelectionsInner(offerId: offerId),
-        ],
+        offerIds: [offerId],
       ),
       subscriber: omsa.Subscriber(successUri: resolvedSuccessUri),
     );

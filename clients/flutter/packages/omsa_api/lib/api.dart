@@ -134,7 +134,6 @@ part 'model/search_offer_input.dart';
 part 'model/seat.dart';
 part 'model/select_offers_handler_request.dart';
 part 'model/select_offers_input.dart';
-part 'model/select_offers_input_selections_inner.dart';
 part 'model/service_parameter.dart';
 part 'model/spot_reservation_parameter.dart';
 part 'model/subscriber.dart';

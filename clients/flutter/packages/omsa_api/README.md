@@ -200,7 +200,6 @@ Class | Method | HTTP request | Description
  - [Seat](doc//Seat.md)
  - [SelectOffersHandlerRequest](doc//SelectOffersHandlerRequest.md)
  - [SelectOffersInput](doc//SelectOffersInput.md)
- - [SelectOffersInputSelectionsInner](doc//SelectOffersInputSelectionsInner.md)
  - [ServiceParameter](doc//ServiceParameter.md)
  - [SpotReservationParameter](doc//SpotReservationParameter.md)
  - [Subscriber](doc//Subscriber.md)

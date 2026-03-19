@@ -20,7 +20,6 @@ class DataType {
   @override
   int get hashCode => runtimeType.hashCode;
 
-
   @override
   String toString() => 'DataType[]';
 
