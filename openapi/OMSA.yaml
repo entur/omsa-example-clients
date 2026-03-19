@@ -1410,6 +1410,7 @@ components:
       anyOf:
         - required: [travellers]
         - required: [profiles]
+        - required: [travellingAssets]
       properties:
         type:
           type: string
@@ -1438,6 +1439,7 @@ components:
             $ref: "#/components/schemas/userProfile"
         travellingAssets:
           type: array
+          minItems: 1
           items:
             $ref: "#/components/schemas/travellingAsset"
 
@@ -1445,23 +1447,12 @@ components:
       type: object
       required:
         - type
-        - selections
+        - offerIds
       properties:
-        selections:
+        offerIds:
           type: array
-          description: "Component-based selection of offers and their ancillaries."
           items:
-            type: object
-            required:
-              - offerId
-            properties:
-              offerId:
-                $ref: "#/components/schemas/offerReference"
-              selectedAncillaryIds:
-                type: array
-                description: "List of ancillaryIds to include specifically for this offer instance."
-                items:
-                  $ref: "#/components/schemas/ancillaryReference"
+            $ref: "#/components/schemas/offerReference"
         type:
           type: string
           pattern: "^(select_offers)"
@@ -3214,7 +3205,7 @@ components:
             address to the **placeDefinitions** list of the request.
           maxLength: 200
           x-example-format: "^(GPS:|GBFS:stations:)"
-          pattern: "^(GPS:|NSR:StopPlace:|P:)"
+          pattern: "^(GPS:|NSR:StopPlace:|P:|KOL:)"
         name:
           $ref: "#/components/schemas/normalString"
 
