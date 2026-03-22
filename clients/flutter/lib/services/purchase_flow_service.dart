@@ -268,6 +268,70 @@ class PurchaseFlowService {
     return [];
   }
 
+  static Future<List<RefundOption>> fetchRefundOptions({
+    required String packageId,
+  }) async {
+    final response = await OmsaApiService.fetchRefundOptions(
+      packageId: packageId,
+    );
+
+    if (response is Map<String, dynamic>) {
+      final options = response['options'] as List<dynamic>? ?? [];
+      return options
+          .map((opt) => RefundOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    } else if (response is List) {
+      return response
+          .map((opt) => RefundOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    }
+
+    return [];
+  }
+
+  static Future<List<ChangeOption>> fetchChangeOptions({
+    required String packageId,
+  }) async {
+    final response = await OmsaApiService.fetchChangeOptions(
+      packageId: packageId,
+    );
+
+    if (response is Map<String, dynamic>) {
+      final options = response['options'] as List<dynamic>? ?? [];
+      return options
+          .map((opt) => ChangeOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    } else if (response is List) {
+      return response
+          .map((opt) => ChangeOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    }
+
+    return [];
+  }
+
+  static Future<Map<String, dynamic>> executeCancelPackage({
+    required String packageId,
+  }) async {
+    _logger.i('Executing cancel-package for packageId=$packageId');
+    final response = await OmsaApiService.cancelPackage(packageId: packageId);
+    _logger.i('Cancel-package response: $response');
+    return response;
+  }
+
+  static Future<Map<String, dynamic>> executeClaimRefund({
+    required String packageId,
+    required String refundOptionId,
+  }) async {
+    _logger.i('Executing claim-refund-option for packageId=$packageId, optionId=$refundOptionId');
+    final response = await OmsaApiService.claimRefund(
+      packageId: packageId,
+      refundOptionId: refundOptionId,
+    );
+    _logger.i('Claim-refund response: $response');
+    return response;
+  }
+
   static Future<void> cacheConfirmedPackage({
     required String packageId,
     String? packageName,

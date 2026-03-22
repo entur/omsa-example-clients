@@ -168,6 +168,58 @@ class OMSAClient:
         )
         return self._handle_response(response, "get travel documents")
 
+    async def get_refund_options(self, package_id: str) -> Dict[str, Any]:
+        response = await self._client.get(
+            f"{self.base_url}/collections/refund-options/items",
+            params={"packageId": package_id},
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Accept": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "get refund options")
+
+    async def get_change_options(self, package_id: str) -> Dict[str, Any]:
+        response = await self._client.get(
+            f"{self.base_url}/collections/change-options/items",
+            params={"packageId": package_id},
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Accept": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "get change options")
+
+    async def cancel_package(self, body: Dict[str, Any]) -> Dict[str, Any]:
+        response = await self._client.post(
+            f"{self.base_url}/processes/cancel-package/execute",
+            json=self._ensure_json(body),
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Content-Type": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "cancel package")
+
+    async def claim_refund_option(self, body: Dict[str, Any]) -> Dict[str, Any]:
+        response = await self._client.post(
+            f"{self.base_url}/processes/claim-refund-option/execute",
+            json=self._ensure_json(body),
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Content-Type": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "claim refund option")
+
     @staticmethod
     def _ensure_json(data: Dict[str, Any]) -> Dict[str, Any]:
         def convert(value):

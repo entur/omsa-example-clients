@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omsa_design_system/omsa_design_system.dart';
+import 'package:omsa_icons/omsa_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:omsa_demo_app/models/purchase_models.dart';
@@ -19,6 +20,8 @@ class _TicketScreenState extends State<TicketScreen> {
   bool _isLoading = true;
   String? _error;
   List<TravelDocument> _documents = const [];
+  List<RefundOption> _refundOptions = const [];
+  List<ChangeOption> _changeOptions = const [];
   int _currentPageIndex = 0;
   final PageController _pageController = PageController(viewportFraction: 0.9);
 
@@ -53,14 +56,25 @@ class _TicketScreenState extends State<TicketScreen> {
     }
 
     try {
-      final documents = await PurchaseFlowService.fetchTravelDocuments(
-        packageId: widget.packageId,
-      );
+      final results = await Future.wait([
+        PurchaseFlowService.fetchTravelDocuments(packageId: widget.packageId),
+        PurchaseFlowService.fetchRefundOptions(packageId: widget.packageId),
+        PurchaseFlowService.fetchChangeOptions(packageId: widget.packageId),
+      ]);
+
+      final documents = results[0] as List<TravelDocument>;
+      final refundOptions = results[1] as List<RefundOption>;
+      final changeOptions = results[2] as List<ChangeOption>;
+
       await TicketWalletService.upsertPackage(
         packageId: widget.packageId,
         documents: documents,
       );
       if (!mounted) return;
+      setState(() {
+        _refundOptions = refundOptions;
+        _changeOptions = changeOptions;
+      });
       _applyDocuments(
         documents,
         preferredDocumentId: _currentDocument?.id ?? preferredDocumentId,
@@ -70,10 +84,69 @@ class _TicketScreenState extends State<TicketScreen> {
       setState(() {
         _isLoading = false;
         if (_documents.isEmpty) {
-          _error = 'Failed to load travel documents: $error';
+          _error = 'Failed to load ticket information: $error';
         }
       });
     }
+  }
+
+  Future<void> _executeCancel() async {
+    setState(() => _isLoading = true);
+    try {
+      await PurchaseFlowService.executeCancelPackage(packageId: widget.packageId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ticket cancelled successfully')),
+        );
+        _loadDocuments(); // Refresh to show new status
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to cancel ticket: $e')),
+        );
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _executeRefund(String optionId) async {
+    setState(() => _isLoading = true);
+    try {
+      await PurchaseFlowService.executeClaimRefund(
+        packageId: widget.packageId,
+        refundOptionId: optionId,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Refund claimed successfully')),
+        );
+        _loadDocuments(); // Refresh
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to claim refund: $e')),
+        );
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  void _showManagementOptions() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: context.tokens.frameTint,
+      builder: (context) => _ManagementOptionsSheet(
+        refundOptions: _refundOptions,
+        changeOptions: _changeOptions,
+        onCancelPackage: _executeCancel,
+        onClaimRefund: _executeRefund,
+      ),
+    );
   }
 
   TravelDocument? get _currentDocument {
@@ -285,6 +358,13 @@ class _TicketScreenState extends State<TicketScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _buildDocumentDetailsCard(context, selected),
                   ),
+                  if (_refundOptions.isNotEmpty || _changeOptions.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _buildManagementCard(context),
+                    ),
+                  ],
                   if (_error != null) ...[
                     const SizedBox(height: 12),
                     Padding(
@@ -344,8 +424,122 @@ class _TicketScreenState extends State<TicketScreen> {
               ),
             ],
           ),
+          if (_refundOptions.isNotEmpty || _changeOptions.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (_refundOptions.isNotEmpty)
+                  const OmsaStatusBadge(
+                    variant: OmsaBadgeVariant.neutral,
+                    child: Text('Refundable'),
+                  ),
+                if (_changeOptions.isNotEmpty)
+                  const OmsaStatusBadge(
+                    variant: OmsaBadgeVariant.neutral,
+                    child: Text('Changeable'),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+
+  Widget _buildManagementCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _surfacePrimary(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Ticket management',
+                style: AppTypography.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              OmsaButton(
+                variant: OmsaButtonVariant.secondary,
+                size: OmsaButtonSize.small,
+                onPressed: _showManagementOptions,
+                child: const Text('View Options'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (_refundOptions.isNotEmpty) ...[
+            _buildManagementItem(
+              context,
+              icon: Icons.replay_circle_filled,
+              title: 'Refundable',
+              subtitle: _refundOptions.any((o) => o.totalRefundAmount > 0)
+                  ? 'Possible to claim a refund for this ticket.'
+                  : 'Refundable under specific conditions.',
+            ),
+            if (_changeOptions.isNotEmpty) const SizedBox(height: 12),
+          ],
+          if (_changeOptions.isNotEmpty) ...[
+            _buildManagementItem(
+              context,
+              icon: Icons.event_repeat,
+              title: 'Changeable',
+              subtitle: 'Possible to change or update this ticket.',
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildManagementItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: context.tokens.frameSubdued,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 20, color: context.tokens.shapeHighlight),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: AppTypography.textMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: AppTypography.textSmall.copyWith(
+                  color: context.tokens.textSubdued,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -659,6 +853,218 @@ class _TicketVisual extends StatelessWidget {
         const SizedBox(height: 12),
         Text('Ticket type: $label', textAlign: TextAlign.center),
       ],
+    );
+  }
+}
+
+class _ManagementOptionsSheet extends StatelessWidget {
+  final List<RefundOption> refundOptions;
+  final List<ChangeOption> changeOptions;
+  final VoidCallback onCancelPackage;
+  final Function(String) onClaimRefund;
+
+  const _ManagementOptionsSheet({
+    required this.refundOptions,
+    required this.changeOptions,
+    required this.onCancelPackage,
+    required this.onClaimRefund,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                width: 32,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: tokens.strokeSubdued,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Ticket management',
+                  style: AppTypography.textExtraLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                OmsaIconButton(
+                  icon: OmsaIcons.CloseSmall(),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (refundOptions.isNotEmpty) ...[
+                      _buildSectionHeader(context, 'Refund Options'),
+                      const SizedBox(height: 12),
+                      ...refundOptions.map(
+                        (option) => _buildRefundOption(context, option),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                    if (changeOptions.isNotEmpty) ...[
+                      _buildSectionHeader(context, 'Change Options'),
+                      const SizedBox(height: 12),
+                      ...changeOptions.map(
+                        (option) => _buildChangeOption(context, option),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Text(
+      title.toUpperCase(),
+      style: AppTypography.textSmall.copyWith(
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.2,
+        color: context.tokens.textSubdued,
+      ),
+    );
+  }
+
+  Widget _buildRefundOption(BuildContext context, RefundOption option) {
+    final hasAmount = option.totalRefundAmount > 0;
+
+    return OmsaCard(
+      variant: OmsaCardVariant.filled,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.replay_circle_filled, color: context.tokens.shapeHighlight),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  option.refundType ?? 'Refund',
+                  style: AppTypography.textMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (hasAmount) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Refund amount: ${option.consequences.first.amount} ${option.consequences.first.currencyCode}',
+                    style: AppTypography.textSmall,
+                  ),
+                ],
+                const SizedBox(height: 12),
+                OmsaButton(
+                  width: OmsaButtonWidth.fluid,
+                  size: OmsaButtonSize.small,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onClaimRefund(option.id);
+                  },
+                  child: const Text('Claim Refund'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangeOption(BuildContext context, ChangeOption option) {
+    final isCancel = option.changeType == 'CANCEL_PACKAGE';
+
+    return OmsaCard(
+      variant: OmsaCardVariant.filled,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            isCancel ? Icons.cancel : Icons.event_repeat,
+            color: isCancel ? Colors.red : context.tokens.shapeHighlight,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  option.changeType ?? 'Change',
+                  style: AppTypography.textMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (option.consequences.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Fee: ${option.consequences.first.amount} ${option.consequences.first.currencyCode}',
+                    style: AppTypography.textSmall.copyWith(
+                      color: option.consequences.first.amount > 0
+                          ? Colors.red
+                          : Colors.green,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12),
+                OmsaButton(
+                  variant: isCancel
+                      ? OmsaButtonVariant.negative
+                      : OmsaButtonVariant.secondary,
+                  width: OmsaButtonWidth.fluid,
+                  size: OmsaButtonSize.small,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    if (isCancel) {
+                      onCancelPackage();
+                    } else {
+                      // Handle other change types - for now just a snackbar
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Change process not yet implemented'),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(isCancel ? 'Cancel Ticket' : 'Apply Change'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

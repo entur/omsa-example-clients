@@ -9,6 +9,8 @@ from ..models import (
     ConfirmPackageRequest,
     PurchaseOffersRequest,
     SearchOfferRequest,
+    CancelPackageRequest,
+    ClaimRefundRequest,
 )
 from ..services.cache import OfferCache
 
@@ -64,3 +66,39 @@ async def confirm_package(
     dumped = confirm_request.model_dump(by_alias=True, exclude_none=True, mode="json")
     logger.debug("Confirming package: %s", dumped.get("inputs", {}).get("packageId"))
     return await client.confirm_package(dumped)
+
+
+@router.get("/refund-options/items")
+async def get_refund_options(
+    packageId: str,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.get_refund_options(packageId)
+
+
+@router.get("/change-options/items")
+async def get_change_options(
+    packageId: str,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.get_change_options(packageId)
+
+
+@router.post("/cancel-package/execute")
+async def cancel_package(
+    cancel_request: CancelPackageRequest,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.cancel_package(
+        cancel_request.model_dump(by_alias=True, exclude_none=True, mode="json")
+    )
+
+
+@router.post("/claim-refund-option/execute")
+async def claim_refund_option(
+    claim_request: ClaimRefundRequest,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.claim_refund_option(
+        claim_request.model_dump(by_alias=True, exclude_none=True, mode="json")
+    )
