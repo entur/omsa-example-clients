@@ -9,6 +9,8 @@ from ..models import (
     ConfirmPackageRequest,
     PurchaseOffersRequest,
     SearchOfferRequest,
+    CancelPackageRequest,
+    ClaimRefundRequest,
 )
 from ..services.cache import OfferCache
 
@@ -80,3 +82,23 @@ async def get_change_options(
     client: OMSAClient = Depends(get_omsa_client),
 ):
     return await client.get_change_options(packageId)
+
+
+@router.post("/cancel-package/execute")
+async def cancel_package(
+    cancel_request: CancelPackageRequest,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.cancel_package(
+        cancel_request.model_dump(by_alias=True, exclude_none=True, mode="json")
+    )
+
+
+@router.post("/claim-refund-option/execute")
+async def claim_refund_option(
+    claim_request: ClaimRefundRequest,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.claim_refund_option(
+        claim_request.model_dump(by_alias=True, exclude_none=True, mode="json")
+    )

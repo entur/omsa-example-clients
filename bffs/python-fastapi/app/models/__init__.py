@@ -1,6 +1,6 @@
 from .health import HealthStatus
 from .search import SearchOfferRequest
-from .processes import PurchaseOffersRequest, ConfirmPackageRequest
+from .processes import PurchaseOffersRequest, ConfirmPackageRequest, CancelPackageRequest, ClaimRefundRequest
 from .payments import PaymentRequest, PaymentTerminalRequest, PaymentAppClaimRequest
 
 __all__ = [
@@ -8,6 +8,8 @@ __all__ = [
     "SearchOfferRequest",
     "PurchaseOffersRequest",
     "ConfirmPackageRequest",
+    "CancelPackageRequest",
+    "ClaimRefundRequest",
     "PaymentRequest",
     "PaymentTerminalRequest",
     "PaymentAppClaimRequest",

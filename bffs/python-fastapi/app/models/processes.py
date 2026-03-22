@@ -7,6 +7,7 @@ from .omsa import (
     Subscriber,
     PurchaseOffersInput,
     PackageInput,
+    RefundOptionInput,
 )
 
 
@@ -24,5 +25,19 @@ class PurchaseOffersRequest(BaseModel):
 
 class ConfirmPackageRequest(BaseModel):
     inputs: PackageInput
+
+    model_config = {"populate_by_name": True, "extra": "ignore"}
+
+
+class CancelPackageRequest(BaseModel):
+    inputs: PackageInput
+    subscriber: Optional[Subscriber] = None
+
+    model_config = {"populate_by_name": True, "extra": "ignore"}
+
+
+class ClaimRefundRequest(BaseModel):
+    inputs: RefundOptionInput
+    subscriber: Optional[Subscriber] = None
 
     model_config = {"populate_by_name": True, "extra": "ignore"}

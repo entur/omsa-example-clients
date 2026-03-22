@@ -194,6 +194,32 @@ class OMSAClient:
         )
         return self._handle_response(response, "get change options")
 
+    async def cancel_package(self, body: Dict[str, Any]) -> Dict[str, Any]:
+        response = await self._client.post(
+            f"{self.base_url}/processes/cancel-package/execute",
+            json=self._ensure_json(body),
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Content-Type": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "cancel package")
+
+    async def claim_refund_option(self, body: Dict[str, Any]) -> Dict[str, Any]:
+        response = await self._client.post(
+            f"{self.base_url}/processes/claim-refund-option/execute",
+            json=self._ensure_json(body),
+            headers={
+                **await self._authorized_headers(),
+                **self._entur_headers(),
+                "Content-Type": "application/json",
+                "Accept-Language": "en-GB",
+            },
+        )
+        return self._handle_response(response, "claim refund option")
+
     @staticmethod
     def _ensure_json(data: Dict[str, Any]) -> Dict[str, Any]:
         def convert(value):
