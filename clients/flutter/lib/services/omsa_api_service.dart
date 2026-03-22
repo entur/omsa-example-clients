@@ -174,6 +174,12 @@ class OmsaApiService {
     return _postJson(url: url, body: request.toJson());
   }
 
+  static Future<dynamic> fetchTravelDocuments({
+    required String packageId,
+  }) async {
+    final url = _resolveApi(
+      '/collections/travel-documents/items?packageId=$packageId',
+    );
     return _getJson(url: url);
   }
 

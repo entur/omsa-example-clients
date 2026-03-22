@@ -247,6 +247,24 @@ class PurchaseFlowService {
     throw lastError ?? Exception('Unknown error while confirming package.');
   }
 
+  static Future<List<TravelDocument>> fetchTravelDocuments({
+    required String packageId,
+  }) async {
+    final response = await OmsaApiService.fetchTravelDocuments(
+      packageId: packageId,
+    );
+
+    if (response is Map<String, dynamic>) {
+      final documents = response['travelDocuments'] as List<dynamic>? ?? [];
+      return documents
+          .map((doc) => TravelDocument.fromMap(doc as Map<String, dynamic>))
+          .toList();
+    } else if (response is List) {
+      return response
+          .map((doc) => TravelDocument.fromMap(doc as Map<String, dynamic>))
+          .toList();
+    }
+
     return [];
   }
 
