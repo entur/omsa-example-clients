@@ -247,21 +247,45 @@ class PurchaseFlowService {
     throw lastError ?? Exception('Unknown error while confirming package.');
   }
 
-  static Future<List<TravelDocument>> fetchTravelDocuments({
+    return [];
+  }
+
+  static Future<List<RefundOption>> fetchRefundOptions({
     required String packageId,
   }) async {
-    final response = await OmsaApiService.fetchTravelDocuments(
+    final response = await OmsaApiService.fetchRefundOptions(
       packageId: packageId,
     );
 
     if (response is Map<String, dynamic>) {
-      final documents = response['travelDocuments'] as List<dynamic>? ?? [];
-      return documents
-          .map((doc) => TravelDocument.fromMap(doc as Map<String, dynamic>))
+      final options = response['options'] as List<dynamic>? ?? [];
+      return options
+          .map((opt) => RefundOption.fromMap(opt as Map<String, dynamic>))
           .toList();
     } else if (response is List) {
       return response
-          .map((doc) => TravelDocument.fromMap(doc as Map<String, dynamic>))
+          .map((opt) => RefundOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    }
+
+    return [];
+  }
+
+  static Future<List<ChangeOption>> fetchChangeOptions({
+    required String packageId,
+  }) async {
+    final response = await OmsaApiService.fetchChangeOptions(
+      packageId: packageId,
+    );
+
+    if (response is Map<String, dynamic>) {
+      final options = response['options'] as List<dynamic>? ?? [];
+      return options
+          .map((opt) => ChangeOption.fromMap(opt as Map<String, dynamic>))
+          .toList();
+    } else if (response is List) {
+      return response
+          .map((opt) => ChangeOption.fromMap(opt as Map<String, dynamic>))
           .toList();
     }
 

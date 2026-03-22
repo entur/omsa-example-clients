@@ -64,3 +64,19 @@ async def confirm_package(
     dumped = confirm_request.model_dump(by_alias=True, exclude_none=True, mode="json")
     logger.debug("Confirming package: %s", dumped.get("inputs", {}).get("packageId"))
     return await client.confirm_package(dumped)
+
+
+@router.get("/refund-options/items")
+async def get_refund_options(
+    packageId: str,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.get_refund_options(packageId)
+
+
+@router.get("/change-options/items")
+async def get_change_options(
+    packageId: str,
+    client: OMSAClient = Depends(get_omsa_client),
+):
+    return await client.get_change_options(packageId)

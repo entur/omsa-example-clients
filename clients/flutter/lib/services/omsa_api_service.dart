@@ -174,11 +174,23 @@ class OmsaApiService {
     return _postJson(url: url, body: request.toJson());
   }
 
-  static Future<dynamic> fetchTravelDocuments({
+    return _getJson(url: url);
+  }
+
+  static Future<dynamic> fetchRefundOptions({
     required String packageId,
   }) async {
     final url = _resolveApi(
-      '/collections/travel-documents/items?packageId=$packageId',
+      '/processes/refund-options/items?packageId=$packageId',
+    );
+    return _getJson(url: url);
+  }
+
+  static Future<dynamic> fetchChangeOptions({
+    required String packageId,
+  }) async {
+    final url = _resolveApi(
+      '/processes/change-options/items?packageId=$packageId',
     );
     return _getJson(url: url);
   }
