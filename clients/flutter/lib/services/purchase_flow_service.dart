@@ -320,12 +320,10 @@ class PurchaseFlowService {
   }
 
   static Future<Map<String, dynamic>> executeClaimRefund({
-    required String packageId,
     required String refundOptionId,
   }) async {
-    _logger.i('Executing claim-refund-option for packageId=$packageId, optionId=$refundOptionId');
+    _logger.i('Executing claim-refund-option for optionId=$refundOptionId');
     final response = await OmsaApiService.claimRefund(
-      packageId: packageId,
       refundOptionId: refundOptionId,
     );
     _logger.i('Claim-refund response: $response');

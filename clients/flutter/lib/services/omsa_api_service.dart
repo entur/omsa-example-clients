@@ -217,7 +217,6 @@ class OmsaApiService {
   }
 
   static Future<Map<String, dynamic>> claimRefund({
-    required String packageId,
     required String refundOptionId,
   }) async {
     final url = _resolveApi('/processes/claim-refund-option/execute');

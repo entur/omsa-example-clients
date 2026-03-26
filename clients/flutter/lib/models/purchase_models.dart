@@ -280,7 +280,7 @@ class RefundOption {
         .toList();
 
     return RefundOption(
-      id: map['id']?.toString() ?? props['id']?.toString() ?? '',
+      id: props['id']?.toString() ?? map['id']?.toString() ?? '',
       refundType: props['refundType']?.toString(),
       consequences: consequences,
     );

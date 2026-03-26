@@ -56,25 +56,15 @@ class _TicketScreenState extends State<TicketScreen> {
     }
 
     try {
-      final results = await Future.wait([
-        PurchaseFlowService.fetchTravelDocuments(packageId: widget.packageId),
-        PurchaseFlowService.fetchRefundOptions(packageId: widget.packageId),
-        PurchaseFlowService.fetchChangeOptions(packageId: widget.packageId),
-      ]);
-
-      final documents = results[0] as List<TravelDocument>;
-      final refundOptions = results[1] as List<RefundOption>;
-      final changeOptions = results[2] as List<ChangeOption>;
+      final documents = await PurchaseFlowService.fetchTravelDocuments(
+        packageId: widget.packageId,
+      );
 
       await TicketWalletService.upsertPackage(
         packageId: widget.packageId,
         documents: documents,
       );
       if (!mounted) return;
-      setState(() {
-        _refundOptions = refundOptions;
-        _changeOptions = changeOptions;
-      });
       _applyDocuments(
         documents,
         preferredDocumentId: _currentDocument?.id ?? preferredDocumentId,
@@ -87,6 +77,20 @@ class _TicketScreenState extends State<TicketScreen> {
           _error = 'Failed to load ticket information: $error';
         }
       });
+    }
+
+    try {
+      final results = await Future.wait([
+        PurchaseFlowService.fetchRefundOptions(packageId: widget.packageId),
+        PurchaseFlowService.fetchChangeOptions(packageId: widget.packageId),
+      ]);
+      if (!mounted) return;
+      setState(() {
+        _refundOptions = results[0] as List<RefundOption>;
+        _changeOptions = results[1] as List<ChangeOption>;
+      });
+    } catch (_) {
+      // Management options are optional — ticket view is still functional without them.
     }
   }
 
@@ -114,7 +118,6 @@ class _TicketScreenState extends State<TicketScreen> {
     setState(() => _isLoading = true);
     try {
       await PurchaseFlowService.executeClaimRefund(
-        packageId: widget.packageId,
         refundOptionId: optionId,
       );
       if (mounted) {
