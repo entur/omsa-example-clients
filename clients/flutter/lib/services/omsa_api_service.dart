@@ -183,6 +183,53 @@ class OmsaApiService {
     return _getJson(url: url);
   }
 
+  static Future<dynamic> fetchRefundOptions({
+    required String packageId,
+  }) async {
+    final url = _resolveApi(
+      '/processes/refund-options/items?packageId=$packageId',
+    );
+    return _getJson(url: url);
+  }
+
+  static Future<dynamic> fetchChangeOptions({
+    required String packageId,
+  }) async {
+    final url = _resolveApi(
+      '/processes/change-options/items?packageId=$packageId',
+    );
+    return _getJson(url: url);
+  }
+
+  static Future<Map<String, dynamic>> cancelPackage({
+    required String packageId,
+  }) async {
+    final url = _resolveApi('/processes/cancel-package/execute');
+    final request = {
+      'inputs': {
+        'packageId': packageId,
+        'type': 'package_input',
+        'timestamp': DateTime.now().toUtc().toIso8601String(),
+      },
+    };
+
+    return _postJson(url: url, body: request);
+  }
+
+  static Future<Map<String, dynamic>> claimRefund({
+    required String refundOptionId,
+  }) async {
+    final url = _resolveApi('/processes/claim-refund-option/execute');
+    final request = {
+      'inputs': {
+        'type': 'claim_refund_option',
+        'optionId': refundOptionId,
+      },
+    };
+
+    return _postJson(url: url, body: request);
+  }
+
   static String _generateTravellerUuid() {
     return _uuid.v4();
   }

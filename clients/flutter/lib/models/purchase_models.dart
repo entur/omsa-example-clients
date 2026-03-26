@@ -261,3 +261,84 @@ class TravelDocument {
   }
 
 }
+
+class RefundOption {
+  final String id;
+  final String? refundType;
+  final List<FinancialDetail> consequences;
+
+  RefundOption({
+    required this.id,
+    this.refundType,
+    this.consequences = const [],
+  });
+
+  factory RefundOption.fromMap(Map<String, dynamic> map) {
+    final props = map['properties'] as Map<String, dynamic>? ?? {};
+    final consequences = (props['consequences'] as List<dynamic>? ?? [])
+        .map((c) => FinancialDetail.fromMap(c as Map<String, dynamic>))
+        .toList();
+
+    return RefundOption(
+      id: props['id']?.toString() ?? map['id']?.toString() ?? '',
+      refundType: props['refundType']?.toString(),
+      consequences: consequences,
+    );
+  }
+
+  double get totalRefundAmount {
+    return consequences.fold(0.0, (sum, detail) => sum + detail.amount);
+  }
+}
+
+class ChangeOption {
+  final String id;
+  final String? changeType;
+  final List<FinancialDetail> consequences;
+
+  ChangeOption({
+    required this.id,
+    this.changeType,
+    this.consequences = const [],
+  });
+
+  factory ChangeOption.fromMap(Map<String, dynamic> map) {
+    final props = map['properties'] as Map<String, dynamic>? ?? {};
+    final consequences = (props['consequences'] as List<dynamic>? ?? [])
+        .map((c) => FinancialDetail.fromMap(c as Map<String, dynamic>))
+        .toList();
+
+    return ChangeOption(
+      id: map['id']?.toString() ?? props['id']?.toString() ?? '',
+      changeType: props['changeType']?.toString(),
+      consequences: consequences,
+    );
+  }
+
+  double get totalFeeAmount {
+    return consequences.fold(0.0, (sum, detail) => sum + detail.amount);
+  }
+}
+
+class FinancialDetail {
+  final double amount;
+  final String currencyCode;
+  final String? category;
+
+  FinancialDetail({
+    required this.amount,
+    required this.currencyCode,
+    this.category,
+  });
+
+  factory FinancialDetail.fromMap(Map<String, dynamic> map) {
+    final amountMap = map['amount'] as Map<String, dynamic>? ?? {};
+    return FinancialDetail(
+      amount: (amountMap['amount'] is num)
+          ? (amountMap['amount'] as num).toDouble()
+          : 0.0,
+      currencyCode: amountMap['currencyCode']?.toString() ?? '',
+      category: map['category']?.toString(),
+    );
+  }
+}
