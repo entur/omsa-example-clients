@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Button } from "@entur/button";
 import PageShell from "../components/layout/PageShell";
 import { clearPackages, getPackages } from "../lib/ticket-storage";
 
@@ -20,7 +21,7 @@ function SettingsPage() {
 		<PageShell title="Settings">
 			<div className="mx-auto max-w-lg">
 				<section
-					className="rounded-xl p-5"
+					className="rounded-lg p-5"
 					style={{
 						background: "var(--wayfare-surface-strong)",
 						border: "1px solid var(--wayfare-line)",
@@ -49,26 +50,19 @@ function SettingsPage() {
 								locally
 							</p>
 						</div>
-						<button
-							type="button"
-							onClick={handleClear}
+						<Button
+							variant="secondary"
+							size="small"
 							disabled={cleared || count === 0}
-							className="rounded-lg px-3 py-1.5 text-xs font-semibold"
-							style={{
-								background: "rgba(233,0,55,0.08)",
-								border: "1px solid rgba(233,0,55,0.2)",
-								color: "var(--wayfare-primary)",
-								cursor: cleared || count === 0 ? "not-allowed" : "pointer",
-								opacity: cleared || count === 0 ? 0.5 : 1,
-							}}
+							onClick={handleClear}
 						>
 							{cleared ? "Cleared" : "Clear history"}
-						</button>
+						</Button>
 					</div>
 				</section>
 
 				<section
-					className="mt-4 rounded-xl p-5"
+					className="mt-4 rounded-lg p-5"
 					style={{
 						background: "var(--wayfare-surface-strong)",
 						border: "1px solid var(--wayfare-line)",

@@ -1,5 +1,11 @@
 import type { AmountOfMoney, Link } from "./common";
 
+export interface Subscriber {
+	successUri?: string;
+	inProgressUri?: string;
+	failedUri?: string;
+}
+
 export interface PurchaseOffersInputs {
 	type: "purchase_offers";
 	offerIds: string[];
@@ -8,6 +14,7 @@ export interface PurchaseOffersInputs {
 
 export interface PurchaseOffersRequest {
 	inputs: PurchaseOffersInputs;
+	subscriber?: Subscriber;
 }
 
 export interface PackageInput {
@@ -22,6 +29,7 @@ export interface ConfirmPackageRequest {
 
 export interface CancelPackageRequest {
 	inputs: PackageInput;
+	subscriber?: Subscriber;
 }
 
 export interface RefundOptionInput {
@@ -31,6 +39,7 @@ export interface RefundOptionInput {
 
 export interface ClaimRefundRequest {
 	inputs: RefundOptionInput;
+	subscriber?: Subscriber;
 }
 
 export type PackageStatus =

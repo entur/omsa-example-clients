@@ -1,3 +1,5 @@
+import { SecondarySquareButton } from "@entur/button";
+
 interface ErrorBannerProps {
 	message: string;
 	onDismiss?: () => void;
@@ -6,7 +8,7 @@ interface ErrorBannerProps {
 export default function ErrorBanner({ message, onDismiss }: ErrorBannerProps) {
 	return (
 		<div
-			className="flex items-start justify-between gap-3 rounded-xl px-4 py-3"
+			className="flex items-start justify-between gap-3 rounded-lg px-4 py-3"
 			role="alert"
 			style={{
 				background: "rgba(233,0,55,0.08)",
@@ -20,20 +22,9 @@ export default function ErrorBanner({ message, onDismiss }: ErrorBannerProps) {
 				{message}
 			</p>
 			{onDismiss && (
-				<button
-					type="button"
-					onClick={onDismiss}
-					className="shrink-0 text-lg leading-none"
-					style={{
-						background: "none",
-						border: "none",
-						color: "var(--wayfare-primary)",
-						cursor: "pointer",
-					}}
-					aria-label="Dismiss"
-				>
+				<SecondarySquareButton size="small" onClick={onDismiss} aria-label="Dismiss">
 					×
-				</button>
+				</SecondarySquareButton>
 			)}
 		</div>
 	);

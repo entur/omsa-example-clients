@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "@entur/button";
 import PageShell from "../../components/layout/PageShell";
 import TicketCard from "../../components/tickets/TicketCard";
 import { getPackages } from "../../lib/ticket-storage";
@@ -41,13 +42,9 @@ function TicketsPage() {
 					>
 						Your purchased tickets will appear here.
 					</p>
-					<Link
-						to="/"
-						className="mt-4 inline-block rounded-xl px-5 py-2.5 text-sm font-semibold no-underline"
-						style={{ background: "var(--wayfare-primary)", color: "#fff" }}
-					>
+					<Button variant="primary" as={Link} to="/" className="mt-4">
 						Search for tickets
-					</Link>
+					</Button>
 				</div>
 			</PageShell>
 		);

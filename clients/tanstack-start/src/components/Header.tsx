@@ -1,8 +1,12 @@
+import { useRouterState } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { TopNavigationItem } from "@entur/menu";
 import ThemeToggle from "./ThemeToggle";
 import WayfareWordmark from "./WayfareWordmark";
 
 export default function Header() {
+	const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 	return (
 		<header
 			className="sticky top-0 z-50 border-b backdrop-blur-lg"
@@ -20,37 +24,16 @@ export default function Header() {
 					<WayfareWordmark height={16} />
 				</Link>
 
-				<div className="ml-auto flex items-center gap-5">
-					<Link
-						to="/"
-						className="text-sm font-medium no-underline"
-						style={{ color: "var(--wayfare-text-secondary)" }}
-						activeProps={{
-							style: { color: "var(--wayfare-primary)", fontWeight: 700 },
-						}}
-					>
+				<div className="ml-auto flex items-center gap-2">
+					<TopNavigationItem as={Link} to="/" active={pathname === "/"}>
 						Search
-					</Link>
-					<Link
-						to="/tickets"
-						className="text-sm font-medium no-underline"
-						style={{ color: "var(--wayfare-text-secondary)" }}
-						activeProps={{
-							style: { color: "var(--wayfare-primary)", fontWeight: 700 },
-						}}
-					>
+					</TopNavigationItem>
+					<TopNavigationItem as={Link} to="/tickets" active={pathname.startsWith("/tickets")}>
 						Tickets
-					</Link>
-					<Link
-						to="/settings"
-						className="text-sm font-medium no-underline"
-						style={{ color: "var(--wayfare-text-secondary)" }}
-						activeProps={{
-							style: { color: "var(--wayfare-primary)", fontWeight: 700 },
-						}}
-					>
+					</TopNavigationItem>
+					<TopNavigationItem as={Link} to="/settings" active={pathname === "/settings"}>
 						Settings
-					</Link>
+					</TopNavigationItem>
 					<ThemeToggle />
 				</div>
 			</nav>

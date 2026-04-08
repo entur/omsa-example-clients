@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Button } from "@entur/button";
 import PageShell from "../../components/layout/PageShell";
 import DocumentViewer from "../../components/tickets/DocumentViewer";
 import {
@@ -69,7 +70,7 @@ function TicketDetailPage() {
 				</Link>
 
 				<div
-					className="mb-4 rounded-xl p-4"
+					className="mb-4 rounded-lg p-4"
 					style={{
 						background: "var(--wayfare-surface-strong)",
 						border: "1px solid var(--wayfare-line)",
@@ -183,20 +184,15 @@ function TicketDetailPage() {
 					</div>
 				)}
 
-				<button
-					type="button"
-					onClick={handleCancel}
+				<Button
+					variant="negative"
+					width="fluid"
 					disabled={cancelMutation.isPending}
-					className="w-full rounded-xl py-2.5 text-sm font-semibold"
-					style={{
-						background: "transparent",
-						border: "1px solid rgba(233,0,55,0.3)",
-						color: "var(--wayfare-primary)",
-						cursor: "pointer",
-					}}
+					loading={cancelMutation.isPending}
+					onClick={handleCancel}
 				>
-					{cancelMutation.isPending ? "Cancelling…" : "Cancel ticket"}
-				</button>
+					Cancel ticket
+				</Button>
 			</div>
 		</PageShell>
 	);

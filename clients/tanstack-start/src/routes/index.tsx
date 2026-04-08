@@ -1,11 +1,41 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Button } from "@entur/button";
+import { DatePicker, TimePicker } from "@entur/datepicker";
+import { SegmentedControl } from "@entur/form";
+import { GridContainer, GridItem } from "@entur/grid";
+import {
+	type CalendarDate,
+	type Time,
+	getLocalTimeZone,
+	parseDate,
+	parseTime,
+	today,
+} from "@internationalized/date";
+import { ClientOnly } from "@tanstack/react-router";
 import PageShell from "../components/layout/PageShell";
-import DepartureTimePicker from "../components/search/DepartureTimePicker";
 import LocationSearch from "../components/search/LocationSearch";
 import TravelerPicker from "../components/search/TravelerPicker";
-import ZoneSelector from "../components/search/ZoneSelector";
+import ZoneSearch from "../components/search/ZoneSearch";
 import { SearchFormProvider, useSearchForm } from "../context/search-form";
 import { useSearchOffers } from "../hooks/use-search-offers";
+
+function toCalendarDate(iso: string): CalendarDate | null {
+	if (!iso) return null;
+	try {
+		return parseDate(iso.slice(0, 10));
+	} catch {
+		return null;
+	}
+}
+
+function toTime(iso: string): Time | null {
+	if (!iso || iso.length < 16) return null;
+	try {
+		return parseTime(iso.slice(11, 16));
+	} catch {
+		return null;
+	}
+}
 
 export const Route = createFileRoute("/")({ component: SearchPage });
 
@@ -69,89 +99,147 @@ function SearchScreen() {
 
 	const canSearch = state.from && state.to && state.travelers.length > 0;
 
+	function handleDateChange(date: CalendarDate | null) {
+		if (!date) return;
+		const time = toTime(state.travelDate);
+		const timeStr = time
+			? `${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`
+			: "00:00";
+		dispatch({ type: "SET_TRAVEL_DATE", payload: `${date.toString()}T${timeStr}` });
+	}
+
+	function handleTimeChange(time: Time | null) {
+		if (!time) return;
+		const date = toCalendarDate(state.travelDate);
+		if (!date) return;
+		dispatch({
+			type: "SET_TRAVEL_DATE",
+			payload: `${date.toString()}T${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`,
+		});
+	}
+
 	return (
 		<PageShell
 			title="Where are you going?"
-			subtitle="Search for travel offers across Nord-Jæren"
+			subtitle="Plan your next trip in Norway"
 		>
 			<form
 				onSubmit={handleSearch}
-				className="rise-in mx-auto max-w-xl rounded-2xl p-6 shadow-sm"
+				className="rise-in mx-auto max-w-xl rounded-lg p-6"
 				style={{
 					background: "var(--wayfare-surface-strong)",
 					border: "1px solid var(--wayfare-line)",
 				}}
 			>
-				<div className="flex flex-col gap-4">
-					{/* Search type toggle */}
-					<div
-						className="flex overflow-hidden rounded-lg"
-						style={{ border: "1px solid var(--wayfare-line)" }}
+				<GridContainer spacing="small">
+				{/* Search type toggle */}
+				<GridItem small={12}>
+					<ClientOnly
+						fallback={<div className="h-10 w-full" aria-hidden="true" />}
 					>
-						{(["zone", "stop"] as const).map((type) => (
-							<button
-								key={type}
-								type="button"
-								onClick={() =>
-									dispatch({ type: "SET_SEARCH_TYPE", payload: type })
+						<SegmentedControl
+							value={state.searchType}
+							onChange={(value) => {
+								if (value === "zone" || value === "stop") {
+									dispatch({ type: "SET_SEARCH_TYPE", payload: value });
 								}
-								className="flex-1 py-2 text-sm font-medium transition-colors"
-								style={{
-									background:
-										state.searchType === type
-											? "var(--wayfare-primary)"
-											: "transparent",
-									color:
-										state.searchType === type
-											? "#fff"
-											: "var(--wayfare-text-secondary)",
-									border: "none",
-									cursor: "pointer",
-								}}
-							>
-								{type === "zone" ? "Zone to Zone" : "Stop to Stop"}
-							</button>
-						))}
-					</div>
+							}}
+						>
+							<SegmentedControl.Item value="zone">
+								Zone to Zone
+							</SegmentedControl.Item>
+							<SegmentedControl.Item value="stop">
+								Stop to Stop
+							</SegmentedControl.Item>
+						</SegmentedControl>
+					</ClientOnly>
+				</GridItem>
 
-					{/* Location inputs */}
-					{state.searchType === "zone" ? (
-						<ZoneSelector
-							from={state.from}
-							to={state.to}
-							onFromChange={(z) => dispatch({ type: "SET_FROM", payload: z })}
-							onToChange={(z) => dispatch({ type: "SET_TO", payload: z })}
-						/>
-					) : (
-						<div className="grid gap-3 sm:grid-cols-2">
+				{/* Location inputs */}
+				{state.searchType === "zone" ? (
+					<>
+						<GridItem small={12} medium={6}>
+							<ZoneSearch
+								label="From"
+								value={state.from}
+								placeholder="Search departure zone…"
+								onChange={(z) => dispatch({ type: "SET_FROM", payload: z })}
+							/>
+						</GridItem>
+						<GridItem small={12} medium={6}>
+							<ZoneSearch
+								label="To"
+								value={state.to}
+								placeholder="Search destination zone…"
+								onChange={(z) => dispatch({ type: "SET_TO", payload: z })}
+							/>
+						</GridItem>
+					</>
+				) : (
+					<>
+						<GridItem small={12} medium={6}>
 							<LocationSearch
-								id="stop-from"
 								label="From"
 								value={state.from}
 								placeholder="Search departure stop…"
 								onChange={(p) => dispatch({ type: "SET_FROM", payload: p })}
 							/>
+						</GridItem>
+						<GridItem small={12} medium={6}>
 							<LocationSearch
-								id="stop-to"
 								label="To"
 								value={state.to}
 								placeholder="Search destination stop…"
 								onChange={(p) => dispatch({ type: "SET_TO", payload: p })}
 							/>
-						</div>
-					)}
+						</GridItem>
+					</>
+				)}
 
-					<DepartureTimePicker
-						value={state.travelDate}
-						onChange={(v) => dispatch({ type: "SET_TRAVEL_DATE", payload: v })}
-					/>
+				{/* Date / Time pickers */}
+				<GridItem small={12} medium={6}>
+					<ClientOnly
+						fallback={<div className="h-14 w-full" aria-hidden="true" />}
+					>
+						<DatePicker
+							className="w-full"
+							label="Departure date"
+							selectedDate={toCalendarDate(state.travelDate)}
+							onChange={handleDateChange}
+							minDate={today(getLocalTimeZone())}
+							disableModal
+						/>
+					</ClientOnly>
+				</GridItem>
+				<GridItem small={12} medium={6}>
+					<ClientOnly
+						fallback={<div className="h-14 w-full" aria-hidden="true" />}
+					>
+						<TimePicker
+							className="w-full"
+							label="Departure time"
+							selectedTime={toTime(state.travelDate)}
+							onChange={handleTimeChange}
+							forcedReturnType="Time"
+						/>
+					</ClientOnly>
+				</GridItem>
 
-					<TravelerPicker
-						travelers={state.travelers}
-						onChange={(t) => dispatch({ type: "SET_TRAVELERS", payload: t })}
-					/>
+				{/* Traveler picker */}
+				<GridItem small={12}>
+					<ClientOnly
+						fallback={<div className="h-12 w-full" aria-hidden="true" />}
+					>
+						<TravelerPicker
+							travelers={state.travelers}
+							onChange={(t) => dispatch({ type: "SET_TRAVELERS", payload: t })}
+						/>
+					</ClientOnly>
+				</GridItem>
 
-					{error && (
+				{/* Error message */}
+				{error && (
+					<GridItem small={12}>
 						<p
 							className="rounded-lg px-3 py-2 text-sm"
 							style={{
@@ -161,24 +249,22 @@ function SearchScreen() {
 						>
 							{error.message}
 						</p>
-					)}
+					</GridItem>
+				)}
 
-					<button
+				{/* Submit */}
+				<GridItem small={12}>
+					<Button
 						type="submit"
-						disabled={isPending || !canSearch}
-						className="mt-1 w-full rounded-xl py-3 text-sm font-bold transition"
-						style={{
-							background: canSearch
-								? "var(--wayfare-primary)"
-								: "var(--wayfare-line)",
-							color: canSearch ? "#fff" : "var(--wayfare-text-secondary)",
-							border: "none",
-							cursor: canSearch ? "pointer" : "not-allowed",
-						}}
+						variant="primary"
+						width="fluid"
+						disabled={!canSearch}
+						loading={isPending}
 					>
-						{isPending ? "Searching…" : "Search offers"}
-					</button>
-				</div>
+						Search offers
+					</Button>
+				</GridItem>
+			</GridContainer>
 			</form>
 		</PageShell>
 	);

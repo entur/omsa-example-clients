@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Button } from "@entur/button";
 
 interface PurchaseSuccessProps {
 	packageId: string;

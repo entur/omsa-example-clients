@@ -12,7 +12,7 @@ export default function TicketCard({ pkg }: TicketCardProps) {
 		<Link
 			to="/tickets/$packageId"
 			params={{ packageId: pkg.packageId }}
-			className="block rounded-xl p-4 no-underline transition"
+			className="block rounded-lg p-4 no-underline transition"
 			style={{
 				background: "var(--wayfare-surface-strong)",
 				border: "1px solid var(--wayfare-line)",

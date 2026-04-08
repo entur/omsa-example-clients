@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PrimaryButton, SecondaryButton } from "@entur/button";
 import { useState } from "react";
 import PaymentMethodPicker from "../../components/checkout/PaymentMethodPicker";
 import PurchaseProgress from "../../components/checkout/PurchaseProgress";
@@ -106,7 +107,7 @@ function CheckoutScreen() {
 				)}
 
 				<div
-					className="mb-4 rounded-xl p-4"
+					className="mb-4 rounded-lg p-4"
 					style={{
 						background: "var(--wayfare-surface-strong)",
 						border: "1px solid var(--wayfare-line)",
@@ -137,7 +138,7 @@ function CheckoutScreen() {
 				</div>
 
 				<div
-					className="mb-6 rounded-xl p-4"
+					className="mb-6 rounded-lg p-4"
 					style={{
 						background: "var(--wayfare-surface-strong)",
 						border: "1px solid var(--wayfare-line)",
@@ -162,38 +163,17 @@ function CheckoutScreen() {
 				)}
 
 				<div className="flex gap-3">
-					<Link
-						to="/offers"
-						className="flex-1 rounded-xl py-3 text-center text-sm font-semibold no-underline"
-						style={{
-							background: "var(--wayfare-surface-strong)",
-							border: "1px solid var(--wayfare-line)",
-							color: "var(--wayfare-text)",
-						}}
-					>
+					<SecondaryButton as={Link} to="/offers" width="fluid">
 						Back
-					</Link>
-					<button
-						type="button"
-						onClick={handlePurchase}
+					</SecondaryButton>
+					<PrimaryButton
+						width="fluid"
 						disabled={!paymentMethod || isProcessing}
-						className="flex-1 rounded-xl py-3 text-sm font-bold transition"
-						style={{
-							background:
-								paymentMethod && !isProcessing
-									? "var(--wayfare-primary)"
-									: "var(--wayfare-line)",
-							color:
-								paymentMethod && !isProcessing
-									? "#fff"
-									: "var(--wayfare-text-secondary)",
-							border: "none",
-							cursor:
-								paymentMethod && !isProcessing ? "pointer" : "not-allowed",
-						}}
+						loading={isProcessing}
+						onClick={handlePurchase}
 					>
-						{isProcessing ? "Processing…" : "Confirm & pay"}
-					</button>
+						Confirm & pay
+					</PrimaryButton>
 				</div>
 			</div>
 		</PageShell>

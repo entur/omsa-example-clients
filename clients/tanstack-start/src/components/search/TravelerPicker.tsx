@@ -1,4 +1,11 @@
 import { useState } from "react";
+import { Button, SecondarySquareButton } from "@entur/button";
+import {
+	Popover,
+	PopoverCloseButton,
+	PopoverContent,
+	PopoverTrigger,
+} from "@entur/tooltip";
 import type { TravelerGroup } from "../../context/search-form";
 
 const GROUPS: {
@@ -25,6 +32,8 @@ export default function TravelerPicker({
 	const [open, setOpen] = useState(false);
 
 	const total = travelers.reduce((sum, t) => sum + t.count, 0);
+	const summary =
+		total === 0 ? "Add travelers" : `${total} traveler${total !== 1 ? "s" : ""}`;
 
 	function getCount(ageGroup: TravelerGroup["ageGroup"]) {
 		return travelers.find((t) => t.ageGroup === ageGroup)?.count ?? 0;
@@ -50,116 +59,76 @@ export default function TravelerPicker({
 		}
 	}
 
-	const btnStyle: React.CSSProperties = {
-		border: `1px solid var(--wayfare-line)`,
-		background: "var(--wayfare-surface-strong)",
-		color: "var(--wayfare-text)",
-		borderRadius: 8,
-		padding: "10px 14px",
-		fontSize: 14,
-		cursor: "pointer",
-		width: "100%",
-		textAlign: "left",
-	};
-
 	return (
-		<div className="relative">
-			<p
-				className="mb-1 block text-xs font-semibold uppercase tracking-wide"
-				style={{ color: "var(--wayfare-text-secondary)" }}
-			>
-				Travelers
-			</p>
-			<button type="button" style={btnStyle} onClick={() => setOpen((o) => !o)}>
-				{total === 0
-					? "Add travelers"
-					: `${total} traveler${total !== 1 ? "s" : ""}`}
-			</button>
-
-			{open && (
-				<div
-					className="absolute left-0 right-0 top-full z-10 mt-1 rounded-xl p-4 shadow-lg"
-					style={{
-						background: "var(--wayfare-surface-strong)",
-						border: `1px solid var(--wayfare-line)`,
-					}}
-				>
-					{GROUPS.map((group) => (
-						<div
-							key={group.id}
-							className="flex items-center justify-between py-2"
-						>
-							<div>
+		<Popover showPopover={open} setShowPopover={setOpen}>
+			<PopoverTrigger>
+				<Button type="button" variant="secondary" width="fluid">
+					{summary}
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="p-4" style={{ minWidth: "260px" }}>
+				{GROUPS.map((group) => (
+					<div
+						key={group.id}
+						className="flex items-center justify-between py-2"
+					>
+						<div>
+							<span
+								className="text-sm font-medium"
+								style={{ color: "var(--wayfare-text)" }}
+							>
+								{group.label}
+							</span>
+							{(group.minAge !== undefined || group.maxAge !== undefined) && (
 								<span
-									className="text-sm font-medium"
-									style={{ color: "var(--wayfare-text)" }}
+									className="ml-2 text-xs"
+									style={{ color: "var(--wayfare-text-secondary)" }}
 								>
-									{group.label}
+									{group.minAge && group.maxAge
+										? `${group.minAge}–${group.maxAge} yrs`
+										: group.minAge
+											? `${group.minAge}+ yrs`
+											: ""}
 								</span>
-								{(group.minAge !== undefined || group.maxAge !== undefined) && (
-									<span
-										className="ml-2 text-xs"
-										style={{ color: "var(--wayfare-text-secondary)" }}
-									>
-										{group.minAge && group.maxAge
-											? `${group.minAge}–${group.maxAge} yrs`
-											: group.minAge
-												? `${group.minAge}+ yrs`
-												: ""}
-									</span>
-								)}
-							</div>
-							<div className="flex items-center gap-3">
-								<button
-									type="button"
-									onClick={() => setCount(group.id, getCount(group.id) - 1)}
-									className="flex h-7 w-7 items-center justify-center rounded-full text-lg font-bold"
-									style={{
-										background: "var(--wayfare-accent-soft)",
-										color: "var(--wayfare-primary)",
-										border: "none",
-										cursor: "pointer",
-									}}
-								>
-									−
-								</button>
-								<span
-									className="w-4 text-center text-sm font-semibold"
-									style={{ color: "var(--wayfare-text)" }}
-								>
-									{getCount(group.id)}
-								</span>
-								<button
-									type="button"
-									onClick={() => setCount(group.id, getCount(group.id) + 1)}
-									className="flex h-7 w-7 items-center justify-center rounded-full text-lg font-bold"
-									style={{
-										background: "var(--wayfare-accent-soft)",
-										color: "var(--wayfare-primary)",
-										border: "none",
-										cursor: "pointer",
-									}}
-								>
-									+
-								</button>
-							</div>
+							)}
 						</div>
-					))}
-					<button
+						<div className="flex items-center gap-3">
+							<SecondarySquareButton
+								size="small"
+								type="button"
+								onClick={() => setCount(group.id, getCount(group.id) - 1)}
+								aria-label={`Remove ${group.label}`}
+							>
+								−
+							</SecondarySquareButton>
+							<span
+								className="w-4 text-center text-sm font-semibold"
+								style={{ color: "var(--wayfare-text)" }}
+							>
+								{getCount(group.id)}
+							</span>
+							<SecondarySquareButton
+								size="small"
+								type="button"
+								onClick={() => setCount(group.id, getCount(group.id) + 1)}
+								aria-label={`Add ${group.label}`}
+							>
+								+
+							</SecondarySquareButton>
+						</div>
+					</div>
+				))}
+				<PopoverCloseButton>
+					<Button
 						type="button"
-						onClick={() => setOpen(false)}
-						className="mt-3 w-full rounded-lg py-2 text-sm font-semibold"
-						style={{
-							background: "var(--wayfare-primary)",
-							color: "#fff",
-							border: "none",
-							cursor: "pointer",
-						}}
+						variant="secondary"
+						width="fluid"
+						className="mt-3"
 					>
 						Done
-					</button>
-				</div>
-			)}
-		</div>
+					</Button>
+				</PopoverCloseButton>
+			</PopoverContent>
+		</Popover>
 	);
 }

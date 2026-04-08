@@ -17,14 +17,12 @@ export default function ZoneSelector({
 	return (
 		<div className="grid gap-3 sm:grid-cols-2">
 			<ZoneSearch
-				id="zone-from"
 				label="From"
 				value={from}
 				placeholder="Search departure zone…"
 				onChange={onFromChange}
 			/>
 			<ZoneSearch
-				id="zone-to"
 				label="To"
 				value={to}
 				placeholder="Search destination zone…"

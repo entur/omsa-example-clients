@@ -16,7 +16,7 @@ export default function Footer() {
 					<WayfareWordmark height={16} />
 				</div>
 				<p className="m-0 text-xs">
-					&copy; {year} Wayfare. Built on TanStack Start.
+					&copy; {year} Wayfare | All rights reserved
 				</p>
 			</div>
 		</footer>

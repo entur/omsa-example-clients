@@ -1,6 +1,23 @@
+import { type CalendarDateTime, DatePicker } from "@entur/datepicker";
+import {
+	getLocalTimeZone,
+	parseDateTime,
+	today,
+} from "@internationalized/date";
+import { ClientOnly } from "@tanstack/react-router";
+
 interface DepartureTimePickerProps {
 	value: string;
 	onChange: (value: string) => void;
+}
+
+function toCalendarDateTime(iso: string): CalendarDateTime | null {
+	if (!iso) return null;
+	try {
+		return parseDateTime(iso) as CalendarDateTime;
+	} catch {
+		return null;
+	}
 }
 
 export default function DepartureTimePicker({
@@ -8,27 +25,17 @@ export default function DepartureTimePicker({
 	onChange,
 }: DepartureTimePickerProps) {
 	return (
-		<div>
-			<label
-				htmlFor="depart-time"
-				className="mb-1 block text-xs font-semibold uppercase tracking-wide"
-				style={{ color: "var(--wayfare-text-secondary)" }}
-			>
-				Departure
-			</label>
-			<input
-				id="depart-time"
-				type="datetime-local"
-				value={value}
-				onChange={(e) => onChange(e.target.value)}
-				className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:ring-2"
-				style={{
-					borderColor: "var(--wayfare-line)",
-					background: "var(--wayfare-surface-strong)",
-					color: "var(--wayfare-text)",
-					colorScheme: "light dark",
+		<ClientOnly fallback={<div className="h-14 w-full" aria-hidden="true" />}>
+			<DatePicker
+				label="Departure"
+				selectedDate={toCalendarDateTime(value)}
+				onChange={(dt) => {
+					if (dt) onChange(dt.toString().slice(0, 16));
 				}}
+				showTime
+				minDate={today(getLocalTimeZone())}
+				disableModal
 			/>
-		</div>
+		</ClientOnly>
 	);
 }

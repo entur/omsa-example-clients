@@ -13,9 +13,13 @@ export const purchaseOffers = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.inputValidator((data: PurchaseOffersRequest) => data)
 	.handler(async ({ data }) => {
+		const body: PurchaseOffersRequest = {
+			...data,
+			subscriber: { successUri: "https://example.com" },
+		};
 		return omsa.post<ConfirmedPackage>(
 			"/processes/purchase-offers/execute",
-			data,
+			body,
 		);
 	});
 

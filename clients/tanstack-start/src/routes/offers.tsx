@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { PrimaryButton, SecondaryButton } from "@entur/button";
+import { RadioGroup } from "@entur/form";
 import { TravelHeader } from "@entur/travel";
 import OfferCard from "../components/checkout/OfferCard";
 import PageShell from "../components/layout/PageShell";
@@ -84,7 +86,7 @@ function OffersScreen() {
 			<div className="mx-auto max-w-xl">
 				{context && (
 					<div
-						className="mb-5 rounded-2xl p-4"
+						className="mb-5 rounded-lg p-4"
 						style={{
 							background: "var(--wayfare-surface-strong)",
 							border: "1px solid var(--wayfare-line)",
@@ -106,45 +108,29 @@ function OffersScreen() {
 					</div>
 				)}
 
-				<div className="flex flex-col gap-3">
-					{offers.map((offer) => (
-						<OfferCard
-							key={offer.id}
-							offer={offer}
-							selected={selectedId === offer.id}
-							onSelect={() => setSelectedId(offer.id ?? null)}
-						/>
-					))}
-				</div>
+				<RadioGroup
+					name="offer-selection"
+					value={selectedId}
+					onChange={(e) => setSelectedId(e.target.value)}
+				>
+					<div className="flex flex-col gap-3">
+						{offers.map((offer) => (
+							<OfferCard key={offer.id} offer={offer} />
+						))}
+					</div>
+				</RadioGroup>
 
 				<div className="mt-6 flex gap-3">
-					<Link
-						to="/"
-						className="flex-1 rounded-xl py-3 text-center text-sm font-semibold no-underline"
-						style={{
-							background: "var(--wayfare-surface-strong)",
-							border: "1px solid var(--wayfare-line)",
-							color: "var(--wayfare-text)",
-						}}
-					>
+					<SecondaryButton as={Link} to="/" width="fluid">
 						Back
-					</Link>
-					<button
-						type="button"
-						onClick={handleContinue}
+					</SecondaryButton>
+					<PrimaryButton
+						width="fluid"
 						disabled={!selectedId}
-						className="flex-1 rounded-xl py-3 text-sm font-bold transition"
-						style={{
-							background: selectedId
-								? "var(--wayfare-primary)"
-								: "var(--wayfare-line)",
-							color: selectedId ? "#fff" : "var(--wayfare-text-secondary)",
-							border: "none",
-							cursor: selectedId ? "pointer" : "not-allowed",
-						}}
+						onClick={handleContinue}
 					>
 						Continue to checkout
-					</button>
+					</PrimaryButton>
 				</div>
 			</div>
 		</PageShell>

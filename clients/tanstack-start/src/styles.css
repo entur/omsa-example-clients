@@ -4,13 +4,17 @@
 @import "@entur/typography/dist/styles.css";
 @import "@entur/layout/dist/styles.css";
 @import "@entur/loader/dist/styles.css";
+@import "@entur/expand/dist/styles.css";
 @import "@entur/button/dist/styles.css";
+@import "@entur/menu/dist/styles.css";
 @import "@entur/modal/dist/styles.css";
 @import "@entur/tooltip/dist/styles.css";
 @import "@entur/form/dist/styles.css";
 @import "@entur/chip/dist/styles.css";
+@import "@entur/datepicker/dist/styles.css";
 @import "@entur/travel/dist/styles.css";
 @import "@entur/dropdown/dist/styles.css";
+@import "@entur/grid/dist/styles.css";
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -33,7 +37,7 @@
 	--wayfare-accent-soft: rgba(233, 0, 55, 0.08);
 }
 
-:root[data-theme="dark"] {
+:root[data-color-mode="dark"] {
 	--wayfare-primary: #ff3355;
 	--wayfare-primary-hover: #ff5577;
 	--wayfare-text: #e8eaed;
@@ -46,19 +50,44 @@
 	--wayfare-accent-soft: rgba(255, 51, 85, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) {
-		--wayfare-primary: #ff3355;
-		--wayfare-primary-hover: #ff5577;
-		--wayfare-text: #e8eaed;
-		--wayfare-text-secondary: #9aa3ae;
-		--wayfare-surface: rgba(30, 34, 40, 0.92);
-		--wayfare-surface-strong: #1e2228;
-		--wayfare-bg: #12151a;
-		--wayfare-line: rgba(232, 234, 237, 0.12);
-		--wayfare-header-bg: rgba(18, 21, 26, 0.88);
-		--wayfare-accent-soft: rgba(255, 51, 85, 0.1);
-	}
+/* Make Entur date/time fields fill their container */
+.eds-datefield,
+.eds-datefield .eds-form-control-wrapper,
+.eds-timepicker,
+.eds-timepicker .eds-form-control-wrapper {
+	width: 100%;
+}
+
+/* Switch timepicker wrapper from inline-flex to flex so it fills its parent
+   and reorder children: field | < > */
+.eds-timepicker .eds-form-control-wrapper {
+	display: flex;
+	justify-content: flex-start;
+	padding-left: 1rem;
+	padding-right: 0;
+}
+
+.eds-timepicker .eds-input-group {
+	flex: 1;
+	order: 1;
+}
+
+.eds-timepicker .eds-form-control__prepend {
+	order: 2;
+	margin-right: 0;
+	margin-left: auto;
+}
+
+.eds-timepicker .eds-form-control__append {
+	order: 3;
+	margin-left: 2px;
+	margin-right: 4px;
+}
+
+/* Zero out the built-in arrowbutton margins — spacing is handled by the
+   containers above to match the DatePicker calendar icon alignment */
+.eds-timepicker .eds-timepicker__arrowbutton {
+	margin: 0;
 }
 
 * {
@@ -81,12 +110,12 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-a {
+a:not([class]) {
 	color: var(--wayfare-primary);
 	text-decoration: none;
 }
 
-a:hover {
+a:not([class]):hover {
 	text-decoration: underline;
 }
 
