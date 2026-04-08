@@ -1,14 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import {
 	getChangeOptions,
+	getPackageItem,
 	getRefundOptions,
 	getTravelDocuments,
 } from "../server-functions/documents";
 import type {
 	ChangeOptionCollection,
+	PackageItem,
 	RefundOptionCollection,
 	TravelDocumentCollection,
 } from "../types/documents";
+
+export function usePackageItem(packageId: string | null) {
+	return useQuery<PackageItem>({
+		queryKey: ["package-item", packageId],
+		queryFn: () => getPackageItem({ data: packageId ?? "" }),
+		enabled: !!packageId,
+		staleTime: 60_000,
+	});
+}
 
 export function useTravelDocuments(packageId: string | null) {
 	return useQuery<TravelDocumentCollection>({

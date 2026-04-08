@@ -8,14 +8,14 @@ import { savePackage } from "../lib/ticket-storage";
 export const Route = createFileRoute("/payment-return")({
 	validateSearch: (search: Record<string, unknown>) => ({
 		packageId: search.packageId as string | undefined,
-		paymentId: search.paymentId as string | undefined,
-		transactionId: search.transactionId as string | undefined,
+		enturPaymentId: search.enturPaymentId as string | undefined,
+		enturTransactionId: search.enturTransactionId as string | undefined,
 	}),
 	component: PaymentReturnPage,
 });
 
 function PaymentReturnPage() {
-	const { packageId, paymentId, transactionId } = Route.useSearch();
+	const { packageId, enturPaymentId, enturTransactionId } = Route.useSearch();
 	const navigate = useNavigate();
 	const captureMutation = useCaptureTransaction();
 	const confirmMutation = useConfirmPackage();
@@ -28,8 +28,11 @@ function PaymentReturnPage() {
 
 		async function complete() {
 			try {
-				if (paymentId && transactionId) {
-					await captureMutation.mutateAsync({ paymentId, transactionId });
+				if (enturPaymentId && enturTransactionId) {
+					await captureMutation.mutateAsync({
+						paymentId: enturPaymentId,
+						transactionId: enturTransactionId,
+					});
 				}
 				const confirmed = await confirmMutation.mutateAsync({
 					inputs: { type: "package", packageId: packageId ?? "" },
@@ -59,8 +62,8 @@ function PaymentReturnPage() {
 		captureMutation.mutateAsync,
 		confirmMutation.mutateAsync,
 		navigate,
-		paymentId,
-		transactionId,
+		enturPaymentId,
+		enturTransactionId,
 	]);
 
 	return (

@@ -1,12 +1,13 @@
 import type { Link } from "./common";
 
 export interface BinaryTicketDocument {
-	type: "binaryTicket";
+	type: "binary_ticket";
 	contentType: string;
 	base64: string;
 	startvalidity: string;
 	endvalidity: string;
 	travelDocumentType?: string;
+	status?: string;
 	version?: string;
 }
 
@@ -87,4 +88,21 @@ export interface StoredPackage {
 	status: string;
 	price: { amount: number; currencyCode?: string };
 	offerIds?: string[];
+}
+
+export interface PackageItemProperties {
+	type?: string;
+	status?: string;
+	from?: { placeId?: string; name?: string };
+	to?: { placeId?: string; name?: string };
+	startTime?: string;
+	endTime?: string;
+	purchaseDate?: string;
+	price?: { amount: number; currencyCode?: string };
+}
+
+export interface PackageItem {
+	id?: string;
+	properties?: PackageItemProperties;
+	links?: { href: string; rel: string; type?: string; method?: string }[];
 }

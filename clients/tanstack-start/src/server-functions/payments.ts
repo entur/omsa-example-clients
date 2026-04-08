@@ -4,6 +4,7 @@ import { sales } from "../server/omsa-client";
 import type {
 	PaymentRequest,
 	PaymentSessionResult,
+	TerminalSessionResult,
 	TransactionStatus,
 } from "../types/purchase";
 
@@ -25,7 +26,7 @@ export const startTerminalSession = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.inputValidator((data: TerminalSessionRequest) => data)
 	.handler(async ({ data }) => {
-		return sales.post<{ status?: string; id?: string }>(
+		return sales.post<TerminalSessionResult>(
 			`/payments/${data.paymentId}/transactions/${data.transactionId}/terminal`,
 			{
 				redirectUrl: data.redirectUrl,

@@ -3,6 +3,7 @@ import { Button } from "@entur/button";
 import PageShell from "../../components/layout/PageShell";
 import DocumentViewer from "../../components/tickets/DocumentViewer";
 import {
+	usePackageItem,
 	useRefundOptions,
 	useTravelDocuments,
 } from "../../hooks/use-documents";
@@ -18,6 +19,7 @@ function TicketDetailPage() {
 	const navigate = useNavigate();
 
 	const pkg = getPackage(packageId);
+	const { data: packageItem } = usePackageItem(packageId);
 	const { data: docCollection, isLoading: docsLoading } =
 		useTravelDocuments(packageId);
 	const { data: refundCollection } = useRefundOptions(packageId);
@@ -58,6 +60,24 @@ function TicketDetailPage() {
 	const documents = docCollection?.travelDocuments ?? [];
 	const refundOptions = refundCollection?.options ?? [];
 
+	const itemProps = packageItem?.properties;
+	const from = itemProps?.from?.name;
+	const to = itemProps?.to?.name;
+	const validFrom = itemProps?.startTime ? new Date(itemProps.startTime) : null;
+	const validTo = itemProps?.endTime ? new Date(itemProps.endTime) : null;
+	const purchased = new Date(pkg.savedAt);
+
+	const formatDateTime = (d: Date) =>
+		d.toLocaleString("en-GB", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+	const formatDate = (d: Date) =>
+		d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
 	return (
 		<PageShell title="Ticket details">
 			<div className="mx-auto max-w-xl">
@@ -76,40 +96,75 @@ function TicketDetailPage() {
 						border: "1px solid var(--wayfare-line)",
 					}}
 				>
-					<p
-						className="text-xs font-semibold uppercase tracking-wide"
-						style={{ color: "var(--wayfare-text-secondary)" }}
+					<div className="flex items-start justify-between gap-3">
+						<div className="min-w-0 flex-1">
+							{from && to ? (
+								<p
+									className="text-base font-bold"
+									style={{ color: "var(--wayfare-text)", margin: 0 }}
+								>
+									{from} → {to}
+								</p>
+							) : (
+								<p
+									className="font-mono text-sm"
+									style={{ color: "var(--wayfare-text)", margin: 0 }}
+								>
+									{pkg.packageId}
+								</p>
+							)}
+						</div>
+						<div className="shrink-0 text-right">
+							<p
+								className="text-base font-bold"
+								style={{ color: "var(--wayfare-primary)", margin: 0 }}
+							>
+								{pkg.price.currencyCode ?? "NOK"} {pkg.price.amount.toFixed(2)}
+							</p>
+							<span
+								className="mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold"
+								style={{
+									background:
+										pkg.status === "CONFIRMED"
+											? "rgba(0,160,80,0.1)"
+											: "var(--wayfare-accent-soft)",
+									color:
+										pkg.status === "CONFIRMED"
+											? "#006630"
+											: "var(--wayfare-primary)",
+								}}
+							>
+								{pkg.status}
+							</span>
+						</div>
+					</div>
+
+					<div
+						className="mt-3 grid gap-y-2 border-t pt-3 text-sm"
+						style={{ borderColor: "var(--wayfare-line)" }}
 					>
-						Package
-					</p>
-					<p
-						className="mt-1 font-mono text-sm"
-						style={{ color: "var(--wayfare-text)" }}
-					>
-						{pkg.packageId}
-					</p>
-					<div className="mt-2 flex items-center justify-between">
-						<span
-							className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-							style={{
-								background:
-									pkg.status === "CONFIRMED"
-										? "rgba(0,160,80,0.1)"
-										: "var(--wayfare-accent-soft)",
-								color:
-									pkg.status === "CONFIRMED"
-										? "#006630"
-										: "var(--wayfare-primary)",
-							}}
-						>
-							{pkg.status}
-						</span>
-						<p
-							className="text-sm font-bold"
-							style={{ color: "var(--wayfare-primary)", margin: 0 }}
-						>
-							{pkg.price.currencyCode ?? "NOK"} {pkg.price.amount.toFixed(2)}
-						</p>
+						{validFrom && validTo && (
+							<>
+								<div className="flex justify-between gap-4">
+									<span style={{ color: "var(--wayfare-text-secondary)" }}>Valid from</span>
+									<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(validFrom)}</span>
+								</div>
+								<div className="flex justify-between gap-4">
+									<span style={{ color: "var(--wayfare-text-secondary)" }}>Valid to</span>
+									<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(validTo)}</span>
+								</div>
+							</>
+						)}
+						<div className="flex justify-between gap-4">
+							<span style={{ color: "var(--wayfare-text-secondary)" }}>Purchased</span>
+							<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(purchased)}</span>
+						</div>
+						{(!from || !to) && (
+							<div className="flex justify-between gap-4">
+								<span style={{ color: "var(--wayfare-text-secondary)" }}>Package ID</span>
+								<span className="font-mono text-xs" style={{ color: "var(--wayfare-text)" }}>{pkg.packageId}</span>
+							</div>
+						)}
 					</div>
 				</div>
 
@@ -160,8 +215,8 @@ function TicketDetailPage() {
 												className="ml-2 font-semibold"
 												style={{ color: "var(--wayfare-primary)" }}
 											>
-												{opt.properties.consequences[0].currencyCode ?? "NOK"}{" "}
-												{opt.properties.consequences[0].amount.toFixed(2)}
+												{opt.properties.consequences[0].amount.currencyCode ?? "NOK"}{" "}
+												{opt.properties.consequences[0].amount.amount.toFixed(2)}
 											</span>
 										)}
 									</p>

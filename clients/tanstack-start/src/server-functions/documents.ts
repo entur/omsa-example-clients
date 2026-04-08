@@ -3,9 +3,19 @@ import { authMiddleware } from "../server/middleware";
 import { omsa } from "../server/omsa-client";
 import type {
 	ChangeOptionCollection,
+	PackageItem,
 	RefundOptionCollection,
 	TravelDocumentCollection,
 } from "../types/documents";
+
+export const getPackageItem = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.inputValidator((packageId: string) => packageId)
+	.handler(async ({ data: packageId }) => {
+		return omsa.get<PackageItem>(
+			`/collections/packages/items/${encodeURIComponent(packageId)}`,
+		);
+	});
 
 export const getTravelDocuments = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])

@@ -65,13 +65,20 @@ export interface ConfirmedPackage {
 	id?: string;
 	status: PackageStatus;
 	price: AmountOfMoney;
+	orderVersion?: number;
 	links?: Link[];
 }
+
+export type CardPaymentType = "VISA" | "MASTERCARD" | "AMEX" | "BANKAXEPT";
+export type OtherPaymentType = "VIPPS" | "GIFTCARD" | "INTERNAL";
+export type PaymentType = CardPaymentType | OtherPaymentType;
 
 export interface PaymentTransaction {
 	amount: string;
 	currency: string;
-	paymentType: string;
+	paymentType: PaymentType;
+	isImport?: boolean;
+	paymentTypeGroup?: string;
 }
 
 export interface PaymentRequest {
@@ -81,6 +88,28 @@ export interface PaymentRequest {
 	transaction: PaymentTransaction;
 }
 
+export interface TransactionHistoryItem {
+	transactionId?: number;
+	amount?: string;
+	currency?: string;
+	status?: string;
+	paymentType?: string;
+}
+
+export interface PaymentSessionResult {
+	paymentId?: number;
+	totalAmount?: string;
+	currency?: string;
+	status?: string;
+	transactionHistory?: TransactionHistoryItem[];
+}
+
+export interface TerminalSessionResult {
+	paymentId?: number;
+	transactionId?: number;
+	terminalUri?: string;
+}
+
 export interface TransactionStatus {
 	id?: string;
 	status?: string;
@@ -88,11 +117,4 @@ export interface TransactionStatus {
 	currency?: string;
 	paymentType?: string;
 	redirectUrl?: string;
-}
-
-export interface PaymentSessionResult {
-	id?: string;
-	orderId?: string;
-	transactions?: TransactionStatus[];
-	links?: Link[];
 }

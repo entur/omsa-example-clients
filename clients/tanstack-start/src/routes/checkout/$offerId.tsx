@@ -9,8 +9,9 @@ import {
 	PurchaseFlowProvider,
 	usePurchaseFlow,
 } from "../../context/purchase-flow";
-import { useConfirmPackage, usePurchaseOffers } from "../../hooks/use-purchase";
-import { savePackage } from "../../lib/ticket-storage";
+import { useCreatePayment, useStartTerminalSession } from "../../hooks/use-payments";
+import { usePurchaseOffers } from "../../hooks/use-purchase";
+import type { PaymentType } from "../../types/purchase";
 import type { Offer, OfferCollection } from "../../types/search";
 
 export const Route = createFileRoute("/checkout/$offerId")({
@@ -28,10 +29,11 @@ function CheckoutPage() {
 function CheckoutScreen() {
 	const { offerId } = Route.useParams();
 	const { state, dispatch } = usePurchaseFlow();
-	const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+	const [paymentMethod, setPaymentMethod] = useState<PaymentType | null>(null);
 
 	const purchaseMutation = usePurchaseOffers();
-	const confirmMutation = useConfirmPackage();
+	const createPaymentMutation = useCreatePayment();
+	const startTerminalMutation = useStartTerminalSession();
 
 	let offer: Offer | null = null;
 	try {
@@ -48,30 +50,46 @@ function CheckoutScreen() {
 		if (!paymentMethod) return;
 		dispatch({ type: "START_PURCHASE" });
 		try {
-			const result = await purchaseMutation.mutateAsync({
+			// Step 1: OMSA purchase-offers
+			const purchased = await purchaseMutation.mutateAsync({
 				inputs: { type: "purchase_offers", offerIds: [offerId] },
 			});
-			const packageId = result.id ?? "";
-			dispatch({
-				type: "PURCHASE_DONE",
-				packageId,
-				paymentSession: { id: packageId },
-			});
-			dispatch({ type: "CONFIRMING" });
-			const confirmed = await confirmMutation.mutateAsync({
-				inputs: { type: "package", packageId },
-			});
-			savePackage({
-				packageId,
-				savedAt: new Date().toISOString(),
-				status: confirmed.status ?? "CONFIRMED",
-				price: {
-					amount: confirmed.price?.amount ?? 0,
-					currencyCode: confirmed.price?.currencyCode,
+			const packageId = purchased.id ?? "";
+			dispatch({ type: "PURCHASE_DONE", packageId });
+
+			// Step 2: Entur Sales create payment
+			const amount = purchased.price?.amount?.toFixed(2) ?? "0.00";
+			const currency = purchased.price?.currencyCode ?? "NOK";
+			const payment = await createPaymentMutation.mutateAsync({
+				orderId: packageId,
+				orderVersion: purchased.orderVersion ?? 1,
+				totalAmount: amount,
+				transaction: {
+					amount,
+					currency,
+					paymentType: paymentMethod,
+					isImport: false,
+					paymentTypeGroup: paymentMethod === "VIPPS" ? "WALLET" : "PAYMENTCARD",
 				},
-				offerIds: [offerId],
 			});
-			dispatch({ type: "SUCCESS" });
+			const paymentId = String(payment.paymentId ?? "");
+			const transactionId = String(
+				payment.transactionHistory?.[0]?.transactionId ?? "",
+			);
+
+			// Step 3: Start terminal session — redirectUrl brings us back after payment
+			// Use entur-prefixed param names to avoid collision with Nets' own
+			// transactionId/paymentId query params it appends on redirect.
+			const redirectUrl = `${window.location.origin}/payment-return?packageId=${packageId}&enturPaymentId=${paymentId}&enturTransactionId=${transactionId}`;
+			const terminal = await startTerminalMutation.mutateAsync({
+				paymentId,
+				transactionId,
+				redirectUrl,
+				terminalLanguage: "en_GB",
+			});
+
+			// Step 4: Redirect user to Nets terminal
+			window.location.href = terminal.terminalUri ?? "";
 		} catch (err) {
 			dispatch({
 				type: "FAILED",

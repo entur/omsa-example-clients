@@ -26,7 +26,7 @@ type Action =
 	| {
 			type: "PURCHASE_DONE";
 			packageId: string;
-			paymentSession: PaymentSessionResult;
+			paymentSession?: PaymentSessionResult | null;
 	  }
 	| { type: "PAYMENT_STARTED" }
 	| { type: "CAPTURING" }
