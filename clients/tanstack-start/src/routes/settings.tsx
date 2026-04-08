@@ -82,7 +82,9 @@ function SettingsPage() {
 						</div>
 						<div className="flex justify-between">
 							<dt style={{ color: "var(--wayfare-text-secondary)" }}>API</dt>
-							<dd style={{ color: "var(--wayfare-text)" }}>OMSA v1 (dev)</dd>
+							<dd style={{ color: "var(--wayfare-text)" }}>
+								OMSA v1 (OMSA_ENV_MODE)
+							</dd>
 						</div>
 						<div className="flex justify-between">
 							<dt style={{ color: "var(--wayfare-text-secondary)" }}>Stack</dt>

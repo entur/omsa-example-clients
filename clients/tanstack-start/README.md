@@ -9,6 +9,31 @@ npm install
 npm run dev
 ```
 
+## OMSA Environment Modes
+
+This client supports mode-based environment config via `.env`:
+
+- `OMSA_ENV_MODE=dev`: OMSA + Sales in dev, uses dev credentials
+- `OMSA_ENV_MODE=staging`: OMSA + Sales in staging, uses staging credentials
+- `OMSA_ENV_MODE=local`: OMSA on `http://localhost:8080/v1`, Sales in dev, uses dev credentials
+- `OMSA_ENV_MODE=local-tst`: OMSA on `http://localhost:8080/v1`, same endpoints as `local`, uses staging credentials
+
+Credential env vars:
+
+```bash
+CLIENT_ID_DEV=...
+CLIENT_SECRET_DEV=...
+CLIENT_ID_STAGING=...
+CLIENT_SECRET_STAGING=...
+```
+
+You can still use `CLIENT_ID` / `CLIENT_SECRET` as fallback.
+
+Optional overrides:
+
+- `OMSA_CREDENTIAL_PROFILE=dev|staging` to force credential set
+- `OMSA_BASE_URL`, `SALES_BASE_URL`, `OAUTH_TOKEN_URL`, `AUTH0_AUDIENCE` for explicit overrides
+
 # Building For Production
 
 To build this application for production:

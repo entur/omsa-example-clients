@@ -1,5 +1,6 @@
 import { inspect } from "node:util";
 import { getAccessToken } from "./auth";
+import { getRuntimeConfig } from "./runtime-config";
 
 type RequestLogLevel = "meta" | "headers" | "body";
 
@@ -174,15 +175,11 @@ function logRequestError(
 }
 
 function getBaseUrl(): string {
-	return (
-		process.env.OMSA_BASE_URL ?? "https://api.dev.entur.io/omsa/v1"
-	).replace(/\/$/, "");
+	return getRuntimeConfig().omsaBaseUrl;
 }
 
 function getSalesBaseUrl(): string {
-	return (
-		process.env.SALES_BASE_URL ?? "https://api.dev.entur.io/sales/v1"
-	).replace(/\/$/, "");
+	return getRuntimeConfig().salesBaseUrl;
 }
 
 function enturHeaders(): Record<string, string> {

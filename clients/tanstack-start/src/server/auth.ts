@@ -1,7 +1,10 @@
+import { getRuntimeConfig } from "./runtime-config";
+
 interface OAuthToken {
 	accessToken: string;
 	tokenType: string;
 	expiresAt: number;
+	cacheKey: string;
 }
 
 let cachedToken: OAuthToken | null = null;
@@ -12,18 +15,24 @@ function isExpired(token: OAuthToken): boolean {
 }
 
 export async function getAccessToken(): Promise<string> {
-	if (cachedToken && !isExpired(cachedToken)) {
+	const runtimeConfig = getRuntimeConfig();
+	const tokenUrl = runtimeConfig.oauthTokenUrl;
+	const clientId = runtimeConfig.clientId;
+	const clientSecret = runtimeConfig.clientSecret;
+	const audience = runtimeConfig.auth0Audience;
+	const cacheKey = `${tokenUrl}|${clientId ?? ""}|${audience ?? ""}`;
+
+	if (
+		cachedToken &&
+		cachedToken.cacheKey === cacheKey &&
+		!isExpired(cachedToken)
+	) {
 		return `${cachedToken.tokenType} ${cachedToken.accessToken}`;
 	}
 
-	const tokenUrl = process.env.OAUTH_TOKEN_URL;
-	const clientId = process.env.CLIENT_ID;
-	const clientSecret = process.env.CLIENT_SECRET;
-	const audience = process.env.AUTH0_AUDIENCE;
-
 	if (!tokenUrl || !clientId || !clientSecret) {
 		throw new Error(
-			"OAuth credentials not configured. Set OAUTH_TOKEN_URL, CLIENT_ID, and CLIENT_SECRET.",
+			`OAuth credentials not configured for ${runtimeConfig.credentialProfile} profile. Set CLIENT_ID_${runtimeConfig.credentialProfile.toUpperCase()} and CLIENT_SECRET_${runtimeConfig.credentialProfile.toUpperCase()}, or fallback CLIENT_ID/CLIENT_SECRET.`,
 		);
 	}
 
@@ -53,6 +62,7 @@ export async function getAccessToken(): Promise<string> {
 		accessToken: body.access_token,
 		tokenType: body.token_type ?? "Bearer",
 		expiresAt: Date.now() + expiresIn * 1000,
+		cacheKey,
 	};
 
 	return `${cachedToken.tokenType} ${cachedToken.accessToken}`;
