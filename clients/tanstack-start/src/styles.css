@@ -1,0 +1,111 @@
+@import "@entur/tokens/dist/styles.css";
+@import "@entur/a11y/dist/styles.css";
+@import "@entur/icons/dist/styles.css";
+@import "@entur/typography/dist/styles.css";
+@import "@entur/layout/dist/styles.css";
+@import "@entur/loader/dist/styles.css";
+@import "@entur/button/dist/styles.css";
+@import "@entur/modal/dist/styles.css";
+@import "@entur/tooltip/dist/styles.css";
+@import "@entur/form/dist/styles.css";
+@import "@entur/chip/dist/styles.css";
+@import "@entur/travel/dist/styles.css";
+@import "@entur/dropdown/dist/styles.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--font-sans: "National 2", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+	--wayfare-primary: #e90037;
+	--wayfare-primary-hover: #c7002f;
+	--wayfare-primary-dark: #ff3355;
+	--wayfare-primary-dark-hover: #ff5577;
+	--wayfare-text: #181c20;
+	--wayfare-text-secondary: #555e68;
+	--wayfare-surface: rgba(255, 255, 255, 0.92);
+	--wayfare-surface-strong: #ffffff;
+	--wayfare-bg: #f5f6f7;
+	--wayfare-line: rgba(24, 28, 32, 0.12);
+	--wayfare-header-bg: rgba(255, 255, 255, 0.88);
+	--wayfare-accent-soft: rgba(233, 0, 55, 0.08);
+}
+
+:root[data-theme="dark"] {
+	--wayfare-primary: #ff3355;
+	--wayfare-primary-hover: #ff5577;
+	--wayfare-text: #e8eaed;
+	--wayfare-text-secondary: #9aa3ae;
+	--wayfare-surface: rgba(30, 34, 40, 0.92);
+	--wayfare-surface-strong: #1e2228;
+	--wayfare-bg: #12151a;
+	--wayfare-line: rgba(232, 234, 237, 0.12);
+	--wayfare-header-bg: rgba(18, 21, 26, 0.88);
+	--wayfare-accent-soft: rgba(255, 51, 85, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--wayfare-primary: #ff3355;
+		--wayfare-primary-hover: #ff5577;
+		--wayfare-text: #e8eaed;
+		--wayfare-text-secondary: #9aa3ae;
+		--wayfare-surface: rgba(30, 34, 40, 0.92);
+		--wayfare-surface-strong: #1e2228;
+		--wayfare-bg: #12151a;
+		--wayfare-line: rgba(232, 234, 237, 0.12);
+		--wayfare-header-bg: rgba(18, 21, 26, 0.88);
+		--wayfare-accent-soft: rgba(255, 51, 85, 0.1);
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	color: var(--wayfare-text);
+	font-family: var(--font-sans);
+	background-color: var(--wayfare-bg);
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+a {
+	color: var(--wayfare-primary);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.page-wrap {
+	width: min(1080px, calc(100% - 2rem));
+	margin-inline: auto;
+}
+
+.rise-in {
+	animation: rise-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise-in {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
