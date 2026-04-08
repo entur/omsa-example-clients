@@ -1,20 +1,12 @@
 @import "@entur/tokens/dist/styles.css";
-@import "@entur/a11y/dist/styles.css";
 @import "@entur/icons/dist/styles.css";
-@import "@entur/typography/dist/styles.css";
+@import "@entur/travel/dist/styles.css";
+@import "@entur/button/dist/styles.css";
+@import "@entur/form/dist/styles.css";
 @import "@entur/layout/dist/styles.css";
 @import "@entur/loader/dist/styles.css";
-@import "@entur/expand/dist/styles.css";
-@import "@entur/button/dist/styles.css";
-@import "@entur/menu/dist/styles.css";
-@import "@entur/modal/dist/styles.css";
 @import "@entur/tooltip/dist/styles.css";
-@import "@entur/form/dist/styles.css";
-@import "@entur/chip/dist/styles.css";
-@import "@entur/datepicker/dist/styles.css";
-@import "@entur/travel/dist/styles.css";
-@import "@entur/dropdown/dist/styles.css";
-@import "@entur/grid/dist/styles.css";
+@import "@entur/typography/dist/styles.css";
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -50,33 +42,6 @@
 	--wayfare-accent-soft: rgba(255, 51, 85, 0.1);
 }
 
-/* Make Entur date/time fields fill their container */
-.eds-datefield,
-.eds-datefield .eds-form-control-wrapper,
-.eds-timepicker,
-.eds-timepicker .eds-form-control-wrapper {
-	width: 100%;
-}
-
-/* Switch timepicker wrapper from inline-flex to flex so it fills its parent
-   and reorder children: field | < > */
-.eds-timepicker .eds-form-control-wrapper {
-	display: flex;
-	justify-content: flex-start;
-	padding-left: 1rem;
-	padding-right: 0;
-}
-
-.eds-timepicker .eds-input-group {
-	flex: 1;
-	order: 1;
-}
-
-.eds-timepicker .eds-form-control__prepend {
-	order: 2;
-	margin-right: 0;
-	margin-left: auto;
-}
 
 .eds-timepicker .eds-form-control__append {
 	order: 3;

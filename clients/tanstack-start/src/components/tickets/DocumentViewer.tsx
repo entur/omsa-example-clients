@@ -57,7 +57,10 @@ function groupDocuments(documents: TravelDocumentItem[]): TicketGroup[] {
 		if (!map.has(baseKey)) {
 			map.set(baseKey, { key: baseKey, primary: null, animation: null });
 		}
-		const group = map.get(baseKey)!;
+		const group = map.get(baseKey);
+		if (!group) {
+			continue;
+		}
 		if (isAnimation) {
 			group.animation = doc;
 		} else {
@@ -82,7 +85,8 @@ export default function DocumentViewer({ documents }: DocumentViewerProps) {
 	return (
 		<div className="flex flex-col gap-4">
 			{groups.map((group) => {
-				const doc = group.primary ?? group.animation!;
+				const doc = group.primary ?? group.animation;
+				if (!doc) return null;
 				const props = doc.properties;
 				if (!props) return null;
 
@@ -126,11 +130,12 @@ export default function DocumentViewer({ documents }: DocumentViewerProps) {
 								)}
 							</p>
 
-							<div
-								className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-center"
-							>
+							<div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-center">
 								{/* Primary: QR code (binary) or image */}
-						<div className="flex flex-col items-center gap-2 rounded-lg p-3 sm:flex-1" style={{ background: "var(--wayfare-surface)" }}>
+								<div
+									className="flex flex-col items-center gap-2 rounded-lg p-3 sm:flex-1"
+									style={{ background: "var(--wayfare-surface)" }}
+								>
 									{isImagePrimary ? (
 										<img
 											src={`data:${props.contentType};base64,${props.base64}`}
@@ -151,7 +156,10 @@ export default function DocumentViewer({ documents }: DocumentViewerProps) {
 
 								{/* Supporting animation */}
 								{animProps && (
-									<div className="flex flex-col items-center gap-2 rounded-lg p-3 sm:flex-1" style={{ background: "var(--wayfare-surface)" }}>
+									<div
+										className="flex flex-col items-center gap-2 rounded-lg p-3 sm:flex-1"
+										style={{ background: "var(--wayfare-surface)" }}
+									>
 										<img
 											src={`data:${animProps.contentType};base64,${animProps.base64}`}
 											alt="Ticket animation"

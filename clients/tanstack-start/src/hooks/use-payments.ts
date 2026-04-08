@@ -1,5 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { CaptureRequest, TerminalSessionRequest } from "../server-functions/payments";
+import type {
+	CaptureRequest,
+	TerminalSessionRequest,
+} from "../server-functions/payments";
 import {
 	captureTransaction,
 	createPayment,

@@ -18,7 +18,11 @@ export default function TicketCard({ pkg }: TicketCardProps) {
 	const validTo = props?.endTime ? new Date(props.endTime) : null;
 
 	const formatDate = (d: Date) =>
-		d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+		d.toLocaleDateString("en-GB", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		});
 
 	return (
 		<Link
@@ -60,7 +64,12 @@ export default function TicketCard({ pkg }: TicketCardProps) {
 							className="mt-0.5 text-xs"
 							style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
 						>
-							Purchased {purchased.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+							Purchased{" "}
+							{purchased.toLocaleDateString("en-GB", {
+								day: "numeric",
+								month: "short",
+								year: "numeric",
+							})}
 						</p>
 					)}
 				</div>

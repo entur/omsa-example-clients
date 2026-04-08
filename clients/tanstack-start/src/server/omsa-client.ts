@@ -1,5 +1,5 @@
-import { getAccessToken } from "./auth";
 import { inspect } from "node:util";
+import { getAccessToken } from "./auth";
 
 type RequestLogLevel = "meta" | "headers" | "body";
 
@@ -38,9 +38,8 @@ function getRequestLogLevel(): RequestLogLevel {
 }
 
 function shouldRedactSensitiveHeaders(): boolean {
-	const envValue = process.env.REQUEST_RESPONSE_LOG_REDACT_SENSITIVE_HEADERS
-		?.trim()
-		.toLowerCase();
+	const envValue =
+		process.env.REQUEST_RESPONSE_LOG_REDACT_SENSITIVE_HEADERS?.trim().toLowerCase();
 	if (envValue === "false") {
 		return false;
 	}
@@ -64,7 +63,9 @@ function redactAuthorizationValue(value: string): string {
 	return `${scheme} [REDACTED]`;
 }
 
-function redactHeaders(headers: Record<string, string>): Record<string, string> {
+function redactHeaders(
+	headers: Record<string, string>,
+): Record<string, string> {
 	if (!shouldRedactSensitiveHeaders()) {
 		return headers;
 	}
@@ -72,7 +73,10 @@ function redactHeaders(headers: Record<string, string>): Record<string, string> 
 	const redactedHeaders: Record<string, string> = {};
 	for (const [key, value] of Object.entries(headers)) {
 		const normalizedKey = key.toLowerCase();
-		if (normalizedKey === "authorization" || normalizedKey === "proxy-authorization") {
+		if (
+			normalizedKey === "authorization" ||
+			normalizedKey === "proxy-authorization"
+		) {
 			redactedHeaders[key] = redactAuthorizationValue(value);
 			continue;
 		}
@@ -117,7 +121,10 @@ function logRequest(
 	const level = getRequestLogLevel();
 	if (level === "headers" || level === "body") {
 		if (headers) {
-			console.log("[http][outgoing] headers", formatForLog(redactHeaders(headers)));
+			console.log(
+				"[http][outgoing] headers",
+				formatForLog(redactHeaders(headers)),
+			);
 		}
 	}
 	if (level === "body" && typeof body !== "undefined") {
@@ -138,7 +145,9 @@ async function logResponse(response: Response, startedAt: number) {
 	if (level === "headers" || level === "body") {
 		console.log(
 			"[http][incoming] headers",
-			formatForLog(redactHeaders(Object.fromEntries(response.headers.entries()))),
+			formatForLog(
+				redactHeaders(Object.fromEntries(response.headers.entries())),
+			),
 		);
 	}
 	if (level === "body") {
@@ -147,13 +156,21 @@ async function logResponse(response: Response, startedAt: number) {
 	}
 }
 
-function logRequestError(method: string, url: string, startedAt: number, error: unknown) {
+function logRequestError(
+	method: string,
+	url: string,
+	startedAt: number,
+	error: unknown,
+) {
 	if (!shouldEnableRequestLogging()) {
 		return;
 	}
 
 	const durationMs = Date.now() - startedAt;
-	console.error(`[http][error] ${method.toUpperCase()} ${url} (${durationMs}ms)`, error);
+	console.error(
+		`[http][error] ${method.toUpperCase()} ${url} (${durationMs}ms)`,
+		error,
+	);
 }
 
 function getBaseUrl(): string {
@@ -197,6 +214,48 @@ async function handleResponse<T>(
 	}
 	return response.json() as Promise<T>;
 }
+
+function getJourneyPlannerUrl(): string {
+	return (
+		process.env.JOURNEY_PLANNER_URL ??
+		"https://api.entur.io/journey-planner/v3/graphql"
+	);
+}
+
+export const journeyPlanner = {
+	async query<T>(query: string, variables: unknown): Promise<T> {
+		const requestUrl = getJourneyPlannerUrl();
+		const body = { query, variables };
+		const startedAt = Date.now();
+		const headers: Record<string, string> = {
+			"Content-Type": "application/json",
+			"ET-Client-Name": process.env.ET_CLIENT_NAME ?? "wayfare-web",
+		};
+		logRequest("POST", requestUrl, body, headers);
+		try {
+			const response = await fetch(requestUrl, {
+				method: "POST",
+				headers,
+				body: JSON.stringify(body),
+			});
+			await logResponse(response, startedAt);
+			const json = (await response.json()) as {
+				data?: T;
+				errors?: { message: string }[];
+			};
+			if (json.errors?.length) {
+				throw new Error(json.errors[0]?.message ?? "Journey planner error");
+			}
+			if (!json.data) {
+				throw new Error("Journey planner returned no data");
+			}
+			return json.data;
+		} catch (error) {
+			logRequestError("POST", requestUrl, startedAt, error);
+			throw error;
+		}
+	},
+};
 
 export const omsa = {
 	async get<T>(path: string, params?: Record<string, string>): Promise<T> {

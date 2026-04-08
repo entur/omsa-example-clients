@@ -1,11 +1,5 @@
-import { useState } from "react";
-import { Button, SecondarySquareButton } from "@entur/button";
-import {
-	Popover,
-	PopoverCloseButton,
-	PopoverContent,
-	PopoverTrigger,
-} from "@entur/tooltip";
+import { DownArrowIcon, UsersIcon } from "@entur/icons";
+import { useEffect, useRef, useState } from "react";
 import type { TravelerGroup } from "../../context/search-form";
 
 const GROUPS: {
@@ -30,10 +24,27 @@ export default function TravelerPicker({
 	onChange,
 }: TravelerPickerProps) {
 	const [open, setOpen] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	const total = travelers.reduce((sum, t) => sum + t.count, 0);
 	const summary =
-		total === 0 ? "Add travelers" : `${total} traveler${total !== 1 ? "s" : ""}`;
+		total === 0
+			? "Add travelers"
+			: `${total} traveler${total !== 1 ? "s" : ""}`;
+
+	// Close on outside click
+	useEffect(() => {
+		function handlePointerDown(e: PointerEvent) {
+			if (
+				containerRef.current &&
+				!containerRef.current.contains(e.target as Node)
+			) {
+				setOpen(false);
+			}
+		}
+		document.addEventListener("pointerdown", handlePointerDown);
+		return () => document.removeEventListener("pointerdown", handlePointerDown);
+	}, []);
 
 	function getCount(ageGroup: TravelerGroup["ageGroup"]) {
 		return travelers.find((t) => t.ageGroup === ageGroup)?.count ?? 0;
@@ -60,75 +71,128 @@ export default function TravelerPicker({
 	}
 
 	return (
-		<Popover showPopover={open} setShowPopover={setOpen}>
-			<PopoverTrigger>
-				<Button type="button" variant="secondary" width="fluid">
+		<div ref={containerRef} className="relative w-full">
+			<button
+				type="button"
+				onClick={() => setOpen((v) => !v)}
+				className="flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-sm font-medium transition-shadow focus:outline-none focus:ring-2"
+				style={{
+					borderColor: "var(--wayfare-line)",
+					background: "var(--wayfare-surface-strong)",
+					color:
+						total === 0
+							? "var(--wayfare-text-secondary)"
+							: "var(--wayfare-text)",
+					// @ts-expect-error - css custom prop
+					"--tw-ring-color":
+						"color-mix(in srgb, var(--wayfare-primary) 30%, transparent)",
+				}}
+				aria-haspopup="dialog"
+				aria-expanded={open}
+			>
+				<span className="flex items-center gap-2">
+					<UsersIcon
+						aria-hidden="true"
+						style={{ color: "var(--wayfare-text-secondary)" }}
+					/>
 					{summary}
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent className="p-4" style={{ minWidth: "260px" }}>
-				{GROUPS.map((group) => (
-					<div
-						key={group.id}
-						className="flex items-center justify-between py-2"
-					>
-						<div>
-							<span
-								className="text-sm font-medium"
-								style={{ color: "var(--wayfare-text)" }}
-							>
-								{group.label}
-							</span>
-							{(group.minAge !== undefined || group.maxAge !== undefined) && (
+				</span>
+				<DownArrowIcon
+					aria-hidden="true"
+					className={`transition-transform ${open ? "rotate-180" : ""}`}
+					style={{ color: "var(--wayfare-text-secondary)" }}
+				/>
+			</button>
+
+			{open && (
+				<div
+					className="absolute z-50 mt-1 w-full min-w-[260px] rounded-xl border p-4 shadow-lg"
+					style={{
+						borderColor: "var(--wayfare-line)",
+						background: "var(--wayfare-surface-strong)",
+					}}
+					role="dialog"
+					aria-label="Select travelers"
+				>
+					{GROUPS.map((group) => (
+						<div
+							key={group.id}
+							className="flex items-center justify-between py-2.5"
+							style={{
+								borderBottom: "1px solid var(--wayfare-line)",
+							}}
+						>
+							<div>
 								<span
-									className="ml-2 text-xs"
-									style={{ color: "var(--wayfare-text-secondary)" }}
+									className="text-sm font-medium"
+									style={{ color: "var(--wayfare-text)" }}
 								>
-									{group.minAge && group.maxAge
-										? `${group.minAge}–${group.maxAge} yrs`
-										: group.minAge
-											? `${group.minAge}+ yrs`
-											: ""}
+									{group.label}
 								</span>
-							)}
+								{(group.minAge !== undefined || group.maxAge !== undefined) && (
+									<span
+										className="ml-2 text-xs"
+										style={{ color: "var(--wayfare-text-secondary)" }}
+									>
+										{group.minAge && group.maxAge
+											? `${group.minAge}–${group.maxAge} yrs`
+											: group.minAge
+												? `${group.minAge}+ yrs`
+												: ""}
+									</span>
+								)}
+							</div>
+							<div className="flex items-center gap-3">
+								<button
+									type="button"
+									onClick={() => setCount(group.id, getCount(group.id) - 1)}
+									disabled={getCount(group.id) === 0}
+									aria-label={`Remove ${group.label}`}
+									className="flex h-7 w-7 items-center justify-center rounded-lg border text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+									style={{
+										borderColor: "var(--wayfare-line)",
+										color: "var(--wayfare-text)",
+										background: "transparent",
+									}}
+								>
+									−
+								</button>
+								<span
+									className="w-4 text-center text-sm font-semibold tabular-nums"
+									style={{ color: "var(--wayfare-text)" }}
+								>
+									{getCount(group.id)}
+								</span>
+								<button
+									type="button"
+									onClick={() => setCount(group.id, getCount(group.id) + 1)}
+									aria-label={`Add ${group.label}`}
+									className="flex h-7 w-7 items-center justify-center rounded-lg border text-sm font-semibold transition-colors"
+									style={{
+										borderColor: "var(--wayfare-line)",
+										color: "var(--wayfare-text)",
+										background: "transparent",
+									}}
+								>
+									+
+								</button>
+							</div>
 						</div>
-						<div className="flex items-center gap-3">
-							<SecondarySquareButton
-								size="small"
-								type="button"
-								onClick={() => setCount(group.id, getCount(group.id) - 1)}
-								aria-label={`Remove ${group.label}`}
-							>
-								−
-							</SecondarySquareButton>
-							<span
-								className="w-4 text-center text-sm font-semibold"
-								style={{ color: "var(--wayfare-text)" }}
-							>
-								{getCount(group.id)}
-							</span>
-							<SecondarySquareButton
-								size="small"
-								type="button"
-								onClick={() => setCount(group.id, getCount(group.id) + 1)}
-								aria-label={`Add ${group.label}`}
-							>
-								+
-							</SecondarySquareButton>
-						</div>
-					</div>
-				))}
-				<PopoverCloseButton>
-					<Button
+					))}
+					<button
 						type="button"
-						variant="secondary"
-						width="fluid"
-						className="mt-3"
+						onClick={() => setOpen(false)}
+						className="mt-3 w-full rounded-xl border py-2 text-sm font-medium transition-colors"
+						style={{
+							borderColor: "var(--wayfare-line)",
+							color: "var(--wayfare-text)",
+							background: "transparent",
+						}}
 					>
 						Done
-					</Button>
-				</PopoverCloseButton>
-			</PopoverContent>
-		</Popover>
+					</button>
+				</div>
+			)}
+		</div>
 	);
 }

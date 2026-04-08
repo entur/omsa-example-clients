@@ -1,5 +1,3 @@
-import { SearchableDropdown } from "@entur/dropdown";
-import type { NormalizedDropdownItemType } from "@entur/dropdown";
 import {
 	BusIcon,
 	FerryIcon,
@@ -8,8 +6,9 @@ import {
 	TrainIcon,
 	TramIcon,
 } from "@entur/icons";
-import type { GeocoderFeature, GeocoderResponse } from "../../types/geocoder";
 import type { PlaceReference } from "../../types/common";
+import type { GeocoderFeature, GeocoderResponse } from "../../types/geocoder";
+import Combobox, { type ComboboxOption } from "../ui/Combobox";
 
 const GEOCODER_BASE = "https://api.entur.io/geocoder/v1";
 
@@ -27,8 +26,8 @@ function getModeIcon(feature: GeocoderFeature): React.ComponentType {
 
 async function fetchLocationItems(
 	input: string,
-	abortControllerRef: React.MutableRefObject<AbortController>,
-) {
+	signal: AbortSignal,
+): Promise<ComboboxOption<PlaceReference>[]> {
 	if (input.trim().length < 2) return [];
 	const params = new URLSearchParams({
 		text: input,
@@ -39,7 +38,7 @@ async function fetchLocationItems(
 	try {
 		const res = await fetch(`${GEOCODER_BASE}/autocomplete?${params}`, {
 			headers: { "ET-Client-Name": "wayfare-web" },
-			signal: abortControllerRef.current.signal,
+			signal,
 		});
 		if (!res.ok) return [];
 		const data = (await res.json()) as GeocoderResponse;
@@ -49,7 +48,7 @@ async function fetchLocationItems(
 				name: feature.properties.label,
 			} as PlaceReference,
 			label: feature.properties.label,
-			icons: [getModeIcon(feature)],
+			icon: getModeIcon(feature),
 		}));
 	} catch {
 		return [];
@@ -69,26 +68,18 @@ export default function LocationSearch({
 	onChange,
 	placeholder,
 }: LocationSearchProps) {
-	const selectedItem = value
-		? { value, label: value.name ?? value.placeId }
-		: null;
-
-	function handleChange(
-		item: NormalizedDropdownItemType<PlaceReference> | null,
-	) {
-		onChange(item?.value ?? null);
-	}
+	const selected = value ? { value, label: value.name ?? value.placeId } : null;
 
 	return (
-		<SearchableDropdown<PlaceReference>
+		<Combobox<PlaceReference>
 			label={label}
-			items={fetchLocationItems}
-			selectedItem={selectedItem}
-			onChange={handleChange}
+			selected={selected}
+			onChange={(opt) => onChange(opt?.value ?? null)}
+			getOptions={fetchLocationItems}
 			placeholder={placeholder ?? "Search for a stop…"}
-			clearable
-			debounceTimeout={350}
-			noMatchesText="No stops found"
+			debounceMs={350}
+			minQueryLength={2}
+			noMatchText="No stops found"
 		/>
 	);
 }

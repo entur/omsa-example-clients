@@ -25,6 +25,7 @@ function PaymentReturnPage() {
 			navigate({ to: "/" });
 			return;
 		}
+		const resolvedPackageId = packageId;
 
 		async function complete() {
 			try {
@@ -35,10 +36,10 @@ function PaymentReturnPage() {
 					});
 				}
 				const confirmed = await confirmMutation.mutateAsync({
-					inputs: { type: "package", packageId: packageId ?? "" },
+					inputs: { type: "package_input", packageId: resolvedPackageId },
 				});
 				savePackage({
-					packageId: packageId ?? "",
+					packageId: resolvedPackageId,
 					savedAt: new Date().toISOString(),
 					status: confirmed.status ?? "CONFIRMED",
 					price: {
@@ -48,7 +49,7 @@ function PaymentReturnPage() {
 				});
 				navigate({
 					to: "/tickets/$packageId",
-					params: { packageId: packageId ?? "" },
+					params: { packageId: resolvedPackageId },
 				});
 			} catch {
 				navigate({ to: "/" });
@@ -56,7 +57,6 @@ function PaymentReturnPage() {
 		}
 
 		complete();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		packageId,
 		captureMutation.mutateAsync,

@@ -36,10 +36,16 @@ export interface TravelDocumentCollection {
 	links?: Link[];
 }
 
-export interface FinancialDetail {
+export interface AmountBreakdown {
 	amount?: number;
 	currencyCode?: string;
+}
+
+export interface FinancialDetail {
+	amount?: AmountBreakdown;
+	currencyCode?: string;
 	description?: string;
+	category?: string;
 }
 
 export interface RefundOption {

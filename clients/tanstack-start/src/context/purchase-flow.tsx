@@ -58,7 +58,7 @@ function reducer(state: PurchaseFlow, action: Action): PurchaseFlow {
 				...state,
 				flowState: "paying",
 				packageId: action.packageId,
-				paymentSession: action.paymentSession,
+				paymentSession: action.paymentSession ?? null,
 			};
 		case "PAYMENT_STARTED":
 			return { ...state, flowState: "paying" };

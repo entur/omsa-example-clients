@@ -9,7 +9,7 @@ export interface TravelerGroup {
 	maxAge?: number;
 }
 
-export type SearchType = "zone" | "stop";
+export type SearchType = "zone" | "stop" | "trip";
 
 interface SearchFormState {
 	from: PlaceReference | null;

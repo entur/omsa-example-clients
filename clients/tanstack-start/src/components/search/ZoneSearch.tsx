@@ -1,16 +1,17 @@
-import { SearchableDropdown } from "@entur/dropdown";
-import type { NormalizedDropdownItemType } from "@entur/dropdown";
-import { searchFareZones } from "../../lib/fare-zones";
+import { getFareZoneSuggestions } from "../../server-functions/fare-zones";
 import type { PlaceReference } from "../../types/common";
+import Combobox, { type ComboboxOption } from "../ui/Combobox";
 
-function fetchZoneItems(input: string) {
-	if (!input.trim()) return [];
-	return searchFareZones(input).map((zone) => ({
-		value: {
-			placeId: zone.id,
-			name: `${zone.name} (${zone.operatorName})`,
-		} as PlaceReference,
-		label: `${zone.name} (${zone.operatorName})`,
+async function fetchZoneItems(
+	input: string,
+	signal: AbortSignal,
+): Promise<ComboboxOption<PlaceReference>[]> {
+	if (!input.trim() || signal.aborted) return [];
+	const zones = await getFareZoneSuggestions({ data: input });
+	if (signal.aborted) return [];
+	return zones.map((zone) => ({
+		value: zone,
+		label: zone.name ?? zone.placeId,
 	}));
 }
 
@@ -27,25 +28,18 @@ export default function ZoneSearch({
 	onChange,
 	placeholder,
 }: ZoneSearchProps) {
-	const selectedItem = value
-		? { value, label: value.name ?? value.placeId }
-		: null;
-
-	function handleChange(
-		item: NormalizedDropdownItemType<PlaceReference> | null,
-	) {
-		onChange(item?.value ?? null);
-	}
+	const selected = value ? { value, label: value.name ?? value.placeId } : null;
 
 	return (
-		<SearchableDropdown<PlaceReference>
+		<Combobox<PlaceReference>
 			label={label}
-			items={fetchZoneItems}
-			selectedItem={selectedItem}
-			onChange={handleChange}
+			selected={selected}
+			onChange={(opt) => onChange(opt?.value ?? null)}
+			getOptions={fetchZoneItems}
 			placeholder={placeholder ?? "Search for a zone…"}
-			clearable
-			noMatchesText="No zones found"
+			debounceMs={0}
+			minQueryLength={1}
+			noMatchText="No zones found"
 		/>
 	);
 }

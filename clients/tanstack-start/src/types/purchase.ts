@@ -18,7 +18,7 @@ export interface PurchaseOffersRequest {
 }
 
 export interface PackageInput {
-	type: "package";
+	type: "package_input" | "package";
 	packageId: string;
 	timestamp?: string;
 }

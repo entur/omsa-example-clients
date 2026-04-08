@@ -1,5 +1,5 @@
+import { ValidTicketIcon } from "@entur/icons";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Button } from "@entur/button";
 import PageShell from "../../components/layout/PageShell";
 import TicketCard from "../../components/tickets/TicketCard";
 import { getPackages } from "../../lib/ticket-storage";
@@ -17,18 +17,11 @@ function TicketsPage() {
 						className="mb-4 flex h-16 w-16 items-center justify-center rounded-full"
 						style={{ background: "var(--wayfare-accent-soft)" }}
 					>
-						<svg
-							width="28"
-							height="28"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="var(--wayfare-primary)"
-							strokeWidth="2"
+						<ValidTicketIcon
+							size="32"
 							aria-hidden="true"
-						>
-							<rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-							<line x1="1" y1="10" x2="23" y2="10" />
-						</svg>
+							style={{ color: "var(--wayfare-primary)" }}
+						/>
 					</div>
 					<p
 						className="text-sm font-medium"
@@ -42,9 +35,13 @@ function TicketsPage() {
 					>
 						Your purchased tickets will appear here.
 					</p>
-					<Button variant="primary" as={Link} to="/" className="mt-4">
+					<Link
+						to="/"
+						className="mt-4 inline-flex items-center rounded-xl px-5 py-2.5 text-sm font-semibold no-underline"
+						style={{ background: "var(--wayfare-primary)", color: "#fff" }}
+					>
 						Search for tickets
-					</Button>
+					</Link>
 				</div>
 			</PageShell>
 		);

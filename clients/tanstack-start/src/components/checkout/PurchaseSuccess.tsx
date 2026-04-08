@@ -1,5 +1,5 @@
+import { ValidationSuccessFilledIcon } from "@entur/icons";
 import { Link } from "@tanstack/react-router";
-import { Button } from "@entur/button";
 
 interface PurchaseSuccessProps {
 	packageId: string;
@@ -12,17 +12,11 @@ export default function PurchaseSuccess({ packageId }: PurchaseSuccessProps) {
 				className="mb-4 flex h-16 w-16 items-center justify-center rounded-full"
 				style={{ background: "var(--wayfare-accent-soft)" }}
 			>
-				<svg
-					width="32"
-					height="32"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="var(--wayfare-primary)"
-					strokeWidth="2.5"
+				<ValidationSuccessFilledIcon
+					size="32"
 					aria-hidden="true"
-				>
-					<path d="M20 6L9 17l-5-5" />
-				</svg>
+					style={{ color: "var(--wayfare-primary)" }}
+				/>
 			</div>
 			<h2
 				className="text-xl font-bold"

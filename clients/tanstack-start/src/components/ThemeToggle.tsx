@@ -1,4 +1,3 @@
-import { SecondaryButton } from "@entur/button";
 import { useEffect, useState } from "react";
 
 type ThemeMode = "light" | "dark" | "auto";
@@ -61,13 +60,19 @@ export default function ThemeToggle() {
 			: `Theme mode: ${mode}. Click to switch mode.`;
 
 	return (
-		<SecondaryButton
-			size="small"
+		<button
+			type="button"
 			onClick={toggleMode}
 			aria-label={label}
 			title={label}
+			className="rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors"
+			style={{
+				borderColor: "var(--wayfare-line)",
+				color: "var(--wayfare-text-secondary)",
+				background: "transparent",
+			}}
 		>
 			{mode === "auto" ? "Auto" : mode === "dark" ? "Dark" : "Light"}
-		</SecondaryButton>
+		</button>
 	);
 }

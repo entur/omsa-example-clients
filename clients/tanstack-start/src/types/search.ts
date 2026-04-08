@@ -1,5 +1,12 @@
 import type { AmountOfMoney, Link, PlaceReference } from "./common";
 
+export interface TripPatternLeg {
+	serviceJourney: string;
+	date: string; // "YYYY-MM-DD"
+	from?: PlaceReference;
+	to?: PlaceReference;
+}
+
 export interface IndividualTraveller {
 	id: string;
 	type: "individual_traveller";
@@ -27,6 +34,7 @@ export interface SearchOfferInputs {
 	travellers?: IndividualTraveller[];
 	profiles?: UserProfile[];
 	specification?: SearchSpecification;
+	pattern?: TripPatternLeg[];
 	timestamp?: string;
 }
 

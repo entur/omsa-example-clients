@@ -1,8 +1,31 @@
-import { useRouterState } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
-import { TopNavigationItem } from "@entur/menu";
+import { Link, useRouterState } from "@tanstack/react-router";
 import ThemeToggle from "./ThemeToggle";
 import WayfareWordmark from "./WayfareWordmark";
+
+function NavItem({
+	to,
+	active,
+	children,
+}: {
+	to: string;
+	active: boolean;
+	children: React.ReactNode;
+}) {
+	return (
+		<Link
+			to={to}
+			className="rounded-lg px-3 py-1.5 text-sm font-medium no-underline transition-colors"
+			style={{
+				color: active
+					? "var(--wayfare-primary)"
+					: "var(--wayfare-text-secondary)",
+				background: active ? "var(--wayfare-accent-soft)" : "transparent",
+			}}
+		>
+			{children}
+		</Link>
+	);
+}
 
 export default function Header() {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -24,16 +47,16 @@ export default function Header() {
 					<WayfareWordmark height={16} />
 				</Link>
 
-				<div className="ml-auto flex items-center gap-2">
-					<TopNavigationItem as={Link} to="/" active={pathname === "/"}>
+				<div className="ml-auto flex items-center gap-1">
+					<NavItem to="/" active={pathname === "/"}>
 						Search
-					</TopNavigationItem>
-					<TopNavigationItem as={Link} to="/tickets" active={pathname.startsWith("/tickets")}>
+					</NavItem>
+					<NavItem to="/tickets" active={pathname.startsWith("/tickets")}>
 						Tickets
-					</TopNavigationItem>
-					<TopNavigationItem as={Link} to="/settings" active={pathname === "/settings"}>
+					</NavItem>
+					<NavItem to="/settings" active={pathname === "/settings"}>
 						Settings
-					</TopNavigationItem>
+					</NavItem>
 					<ThemeToggle />
 				</div>
 			</nav>

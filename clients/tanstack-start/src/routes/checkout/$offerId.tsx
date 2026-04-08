@@ -1,16 +1,21 @@
+import { CardIcon, LeftArrowIcon } from "@entur/icons";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PrimaryButton, SecondaryButton } from "@entur/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentMethodPicker from "../../components/checkout/PaymentMethodPicker";
 import PurchaseProgress from "../../components/checkout/PurchaseProgress";
 import PurchaseSuccess from "../../components/checkout/PurchaseSuccess";
 import PageShell from "../../components/layout/PageShell";
+import Button from "../../components/ui/Button";
 import {
 	PurchaseFlowProvider,
 	usePurchaseFlow,
 } from "../../context/purchase-flow";
-import { useCreatePayment, useStartTerminalSession } from "../../hooks/use-payments";
+import {
+	useCreatePayment,
+	useStartTerminalSession,
+} from "../../hooks/use-payments";
 import { usePurchaseOffers } from "../../hooks/use-purchase";
+import { readSearchSession } from "../../lib/search-session";
 import type { PaymentType } from "../../types/purchase";
 import type { Offer, OfferCollection } from "../../types/search";
 
@@ -30,21 +35,23 @@ function CheckoutScreen() {
 	const { offerId } = Route.useParams();
 	const { state, dispatch } = usePurchaseFlow();
 	const [paymentMethod, setPaymentMethod] = useState<PaymentType | null>(null);
+	const [hydrated, setHydrated] = useState(false);
+	const [offerCollection, setOfferCollection] =
+		useState<OfferCollection | null>(null);
 
 	const purchaseMutation = usePurchaseOffers();
 	const createPaymentMutation = useCreatePayment();
 	const startTerminalMutation = useStartTerminalSession();
 
-	let offer: Offer | null = null;
-	try {
-		const raw = sessionStorage.getItem("offerCollection");
-		if (raw) {
-			const col = JSON.parse(raw) as OfferCollection;
-			offer = col.offers?.find((o) => o.id === offerId) ?? null;
-		}
-	} catch {
-		// ignore
-	}
+	useEffect(() => {
+		const session = readSearchSession();
+		setOfferCollection(session.collection);
+		setHydrated(true);
+	}, []);
+
+	const offer: Offer | null =
+		offerCollection?.offers?.find((candidate) => candidate.id === offerId) ??
+		null;
 
 	async function handlePurchase() {
 		if (!paymentMethod) return;
@@ -69,7 +76,8 @@ function CheckoutScreen() {
 					currency,
 					paymentType: paymentMethod,
 					isImport: false,
-					paymentTypeGroup: paymentMethod === "VIPPS" ? "WALLET" : "PAYMENTCARD",
+					paymentTypeGroup:
+						paymentMethod === "VIPPS" ? "WALLET" : "PAYMENTCARD",
 				},
 			});
 			const paymentId = String(payment.paymentId ?? "");
@@ -114,6 +122,14 @@ function CheckoutScreen() {
 		"capturing",
 		"confirming",
 	].includes(state.flowState);
+
+	if (!hydrated) {
+		return (
+			<PageShell title="Checkout" subtitle="Review your order and pay">
+				<p style={{ color: "var(--wayfare-text-secondary)" }}>Loading…</p>
+			</PageShell>
+		);
+	}
 
 	return (
 		<PageShell title="Checkout" subtitle="Review your order and pay">
@@ -181,17 +197,27 @@ function CheckoutScreen() {
 				)}
 
 				<div className="flex gap-3">
-					<SecondaryButton as={Link} to="/offers" width="fluid">
+					<Link
+						to="/offers"
+						className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-5 py-2.5 text-sm font-semibold no-underline transition-colors"
+						style={{
+							borderColor: "var(--wayfare-line)",
+							color: "var(--wayfare-text)",
+						}}
+					>
+						<LeftArrowIcon aria-hidden="true" />
 						Back
-					</SecondaryButton>
-					<PrimaryButton
-						width="fluid"
+					</Link>
+					<Button
+						variant="primary"
+						className="flex-1"
 						disabled={!paymentMethod || isProcessing}
 						loading={isProcessing}
 						onClick={handlePurchase}
 					>
 						Confirm & pay
-					</PrimaryButton>
+						<CardIcon aria-hidden="true" />
+					</Button>
 				</div>
 			</div>
 		</PageShell>

@@ -1,4 +1,9 @@
-import { RadioGroup, RadioPanel } from "@entur/form";
+import {
+	AmericanExpressIcon,
+	MastercardIcon,
+	VippsIcon,
+	VisaIcon,
+} from "@entur/icons";
 import type { PaymentType } from "../../types/purchase";
 
 interface PaymentMethodPickerProps {
@@ -6,23 +11,36 @@ interface PaymentMethodPickerProps {
 	onSelect: (method: PaymentType) => void;
 }
 
-const PAYMENT_METHODS = [
+const PAYMENT_METHODS: {
+	id: PaymentType;
+	label: string;
+	description: string;
+	Icon: React.ComponentType;
+}[] = [
 	{
 		id: "VISA",
 		label: "Visa",
 		description: "Pay with Visa card",
+		Icon: VisaIcon,
 	},
 	{
 		id: "MASTERCARD",
 		label: "Mastercard",
 		description: "Pay with Mastercard",
+		Icon: MastercardIcon,
 	},
 	{
 		id: "AMEX",
 		label: "American Express",
 		description: "Pay with American Express card",
+		Icon: AmericanExpressIcon,
 	},
-	{ id: "VIPPS", label: "Vipps", description: "Pay with Vipps mobile payment" },
+	{
+		id: "VIPPS",
+		label: "Vipps",
+		description: "Pay with Vipps mobile payment",
+		Icon: VippsIcon,
+	},
 ];
 
 export default function PaymentMethodPicker({
@@ -30,36 +48,71 @@ export default function PaymentMethodPicker({
 	onSelect,
 }: PaymentMethodPickerProps) {
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-3">
 			<p
 				className="text-xs font-semibold uppercase tracking-wide"
 				style={{ color: "var(--wayfare-text-secondary)" }}
 			>
 				Payment method
 			</p>
-			<RadioGroup
-				name="payment-method"
-				value={selected}
-				onChange={(e) => onSelect(e.target.value as PaymentType)}
-			>
-				<div className="flex flex-col gap-2">
-					{PAYMENT_METHODS.map((method) => (
-						<RadioPanel
+			<div className="flex flex-col gap-2">
+				{PAYMENT_METHODS.map((method) => {
+					const isSelected = selected === method.id;
+					return (
+						<label
 							key={method.id}
-							value={method.id}
-							title={method.label}
-							className="!w-full"
+							className="flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all"
+							style={{
+								borderColor: isSelected
+									? "var(--wayfare-primary)"
+									: "var(--wayfare-line)",
+								background: isSelected
+									? "var(--wayfare-accent-soft)"
+									: "transparent",
+							}}
 						>
-							<p
-								className="text-xs"
-								style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
+							<input
+								type="radio"
+								name="payment-method"
+								value={method.id}
+								checked={isSelected}
+								onChange={() => onSelect(method.id)}
+								className="sr-only"
+							/>
+							<div
+								className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
+								style={{
+									borderColor: isSelected
+										? "var(--wayfare-primary)"
+										: "var(--wayfare-line)",
+								}}
 							>
-								{method.description}
-							</p>
-						</RadioPanel>
-					))}
-				</div>
-			</RadioGroup>
+								{isSelected && (
+									<div
+										className="h-2 w-2 rounded-full"
+										style={{ background: "var(--wayfare-primary)" }}
+									/>
+								)}
+							</div>
+							<method.Icon aria-hidden="true" />
+							<div className="min-w-0">
+								<p
+									className="text-sm font-semibold"
+									style={{ color: "var(--wayfare-text)", margin: 0 }}
+								>
+									{method.label}
+								</p>
+								<p
+									className="text-xs"
+									style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
+								>
+									{method.description}
+								</p>
+							</div>
+						</label>
+					);
+				})}
+			</div>
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Button } from "@entur/button";
 import PageShell from "../components/layout/PageShell";
+import Button from "../components/ui/Button";
 import { clearPackages, getPackages } from "../lib/ticket-storage";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
@@ -52,7 +52,6 @@ function SettingsPage() {
 						</div>
 						<Button
 							variant="secondary"
-							size="small"
 							disabled={cleared || count === 0}
 							onClick={handleClear}
 						>

@@ -1,5 +1,5 @@
-import ZoneSearch from "./ZoneSearch";
 import type { PlaceReference } from "../../types/common";
+import ZoneSearch from "./ZoneSearch";
 
 interface ZoneSelectorProps {
 	from: PlaceReference | null;

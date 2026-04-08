@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Button } from "@entur/button";
 import PageShell from "../../components/layout/PageShell";
 import DocumentViewer from "../../components/tickets/DocumentViewer";
+import Button from "../../components/ui/Button";
 import {
 	usePackageItem,
 	useRefundOptions,
@@ -29,7 +29,7 @@ function TicketDetailPage() {
 	async function handleCancel() {
 		if (!confirm("Are you sure you want to cancel this ticket?")) return;
 		await cancelMutation.mutateAsync({
-			inputs: { type: "package", packageId },
+			inputs: { type: "package_input", packageId },
 		});
 		removePackage(packageId);
 		navigate({ to: "/tickets" });
@@ -75,8 +75,6 @@ function TicketDetailPage() {
 			hour: "2-digit",
 			minute: "2-digit",
 		});
-	const formatDate = (d: Date) =>
-		d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
 	return (
 		<PageShell title="Ticket details">
@@ -146,23 +144,42 @@ function TicketDetailPage() {
 						{validFrom && validTo && (
 							<>
 								<div className="flex justify-between gap-4">
-									<span style={{ color: "var(--wayfare-text-secondary)" }}>Valid from</span>
-									<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(validFrom)}</span>
+									<span style={{ color: "var(--wayfare-text-secondary)" }}>
+										Valid from
+									</span>
+									<span style={{ color: "var(--wayfare-text)" }}>
+										{formatDateTime(validFrom)}
+									</span>
 								</div>
 								<div className="flex justify-between gap-4">
-									<span style={{ color: "var(--wayfare-text-secondary)" }}>Valid to</span>
-									<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(validTo)}</span>
+									<span style={{ color: "var(--wayfare-text-secondary)" }}>
+										Valid to
+									</span>
+									<span style={{ color: "var(--wayfare-text)" }}>
+										{formatDateTime(validTo)}
+									</span>
 								</div>
 							</>
 						)}
 						<div className="flex justify-between gap-4">
-							<span style={{ color: "var(--wayfare-text-secondary)" }}>Purchased</span>
-							<span style={{ color: "var(--wayfare-text)" }}>{formatDateTime(purchased)}</span>
+							<span style={{ color: "var(--wayfare-text-secondary)" }}>
+								Purchased
+							</span>
+							<span style={{ color: "var(--wayfare-text)" }}>
+								{formatDateTime(purchased)}
+							</span>
 						</div>
 						{(!from || !to) && (
 							<div className="flex justify-between gap-4">
-								<span style={{ color: "var(--wayfare-text-secondary)" }}>Package ID</span>
-								<span className="font-mono text-xs" style={{ color: "var(--wayfare-text)" }}>{pkg.packageId}</span>
+								<span style={{ color: "var(--wayfare-text-secondary)" }}>
+									Package ID
+								</span>
+								<span
+									className="font-mono text-xs"
+									style={{ color: "var(--wayfare-text)" }}
+								>
+									{pkg.packageId}
+								</span>
 							</div>
 						)}
 					</div>
@@ -203,20 +220,26 @@ function TicketDetailPage() {
 						</h2>
 						<div className="flex flex-col gap-2">
 							{refundOptions.map((opt) => (
-								<div key={opt.id} className="flex items-center justify-between">
+								<div
+									key={opt.id ?? opt.properties?.refundType ?? "refund-option"}
+									className="flex items-center justify-between"
+								>
 									<p
 										className="text-sm"
 										style={{ color: "var(--wayfare-text)", margin: 0 }}
 									>
 										{opt.properties?.refundType ?? "Refund"}
-										{opt.properties?.consequences?.[0]?.amount !==
-											undefined && (
+										{opt.properties?.consequences?.[0]?.amount && (
 											<span
 												className="ml-2 font-semibold"
 												style={{ color: "var(--wayfare-primary)" }}
 											>
-												{opt.properties.consequences[0].amount.currencyCode ?? "NOK"}{" "}
-												{opt.properties.consequences[0].amount.amount.toFixed(2)}
+												{opt.properties.consequences[0].amount.currencyCode ??
+													opt.properties.consequences[0].currencyCode ??
+													"NOK"}{" "}
+												{opt.properties.consequences[0].amount.amount?.toFixed(
+													2,
+												)}
 											</span>
 										)}
 									</p>
@@ -241,7 +264,7 @@ function TicketDetailPage() {
 
 				<Button
 					variant="negative"
-					width="fluid"
+					fluid
 					disabled={cancelMutation.isPending}
 					loading={cancelMutation.isPending}
 					onClick={handleCancel}
