@@ -20,35 +20,43 @@ export interface RuntimeConfig {
 	clientSecret: string | undefined;
 }
 
-const DEFAULT_OAUTH_TOKEN_URL = "https://partner.dev.entur.org/oauth/token";
+interface EnvironmentDefaults {
+	salesBaseUrl: string;
+	oauthTokenUrl: string;
+	auth0Audience: string;
+}
+
+const DEV_ENVIRONMENT_DEFAULTS: EnvironmentDefaults = {
+	salesBaseUrl: "https://api.dev.entur.io/sales/v1",
+	oauthTokenUrl: "https://partner.dev.entur.org/oauth/token",
+	auth0Audience: "https://api.dev.entur.io",
+};
+
+const STAGING_ENVIRONMENT_DEFAULTS: EnvironmentDefaults = {
+	salesBaseUrl: "https://api.staging.entur.io/sales/v1",
+	oauthTokenUrl: "https://partner.staging.entur.org/oauth/token",
+	auth0Audience: "https://api.staging.entur.io",
+};
 
 const MODE_DEFAULTS: Record<OmsaRuntimeMode, ModeDefaults> = {
 	dev: {
 		omsaBaseUrl: "https://api.dev.entur.io/omsa/v1",
-		salesBaseUrl: "https://api.dev.entur.io/sales/v1",
-		oauthTokenUrl: DEFAULT_OAUTH_TOKEN_URL,
-		auth0Audience: "https://api.dev.entur.io",
+		...DEV_ENVIRONMENT_DEFAULTS,
 		credentialProfile: "dev",
 	},
 	staging: {
 		omsaBaseUrl: "https://api.staging.entur.io/omsa/v1",
-		salesBaseUrl: "https://api.staging.entur.io/sales/v1",
-		oauthTokenUrl: DEFAULT_OAUTH_TOKEN_URL,
-		auth0Audience: "https://api.staging.entur.io",
+		...STAGING_ENVIRONMENT_DEFAULTS,
 		credentialProfile: "staging",
 	},
 	local: {
 		omsaBaseUrl: "http://localhost:8080/v1",
-		salesBaseUrl: "https://api.dev.entur.io/sales/v1",
-		oauthTokenUrl: DEFAULT_OAUTH_TOKEN_URL,
-		auth0Audience: "https://api.dev.entur.io",
+		...DEV_ENVIRONMENT_DEFAULTS,
 		credentialProfile: "dev",
 	},
 	"local-tst": {
 		omsaBaseUrl: "http://localhost:8080/v1",
-		salesBaseUrl: "https://api.dev.entur.io/sales/v1",
-		oauthTokenUrl: DEFAULT_OAUTH_TOKEN_URL,
-		auth0Audience: "https://api.dev.entur.io",
+		...STAGING_ENVIRONMENT_DEFAULTS,
 		credentialProfile: "staging",
 	},
 };

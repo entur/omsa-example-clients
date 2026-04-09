@@ -16,7 +16,7 @@ This client supports mode-based environment config via `.env`:
 - `OMSA_ENV_MODE=dev`: OMSA + Sales in dev, uses dev credentials
 - `OMSA_ENV_MODE=staging`: OMSA + Sales in staging, uses staging credentials
 - `OMSA_ENV_MODE=local`: OMSA on `http://localhost:8080/v1`, Sales in dev, uses dev credentials
-- `OMSA_ENV_MODE=local-tst`: OMSA on `http://localhost:8080/v1`, same endpoints as `local`, uses staging credentials
+- `OMSA_ENV_MODE=local-tst`: OMSA on `http://localhost:8080/v1`, Sales + OAuth + audience in staging, uses staging credentials
 
 Credential env vars:
 
