@@ -77,9 +77,22 @@ export interface OfferSummary {
 	isExchangeable?: boolean;
 	geographicalValidity?: GeographicalValidity;
 	travellerMapping?: TravellerMapping[];
+	recommendationType?: string;
+	recommendationGroup?: number;
+	recommendationRank?: number;
+}
+
+export interface OfferLeg {
+	id: string;
+	type?: "leg";
+	sequenceNumber?: number;
+	traveller?: string;
+	state?: string;
+	products?: string[];
 }
 
 export interface OfferProperties {
+	legs?: OfferLeg[];
 	products?: OfferProduct[];
 	price?: AmountOfMoney;
 	expiryTime?: string;

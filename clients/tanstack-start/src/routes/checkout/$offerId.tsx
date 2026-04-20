@@ -15,6 +15,7 @@ import {
 	useStartTerminalSession,
 } from "../../hooks/use-payments";
 import { usePurchaseOffers } from "../../hooks/use-purchase";
+import { formatPrice } from "../../lib/format-price";
 import { readSearchSession } from "../../lib/search-session";
 import type { PaymentType } from "../../types/purchase";
 import type { Offer, OfferCollection } from "../../types/search";
@@ -33,6 +34,7 @@ function CheckoutPage() {
 
 function CheckoutScreen() {
 	const { offerId } = Route.useParams();
+	const offerIds = offerId.split(",");
 	const { state, dispatch } = usePurchaseFlow();
 	const [paymentMethod, setPaymentMethod] = useState<PaymentType | null>(null);
 	const [hydrated, setHydrated] = useState(false);
@@ -49,31 +51,39 @@ function CheckoutScreen() {
 		setHydrated(true);
 	}, []);
 
-	const offer: Offer | null =
-		offerCollection?.offers?.find((candidate) => candidate.id === offerId) ??
-		null;
+	const selectedOffers: Offer[] =
+		offerCollection?.offers?.filter(
+			(o) => o.id && offerIds.includes(o.id),
+		) ?? [];
+
+	const previewTotal = selectedOffers.reduce(
+		(sum, o) => sum + (o.properties?.price?.amount ?? 0),
+		0,
+	);
+	const currency =
+		selectedOffers[0]?.properties?.price?.currencyCode ?? "NOK";
 
 	async function handlePurchase() {
 		if (!paymentMethod) return;
 		dispatch({ type: "START_PURCHASE" });
 		try {
-			// Step 1: OMSA purchase-offers
+			// Step 1: OMSA purchase-offers (supports multiple IDs in one call)
 			const purchased = await purchaseMutation.mutateAsync({
-				inputs: { type: "purchase_offers", offerIds: [offerId] },
+				inputs: { type: "purchase_offers", offerIds },
 			});
 			const packageId = purchased.id ?? "";
 			dispatch({ type: "PURCHASE_DONE", packageId });
 
 			// Step 2: Entur Sales create payment
 			const amount = purchased.price?.amount?.toFixed(2) ?? "0.00";
-			const currency = purchased.price?.currencyCode ?? "NOK";
+			const purchasedCurrency = purchased.price?.currencyCode ?? "NOK";
 			const payment = await createPaymentMutation.mutateAsync({
 				orderId: packageId,
 				orderVersion: purchased.orderVersion ?? 1,
 				totalAmount: amount,
 				transaction: {
 					amount,
-					currency,
+					currency: purchasedCurrency,
 					paymentType: paymentMethod,
 					isImport: false,
 					paymentTypeGroup:
@@ -85,9 +95,7 @@ function CheckoutScreen() {
 				payment.transactionHistory?.[0]?.transactionId ?? "",
 			);
 
-			// Step 3: Start terminal session — redirectUrl brings us back after payment
-			// Use entur-prefixed param names to avoid collision with Nets' own
-			// transactionId/paymentId query params it appends on redirect.
+			// Step 3: Start terminal session
 			const redirectUrl = `${window.location.origin}/payment-return?packageId=${packageId}&enturPaymentId=${paymentId}&enturTransactionId=${transactionId}`;
 			const terminal = await startTerminalMutation.mutateAsync({
 				paymentId,
@@ -114,8 +122,6 @@ function CheckoutScreen() {
 		);
 	}
 
-	const product = offer?.properties?.products?.[0];
-	const price = offer?.properties?.price;
 	const isProcessing = [
 		"purchasing",
 		"paying",
@@ -148,27 +154,71 @@ function CheckoutScreen() {
 					}}
 				>
 					<p
-						className="text-xs font-semibold uppercase tracking-wide"
+						className="text-xs font-semibold uppercase tracking-wide mb-3"
 						style={{ color: "var(--wayfare-text-secondary)" }}
 					>
-						Your offer
+						{selectedOffers.length === 1 ? "Your offer" : `Your offers (${selectedOffers.length})`}
 					</p>
-					<div className="mt-2 flex items-center justify-between">
-						<p
-							className="text-sm font-semibold"
-							style={{ color: "var(--wayfare-text)", margin: 0 }}
+					<div className="flex flex-col gap-2">
+						{selectedOffers.map((offer) => {
+							const product = offer.properties?.products?.[0];
+							const price = offer.properties?.price;
+							const legs = offer.properties?.legs ?? [];
+							const travellerCount = new Set(
+								legs.map((l) => l.traveller).filter(Boolean),
+							).size;
+							return (
+								<div
+									key={offer.id}
+									className="flex items-center justify-between gap-2"
+								>
+									<div>
+										<p
+											className="text-sm font-medium"
+											style={{ color: "var(--wayfare-text)", margin: 0 }}
+										>
+											{offer.properties?.summary?.name ?? product?.productName ?? "Travel Offer"}
+										</p>
+										{travellerCount > 0 && (
+											<p
+												className="text-xs"
+												style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
+											>
+												{travellerCount} traveller{travellerCount !== 1 ? "s" : ""}
+											</p>
+										)}
+									</div>
+									{price && (
+										<p
+											className="text-sm font-semibold shrink-0"
+											style={{ color: "var(--wayfare-primary)", margin: 0 }}
+										>
+											{formatPrice(price.amount, price.currencyCode ?? "NOK")}
+										</p>
+									)}
+								</div>
+							);
+						})}
+					</div>
+					{selectedOffers.length > 1 && (
+						<div
+							className="mt-3 pt-3 flex items-center justify-between"
+							style={{ borderTop: "1px solid var(--wayfare-line)" }}
 						>
-							{product?.productName ?? "Travel Offer"}
-						</p>
-						{price && (
+							<p
+								className="text-sm font-semibold"
+								style={{ color: "var(--wayfare-text)", margin: 0 }}
+							>
+								Total
+							</p>
 							<p
 								className="text-base font-bold"
 								style={{ color: "var(--wayfare-primary)", margin: 0 }}
 							>
-								{price.currencyCode ?? "NOK"} {price.amount.toFixed(2)}
+								{formatPrice(previewTotal, currency)}
 							</p>
-						)}
-					</div>
+						</div>
+					)}
 				</div>
 
 				<div

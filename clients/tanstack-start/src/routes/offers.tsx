@@ -1,12 +1,15 @@
 import { LeftArrowIcon, RightArrowIcon } from "@entur/icons";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import OfferCard from "../components/checkout/OfferCard";
+import { useEffect, useState, type ReactNode } from "react";
+import BundleCard, {
+	buildBundles,
+	type OfferBundle,
+} from "../components/checkout/BundleCard";
 import PageShell from "../components/layout/PageShell";
 import Button from "../components/ui/Button";
 import { PurchaseFlowProvider } from "../context/purchase-flow";
 import { readSearchSession, type SearchContext } from "../lib/search-session";
-import type { Offer, OfferCollection } from "../types/search";
+import type { IndividualTraveller, OfferCollection } from "../types/search";
 
 export const Route = createFileRoute("/offers")({ component: OffersPage });
 
@@ -18,9 +21,40 @@ function OffersPage() {
 	);
 }
 
+function SectionLabel({ children }: { children: ReactNode }) {
+	return (
+		<p
+			className="text-xs font-semibold uppercase tracking-wide"
+			style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
+		>
+			{children}
+		</p>
+	);
+}
+
+function Divider({ label }: { label: string }) {
+	return (
+		<div className="flex items-center gap-3 my-1">
+			<div style={{ flex: 1, height: 1, background: "var(--wayfare-line)" }} />
+			<span
+				className="shrink-0 text-xs"
+				style={{ color: "var(--wayfare-text-secondary)" }}
+			>
+				{label}
+			</span>
+			<div style={{ flex: 1, height: 1, background: "var(--wayfare-line)" }} />
+		</div>
+	);
+}
+
 function OffersScreen() {
 	const navigate = useNavigate();
-	const [selectedId, setSelectedId] = useState<string | null>(null);
+	const [selectedFullKey, setSelectedFullKey] = useState<
+		string | number | null
+	>(null);
+	const [selectedLegKeys, setSelectedLegKeys] = useState<
+		Partial<Record<number, string | number>>
+	>({});
 	const [hydrated, setHydrated] = useState(false);
 	const [collection, setCollection] = useState<OfferCollection | null>(null);
 	const [context, setContext] = useState<SearchContext | null>(null);
@@ -32,7 +66,36 @@ function OffersScreen() {
 		setHydrated(true);
 	}, []);
 
-	const offers: Offer[] = collection?.offers ?? [];
+	const travellers: IndividualTraveller[] = context?.travellers ?? [];
+	const bundles: OfferBundle[] = buildBundles(collection?.offers ?? []);
+
+	// Detect multi-leg journeys and split bundles into tiers
+	const allSequences = [
+		...new Set(bundles.flatMap((b) => b.sequences)),
+	].sort((a, b) => a - b);
+	const isMultiLeg = allSequences.length > 1;
+
+	const fullBundles = isMultiLeg
+		? bundles.filter((b) => allSequences.every((s) => b.sequences.includes(s)))
+		: bundles;
+
+	const perSeqMap = new Map<number, OfferBundle[]>();
+	if (isMultiLeg) {
+		const partial = bundles.filter((b) => !fullBundles.includes(b));
+		for (const seq of allSequences) {
+			const seqBundles = partial.filter((b) => b.sequences.includes(seq));
+			if (seqBundles.length > 0) perSeqMap.set(seq, seqBundles);
+		}
+	}
+
+	// Mix-and-match is only possible when every sequence has its own partial bundles
+	const canMixAndMatch =
+		isMultiLeg && allSequences.every((s) => perSeqMap.has(s));
+	const showSections = isMultiLeg && perSeqMap.size > 0;
+
+	const allLegsSelected =
+		canMixAndMatch && allSequences.every((s) => selectedLegKeys[s] != null);
+	const canContinue = selectedFullKey !== null || allLegsSelected;
 
 	const formattedDate = context?.travelDate
 		? new Date(context.travelDate).toLocaleString("no-NO", {
@@ -44,9 +107,40 @@ function OffersScreen() {
 			})
 		: null;
 
+	function handleSelectFull(key: string | number) {
+		setSelectedFullKey(key);
+		setSelectedLegKeys({});
+	}
+
+	function handleSelectLeg(seq: number, key: string | number) {
+		setSelectedFullKey(null);
+		setSelectedLegKeys((prev) => ({ ...prev, [seq]: key }));
+	}
+
 	function handleContinue() {
-		if (!selectedId) return;
-		navigate({ to: "/checkout/$offerId", params: { offerId: selectedId } });
+		let offerIds: string[] = [];
+		if (selectedFullKey !== null) {
+			const bundle = fullBundles.find((b) => b.groupKey === selectedFullKey);
+			offerIds = bundle?.offers.map((o) => o.id!).filter(Boolean) ?? [];
+		} else {
+			for (const seq of allSequences) {
+				const key = selectedLegKeys[seq];
+				if (key != null) {
+					const bundle = (perSeqMap.get(seq) ?? []).find(
+						(b) => b.groupKey === key,
+					);
+					if (bundle)
+						offerIds.push(
+							...bundle.offers.map((o) => o.id!).filter(Boolean),
+						);
+				}
+			}
+		}
+		if (offerIds.length === 0) return;
+		navigate({
+			to: "/checkout/$offerId",
+			params: { offerId: offerIds.join(",") },
+		});
 	}
 
 	if (!hydrated) {
@@ -57,7 +151,7 @@ function OffersScreen() {
 		);
 	}
 
-	if (offers.length === 0) {
+	if (bundles.length === 0) {
 		return (
 			<PageShell title="No offers found">
 				<div className="mt-8 text-center">
@@ -79,7 +173,7 @@ function OffersScreen() {
 	return (
 		<PageShell
 			title="Available offers"
-			subtitle={`${offers.length} offer${offers.length !== 1 ? "s" : ""} found`}
+			subtitle={`${bundles.length} option${bundles.length !== 1 ? "s" : ""} found`}
 		>
 			<div className="mx-auto max-w-xl">
 				{context && (
@@ -113,33 +207,81 @@ function OffersScreen() {
 						</div>
 						{formattedDate && (
 							<p
-								className="mt-2 text-xs"
+								className="mt-1 text-xs"
 								style={{ color: "var(--wayfare-text-secondary)", margin: 0 }}
 							>
 								{formattedDate}
 							</p>
 						)}
+						{travellers.length > 0 && (
+							<div className="mt-2 flex flex-wrap gap-1.5">
+								{travellers.map((t) => (
+									<span
+										key={t.id}
+										className="inline-flex items-center rounded-full px-2 py-0.5 text-xs"
+										style={{
+											background: "var(--wayfare-bg)",
+											color: "var(--wayfare-text-secondary)",
+											border: "1px solid var(--wayfare-line)",
+										}}
+									>
+										{t.age != null ? `${t.age} yrs` : t.id}
+									</span>
+								))}
+							</div>
+						)}
 					</div>
 				)}
 
 				<div className="flex flex-col gap-3">
-					{offers.map((offer) => (
-						<OfferCard
-							key={
-								offer.id ??
-								`${offer.properties?.products?.[0]?.productName ?? "offer"}-${
-									offer.properties?.price?.amount ?? "0"
-								}`
-							}
-							offer={offer}
-							selected={selectedId === offer.id}
-							onSelect={() => {
-								if (offer.id) {
-									setSelectedId(offer.id);
-								}
-							}}
+					{/* Full journey section — labelled only when there are also per-leg sections */}
+					{showSections && fullBundles.length > 0 && (
+						<SectionLabel>Full journey</SectionLabel>
+					)}
+					{fullBundles.map((bundle) => (
+						<BundleCard
+							key={String(bundle.groupKey)}
+							bundle={bundle}
+							travellers={travellers}
+							selected={selectedFullKey === bundle.groupKey}
+							onSelect={() => handleSelectFull(bundle.groupKey)}
 						/>
 					))}
+
+					{/* Per-leg sections — shown when some bundles don't cover all sequences */}
+					{showSections && (
+						<>
+							<Divider
+								label={canMixAndMatch ? "or choose by leg" : "partial journey"}
+							/>
+							{allSequences.map((seq) => {
+								const legBundles = perSeqMap.get(seq);
+								if (!legBundles?.length) return null;
+								return (
+									<div key={seq} className="flex flex-col gap-3">
+										<SectionLabel>Leg {seq}</SectionLabel>
+										{legBundles.map((bundle) => (
+											<BundleCard
+												key={String(bundle.groupKey)}
+												bundle={bundle}
+												travellers={travellers}
+												selected={
+													canMixAndMatch
+														? selectedLegKeys[seq] === bundle.groupKey
+														: selectedFullKey === bundle.groupKey
+												}
+												onSelect={
+													canMixAndMatch
+														? () => handleSelectLeg(seq, bundle.groupKey)
+														: () => handleSelectFull(bundle.groupKey)
+												}
+											/>
+										))}
+									</div>
+								);
+							})}
+						</>
+					)}
 				</div>
 
 				<div className="mt-6 flex gap-3">
@@ -157,7 +299,7 @@ function OffersScreen() {
 					<Button
 						variant="primary"
 						className="flex-1"
-						disabled={!selectedId}
+						disabled={!canContinue}
 						onClick={handleContinue}
 					>
 						Continue to checkout

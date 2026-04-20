@@ -83,6 +83,7 @@ function SearchScreen() {
 			to,
 			travelDate,
 			searchType,
+			travellers,
 		});
 		navigate({ to: "/offers" });
 	}
@@ -93,6 +94,7 @@ function SearchScreen() {
 		const to = state.to;
 		const travelDate = state.travelDate;
 		const searchType = state.searchType;
+		const travellers = buildTravellers(state.travelers);
 
 		const omsaPattern: TripPatternLeg[] = pattern.legs.flatMap((leg) => {
 			if (!leg.serviceJourney) return [];
@@ -113,7 +115,7 @@ function SearchScreen() {
 		const result = await mutateAsync({
 			inputs: {
 				type: "search_offer",
-				travellers: buildTravellers(state.travelers),
+				travellers,
 				pattern: omsaPattern,
 			},
 		});
@@ -123,6 +125,7 @@ function SearchScreen() {
 			to,
 			travelDate,
 			searchType,
+			travellers,
 		});
 		navigate({ to: "/offers" });
 	}
