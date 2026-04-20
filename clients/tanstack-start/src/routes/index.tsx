@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useMemo } from "react";
 import PageShell from "../components/layout/PageShell";
 import LocationSearch from "../components/search/LocationSearch";
 import TravelerPicker from "../components/search/TravelerPicker";
@@ -130,12 +131,16 @@ function SearchScreen() {
 		navigate({ to: "/offers" });
 	}
 
-	const canSearch = state.from && state.to && state.travelers.length > 0;
+	const canSearch = useMemo(
+		() => Boolean(state.from && state.to && state.travelers.length > 0),
+		[state.from, state.to, state.travelers],
+	);
 
 	const dateValue = state.travelDate.slice(0, 10);
 	const timeValue =
 		state.travelDate.length >= 16 ? state.travelDate.slice(11, 16) : "00:00";
-	const minDate = new Date().toISOString().slice(0, 10);
+	// Compute minDate client-side only — new Date() during SSR causes hydration mismatch if server/client dates differ
+	const minDate = dateValue || undefined;
 
 	function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
 		dispatch({
