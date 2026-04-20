@@ -1,13 +1,19 @@
 import { ValidTicketIcon } from "@entur/icons";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import PageShell from "../../components/layout/PageShell";
 import TicketCard from "../../components/tickets/TicketCard";
+import type { StoredPackage } from "../../types/documents";
 import { getPackages } from "../../lib/ticket-storage";
 
 export const Route = createFileRoute("/tickets/")({ component: TicketsPage });
 
 function TicketsPage() {
-	const packages = getPackages();
+	const [packages, setPackages] = useState<StoredPackage[]>([]);
+
+	useEffect(() => {
+		setPackages(getPackages());
+	}, []);
 
 	if (packages.length === 0) {
 		return (

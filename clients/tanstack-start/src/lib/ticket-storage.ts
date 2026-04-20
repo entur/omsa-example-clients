@@ -2,7 +2,10 @@ import type { StoredPackage } from "../types/documents";
 
 const STORAGE_KEY = "wayfare_tickets";
 
+const isClient = typeof window !== "undefined";
+
 export function savePackage(pkg: StoredPackage): void {
+	if (!isClient) return;
 	const existing = getPackages();
 	const updated = [
 		pkg,
@@ -16,6 +19,7 @@ export function savePackage(pkg: StoredPackage): void {
 }
 
 export function getPackages(): StoredPackage[] {
+	if (!isClient) return [];
 	try {
 		const raw = localStorage.getItem(STORAGE_KEY);
 		if (!raw) return [];
@@ -30,6 +34,7 @@ export function getPackage(id: string): StoredPackage | undefined {
 }
 
 export function removePackage(id: string): void {
+	if (!isClient) return;
 	const updated = getPackages().filter((p) => p.packageId !== id);
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -39,6 +44,7 @@ export function removePackage(id: string): void {
 }
 
 export function clearPackages(): void {
+	if (!isClient) return;
 	try {
 		localStorage.removeItem(STORAGE_KEY);
 	} catch {

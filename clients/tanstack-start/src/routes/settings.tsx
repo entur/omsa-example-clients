@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageShell from "../components/layout/PageShell";
 import Button from "../components/ui/Button";
 import { clearPackages, getPackages } from "../lib/ticket-storage";
@@ -8,7 +8,11 @@ export const Route = createFileRoute("/settings")({ component: SettingsPage });
 
 function SettingsPage() {
 	const [cleared, setCleared] = useState(false);
-	const count = getPackages().length;
+	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		setCount(getPackages().length);
+	}, []);
 
 	function handleClear() {
 		if (!confirm(`Delete ${count} saved ticket${count !== 1 ? "s" : ""}?`))

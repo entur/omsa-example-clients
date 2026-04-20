@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import PageShell from "../../components/layout/PageShell";
 import DocumentViewer from "../../components/tickets/DocumentViewer";
 import Button from "../../components/ui/Button";
@@ -9,6 +10,7 @@ import {
 } from "../../hooks/use-documents";
 import { useCancelPackage, useClaimRefund } from "../../hooks/use-purchase";
 import { getPackage, removePackage } from "../../lib/ticket-storage";
+import type { StoredPackage } from "../../types/documents";
 
 export const Route = createFileRoute("/tickets/$packageId")({
 	component: TicketDetailPage,
@@ -17,8 +19,11 @@ export const Route = createFileRoute("/tickets/$packageId")({
 function TicketDetailPage() {
 	const { packageId } = Route.useParams();
 	const navigate = useNavigate();
+	const [pkg, setPkg] = useState<StoredPackage | undefined>(undefined);
 
-	const pkg = getPackage(packageId);
+	useEffect(() => {
+		setPkg(getPackage(packageId));
+	}, [packageId]);
 	const { data: packageItem } = usePackageItem(packageId);
 	const { data: docCollection, isLoading: docsLoading } =
 		useTravelDocuments(packageId);
