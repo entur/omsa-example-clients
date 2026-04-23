@@ -9,6 +9,7 @@ function resetRuntimeEnv() {
 	delete process.env.OMSA_CREDENTIAL_PROFILE;
 	delete process.env.OMSA_BASE_URL;
 	delete process.env.SALES_BASE_URL;
+	delete process.env.JOURNEY_PLANNER_URL;
 	delete process.env.OAUTH_TOKEN_URL;
 	delete process.env.AUTH0_AUDIENCE;
 	delete process.env.CLIENT_ID;
@@ -32,6 +33,9 @@ describe("getRuntimeConfig", () => {
 		expect(config.oauthTokenUrl).toBe("https://partner.dev.entur.org/oauth/token");
 		expect(config.auth0Audience).toBe("https://api.dev.entur.io");
 		expect(config.salesBaseUrl).toBe("https://api.dev.entur.io/sales/v1");
+		expect(config.journeyPlannerUrl).toBe(
+			"https://api.dev.entur.io/journey-planner/v3/graphql",
+		);
 		expect(config.credentialProfile).toBe("dev");
 	});
 
@@ -45,6 +49,9 @@ describe("getRuntimeConfig", () => {
 		);
 		expect(config.auth0Audience).toBe("https://api.staging.entur.io");
 		expect(config.salesBaseUrl).toBe("https://api.staging.entur.io/sales/v1");
+		expect(config.journeyPlannerUrl).toBe(
+			"https://api.staging.entur.io/journey-planner/v3/graphql",
+		);
 		expect(config.credentialProfile).toBe("staging");
 	});
 
@@ -59,6 +66,32 @@ describe("getRuntimeConfig", () => {
 		);
 		expect(config.auth0Audience).toBe("https://api.staging.entur.io");
 		expect(config.salesBaseUrl).toBe("https://api.staging.entur.io/sales/v1");
+		expect(config.journeyPlannerUrl).toBe(
+			"https://api.staging.entur.io/journey-planner/v3/graphql",
+		);
 		expect(config.credentialProfile).toBe("staging");
+	});
+
+	it("uses dev Journey Planner in local mode", () => {
+		process.env.OMSA_ENV_MODE = "local";
+
+		const config = getRuntimeConfig();
+
+		expect(config.omsaBaseUrl).toBe("http://localhost:8080/v1");
+		expect(config.journeyPlannerUrl).toBe(
+			"https://api.dev.entur.io/journey-planner/v3/graphql",
+		);
+	});
+
+	it("honors JOURNEY_PLANNER_URL override regardless of mode", () => {
+		process.env.OMSA_ENV_MODE = "staging";
+		process.env.JOURNEY_PLANNER_URL =
+			"https://api.entur.io/journey-planner/v3/graphql/";
+
+		const config = getRuntimeConfig();
+
+		expect(config.journeyPlannerUrl).toBe(
+			"https://api.entur.io/journey-planner/v3/graphql",
+		);
 	});
 });
