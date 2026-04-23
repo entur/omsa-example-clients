@@ -5,6 +5,7 @@ interface ModeDefaults {
 	omsaBaseUrl: string;
 	salesBaseUrl: string;
 	journeyPlannerUrl: string;
+	geocoderUrl: string;
 	oauthTokenUrl: string;
 	auth0Audience: string;
 	credentialProfile: CredentialProfile;
@@ -16,6 +17,7 @@ export interface RuntimeConfig {
 	omsaBaseUrl: string;
 	salesBaseUrl: string;
 	journeyPlannerUrl: string;
+	geocoderUrl: string;
 	oauthTokenUrl: string;
 	auth0Audience: string;
 	clientId: string | undefined;
@@ -25,6 +27,7 @@ export interface RuntimeConfig {
 interface EnvironmentDefaults {
 	salesBaseUrl: string;
 	journeyPlannerUrl: string;
+	geocoderUrl: string;
 	oauthTokenUrl: string;
 	auth0Audience: string;
 }
@@ -32,6 +35,7 @@ interface EnvironmentDefaults {
 const DEV_ENVIRONMENT_DEFAULTS: EnvironmentDefaults = {
 	salesBaseUrl: "https://api.dev.entur.io/sales/v1",
 	journeyPlannerUrl: "https://api.dev.entur.io/journey-planner/v3/graphql",
+	geocoderUrl: "https://api.dev.entur.io/geocoder/v1",
 	oauthTokenUrl: "https://partner.dev.entur.org/oauth/token",
 	auth0Audience: "https://api.dev.entur.io",
 };
@@ -39,6 +43,7 @@ const DEV_ENVIRONMENT_DEFAULTS: EnvironmentDefaults = {
 const STAGING_ENVIRONMENT_DEFAULTS: EnvironmentDefaults = {
 	salesBaseUrl: "https://api.staging.entur.io/sales/v1",
 	journeyPlannerUrl: "https://api.staging.entur.io/journey-planner/v3/graphql",
+	geocoderUrl: "https://api.staging.entur.io/geocoder/v1",
 	oauthTokenUrl: "https://partner.staging.entur.org/oauth/token",
 	auth0Audience: "https://api.staging.entur.io",
 };
@@ -144,6 +149,7 @@ export function getRuntimeConfig(): RuntimeConfig {
 		journeyPlannerUrl: normalizeUrl(
 			process.env.JOURNEY_PLANNER_URL ?? defaults.journeyPlannerUrl,
 		),
+		geocoderUrl: normalizeUrl(process.env.GEOCODER_URL ?? defaults.geocoderUrl),
 		oauthTokenUrl: normalizeUrl(
 			process.env.OAUTH_TOKEN_URL ?? defaults.oauthTokenUrl,
 		),
