@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: bffs/reisefrihet-fastify
+        working-directory: bffs/fastify
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 24.15.0
           cache: pnpm
-          cache-dependency-path: bffs/reisefrihet-fastify/pnpm-lock.yaml
+          cache-dependency-path: bffs/fastify/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm contract:generate
       - id: diff
@@ -41,11 +41,11 @@ jobs:
           ISSUE_TITLE: "reisefrihet staging spec has drifted from src/generated/reisefrihet.ts"
           ISSUE_BODY: |
             The live OpenAPI spec at https://api.staging.entur.io/reisefrihet/v3/api-docs no
-            longer matches the committed `bffs/reisefrihet-fastify/src/generated/reisefrihet.ts`.
+            longer matches the committed `bffs/fastify/src/generated/reisefrihet.ts`.
 
             Regenerate it locally:
 
-                cd bffs/reisefrihet-fastify
+                cd bffs/fastify
                 pnpm contract:generate
 
             Then run `pnpm check` and fix any type errors it surfaces in `src/mappers.ts` or

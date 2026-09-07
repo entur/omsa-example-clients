@@ -14,10 +14,10 @@ This repository hosts a complete demo of how clients may integrate with Entur's 
 ```
 clients/
   flutter/             Cross-platform mobile client
-  react-native/        Wayfare reisefrihet rider prototype
+  react-native/        Wayfare mobile client (Expo)
 bffs/
   python-fastapi/      Reference FastAPI BFF
-  reisefrihet-fastify/ Fastify BFF for the React Native prototype
+  fastify/             Fastify BFF for the React Native client
 docs/                  Shared documentation and BFF + client integration guides
 ```
 
@@ -26,7 +26,7 @@ docs/                  Shared documentation and BFF + client integration guides
 - Each project documents its own setup:
   - [clients/flutter/README.md](clients/flutter/README.md) covers the Flutter demo app.
   - [bffs/python-fastapi/README.md](bffs/python-fastapi/README.md) covers the FastAPI BFF.
-  - [docs/react-native-reisefrihet-guide.md](docs/react-native-reisefrihet-guide.md) covers the Wayfare Expo app and reisefrihet Fastify BFF.
+  - [docs/react-native-fastify-guide.md](docs/react-native-fastify-guide.md) covers the Wayfare Expo app and Fastify BFF.
 - Integration guides live in `docs/`. Start with [docs/flutter-fastapi-guide.md](docs/flutter-fastapi-guide.md) to run the Flutter client against the FastAPI BFF.
 
 ## Documentation

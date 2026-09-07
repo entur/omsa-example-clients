@@ -1,17 +1,17 @@
-name: reisefrihet mobile
+name: mobile
 
 on:
   pull_request:
     paths:
-      - "bffs/reisefrihet-fastify/**"
+      - "bffs/fastify/**"
       - "clients/react-native/**"
-      - ".github/workflows/reisefrihet-mobile.yml"
+      - ".github/workflows/mobile.yml"
   push:
     branches: [main]
     paths:
-      - "bffs/reisefrihet-fastify/**"
+      - "bffs/fastify/**"
       - "clients/react-native/**"
-      - ".github/workflows/reisefrihet-mobile.yml"
+      - ".github/workflows/mobile.yml"
 
 permissions:
   contents: read
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: bffs/reisefrihet-fastify
+        working-directory: bffs/fastify
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 24.15.0
           cache: pnpm
-          cache-dependency-path: bffs/reisefrihet-fastify/pnpm-lock.yaml
+          cache-dependency-path: bffs/fastify/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       # src/generated/reisefrihet.ts is checked against the live staging spec by

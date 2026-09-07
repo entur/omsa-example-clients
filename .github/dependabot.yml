@@ -67,7 +67,7 @@ updates:
           - patch
 
   - package-ecosystem: npm
-    directory: /bffs/reisefrihet-fastify
+    directory: /bffs/fastify
     schedule:
       interval: weekly
       day: monday
@@ -77,7 +77,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     groups:
-      reisefrihet-bff-dependencies:
+      fastify-bff-dependencies:
         patterns:
           - "*"
         update-types:

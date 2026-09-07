@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android",
-    "api:generate": "openapi-typescript ../../bffs/reisefrihet-fastify/contract/mobile.openapi.json -o src/api/schema.ts",
+    "api:generate": "openapi-typescript ../../bffs/fastify/contract/mobile.openapi.json -o src/api/schema.ts",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
     "doctor": "expo-doctor",
     "format": "prettier --write .",

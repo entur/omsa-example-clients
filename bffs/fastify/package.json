@@ -1,5 +1,5 @@
 {
-  "name": "@wayfare/reisefrihet-bff",
+  "name": "@wayfare/fastify-bff",
   "version": "0.1.0",
   "private": true,
   "type": "module",
