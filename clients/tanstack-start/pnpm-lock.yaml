@@ -40,8 +40,8 @@ importers:
         specifier: 0.8.4
         version: 0.8.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/tokens':
-        specifier: 3.24.0
-        version: 3.24.0
+        specifier: 4.0.1
+        version: 4.0.1
       '@entur/tooltip':
         specifier: 6.0.0
         version: 6.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3031,7 +3031,7 @@ snapshots:
       '@entur/button': 5.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/icons': 10.0.0(react@19.2.8)
       '@entur/layout': 4.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@entur/tokens': 4.1.0
+      '@entur/tokens': 4.0.1
       '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@floating-ui/react': 0.26.28(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
