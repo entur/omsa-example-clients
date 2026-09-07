@@ -54,13 +54,9 @@
     "react-native-svg-transformer": "^1.5.3",
     "typescript": "~6.0.3"
   },
-  "packageManager": "pnpm@10.34.1",
-  "pnpm": {
-    "overrides": {
-      "@expo/metro-runtime": "57.0.11",
-      "uuid@<11.1.1": "11.1.1",
-      "nanoid": ">=3.3.18 <4",
-      "js-yaml": ">=4.3.1 <5"
-    }
+  "packageManager": "pnpm@11.13.1",
+  "engines": {
+    "node": ">=24.15.0",
+    "pnpm": ">=11.13.1"
   }
 }
