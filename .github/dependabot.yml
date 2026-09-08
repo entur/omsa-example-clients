@@ -32,6 +32,11 @@ updates:
         update-types:
           - minor
           - patch
+      entur-design-system-majors:
+        patterns:
+          - "@entur/*"
+        update-types:
+          - major
 
   - package-ecosystem: docker
     directory: /clients/tanstack-start
