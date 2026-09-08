@@ -40,8 +40,8 @@ importers:
         specifier: 0.8.4
         version: 0.8.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/tokens':
-        specifier: 4.0.1
-        version: 4.0.1
+        specifier: 4.1.0
+        version: 4.1.0
       '@entur/tooltip':
         specifier: 6.0.0
         version: 6.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -49,8 +49,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/typography':
-        specifier: 3.0.1
-        version: 3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 3.0.4
+        version: 3.0.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tailwindcss/vite':
         specifier: 4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.3.0)(jiti@2.7.0))
@@ -392,9 +392,6 @@ packages:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
-  '@entur/tokens@4.0.1':
-    resolution: {integrity: sha512-zAHR09+/9VxVXoxJY/Of1th7KMkzhxVNz2mQy+N8D8bSojm7ULdzD0DYhQjOUrksdnngpvItNeGJMlZAmK3GsA==}
-
   '@entur/tokens@4.1.0':
     resolution: {integrity: sha512-QLjOOxbiOA9C3zbeagqaxVvMiE2U31q9tRWQ5xkHc6O7u08IdInSjo2f8w3/uOofUoOasU/vMB5DDrBAxPVnsA==}
 
@@ -406,12 +403,6 @@ packages:
 
   '@entur/travel@8.0.0':
     resolution: {integrity: sha512-UylZ3k8zijZ0NKO1YpjvzuZOngYgmWxGShXxdxm86ZvwFDt++EnTubsV5I5h3bGKPHtVU738cLTVwc7ivpALoA==}
-    peerDependencies:
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
-
-  '@entur/typography@3.0.1':
-    resolution: {integrity: sha512-spLeV6sRV4d6un5acQh4EkP9ceG9UaNDOO7UayUqA9g8qWZofwCbdA7I8zbu3QyppvtWkJdsvtFtSk5RIBzewg==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -2263,10 +2254,6 @@ packages:
     resolution: {integrity: sha512-rVQVWjjSvlINzaQPZH5JFqsqEsIWdTxY3iJZCnTL/5gQbXIRooVZKI60tVCkOVfzcRPejboxO2t0P89dg5mQaA==}
     engines: {node: '>=10'}
 
-  seroval@1.6.3:
-    resolution: {integrity: sha512-5PwLbVPpT4DEki1hYVSSsoxWY6xCNMVucAVLK/CH0mXSDfp/I4KaAex72q80GNt5hpn7CCMGdSpIg4YGqH/wXQ==}
-    engines: {node: '>=10'}
-
   seroval@1.6.4:
     resolution: {integrity: sha512-LErWMNS2RRFdu2RMA5u/PA59/IWs0XsikyEXGQ2/36iEWFrdG0ABmg17E17cikrv76891kOAMq3TkTFXpwAHXw==}
     engines: {node: '>=10'}
@@ -2897,9 +2884,9 @@ snapshots:
     dependencies:
       '@entur/button': 5.0.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/icons': 10.0.0(react@19.2.8)
-      '@entur/tokens': 4.0.1
+      '@entur/tokens': 4.1.0
       '@entur/tooltip': 6.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@entur/typography': 3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@entur/typography': 3.0.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       classnames: 2.5.1
       react: 19.2.8
@@ -2907,7 +2894,7 @@ snapshots:
 
   '@entur/icons@10.0.0(react@19.2.8)':
     dependencies:
-      '@entur/tokens': 4.0.1
+      '@entur/tokens': 4.1.0
       react: 19.2.8
 
   '@entur/icons@10.0.3(react@19.2.8)':
@@ -2944,10 +2931,6 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  '@entur/tokens@4.0.1':
-    dependencies:
-      hex-rgb: 4.3.0
-
   '@entur/tokens@4.1.0':
     dependencies:
       hex-rgb: 4.3.0
@@ -2970,23 +2953,11 @@ snapshots:
       '@entur/form': 10.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/icons': 10.0.0(react@19.2.8)
       '@entur/layout': 4.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@entur/tokens': 4.0.1
-      '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      classnames: 2.5.1
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-
-  '@entur/typography@3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
-    dependencies:
-      '@entur/icons': 10.0.3(react@19.2.8)
       '@entur/tokens': 4.1.0
       '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       classnames: 2.5.1
-      modern-normalize: 3.0.1
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-    optionalDependencies:
-      glob: 13.0.6
 
   '@entur/typography@3.0.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -3638,7 +3609,7 @@ snapshots:
       '@tanstack/router-core': 1.171.27
       '@tanstack/start-fn-stubs': 1.162.0
       '@tanstack/start-storage-context': 1.167.29
-      seroval: 1.6.3
+      seroval: 1.6.4
 
   '@tanstack/start-fn-stubs@1.162.0': {}
 
@@ -3656,7 +3627,7 @@ snapshots:
       lightningcss: 1.33.0
       pathe: 2.0.3
       picomatch: 4.0.5
-      seroval: 1.6.3
+      seroval: 1.6.4
       source-map: 0.7.6
       srvx: 0.11.22
       tinyglobby: 0.2.17
@@ -3688,7 +3659,7 @@ snapshots:
       '@tanstack/start-storage-context': 1.167.29
       fetchdts: 0.1.7
       h3-v2: h3@2.0.1-rc.20
-      seroval: 1.6.3
+      seroval: 1.6.4
     transitivePeerDependencies:
       - crossws
 
@@ -4861,8 +4832,6 @@ snapshots:
       seroval: 1.6.4
 
   seroval@1.5.6: {}
-
-  seroval@1.6.3: {}
 
   seroval@1.6.4: {}
 
