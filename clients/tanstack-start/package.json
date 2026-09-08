@@ -21,7 +21,7 @@
   "dependencies": {
     "@auth0/auth0-server-js": "1.12.1",
     "@entur-partner/permission-client-node": "3.6.2",
-    "@entur/button": "5.0.1",
+    "@entur/button": "5.0.4",
     "@entur/form": "10.0.0",
     "@entur/icons": "10.0.0",
     "@entur/layout": "3.7.5",
