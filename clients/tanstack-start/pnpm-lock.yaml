@@ -49,8 +49,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/typography':
-        specifier: 2.1.12
-        version: 2.1.12(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 3.0.1
+        version: 3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tailwindcss/vite':
         specifier: 4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.3.0)(jiti@2.7.0))
@@ -369,11 +369,6 @@ packages:
     peerDependencies:
       react: '>=18.0.0'
 
-  '@entur/icons@10.0.2':
-    resolution: {integrity: sha512-JGp34iHlmCsFLJa7Mqt+nJMlZu7lbgOiLjEjhx0tay7BHFMcBtqOCtWw12QQ8d8nwCrAq58zD8vonG5qVcnfIA==}
-    peerDependencies:
-      react: '>=18.0.0'
-
   '@entur/icons@10.0.3':
     resolution: {integrity: sha512-16IiGcO2XUhgnDVpAVSs8WT+tHlQ4JmJbDehTpk040V1NLK9iggmHw040cRxExU/EE3WIWzNEh+ihLADiZlssA==}
     peerDependencies:
@@ -429,8 +424,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@entur/typography@3.0.3':
-    resolution: {integrity: sha512-lzoF2YDOqck7SKsw9fINme/ExGLhU6lgp4Ss5YBpQGE185hThfkJIgXLT2N1tIuz3eSItMWVJEp/xMRhe5gRZg==}
+  '@entur/typography@3.0.1':
+    resolution: {integrity: sha512-spLeV6sRV4d6un5acQh4EkP9ceG9UaNDOO7UayUqA9g8qWZofwCbdA7I8zbu3QyppvtWkJdsvtFtSk5RIBzewg==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -2928,7 +2923,7 @@ snapshots:
       '@entur/icons': 10.0.0(react@19.2.8)
       '@entur/tokens': 4.0.1
       '@entur/tooltip': 6.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@entur/typography': 3.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@entur/typography': 3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       classnames: 2.5.1
       react: 19.2.8
@@ -2937,11 +2932,6 @@ snapshots:
   '@entur/icons@10.0.0(react@19.2.8)':
     dependencies:
       '@entur/tokens': 4.0.1
-      react: 19.2.8
-
-  '@entur/icons@10.0.2(react@19.2.8)':
-    dependencies:
-      '@entur/tokens': 4.1.0
       react: 19.2.8
 
   '@entur/icons@10.0.3(react@19.2.8)':
@@ -2966,7 +2956,7 @@ snapshots:
 
   '@entur/layout@4.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@entur/icons': 10.0.2(react@19.2.8)
+      '@entur/icons': 10.0.3(react@19.2.8)
       '@entur/tokens': 4.1.0
       '@entur/typography': 3.0.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@entur/utils': 0.15.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3032,11 +3022,11 @@ snapshots:
     optionalDependencies:
       glob: 13.0.6
 
-  '@entur/typography@3.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@entur/typography@3.0.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@entur/icons': 10.0.2(react@19.2.8)
+      '@entur/icons': 10.0.3(react@19.2.8)
       '@entur/tokens': 4.1.0
-      '@entur/utils': 0.15.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@entur/utils': 0.14.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       classnames: 2.5.1
       modern-normalize: 3.0.1
       react: 19.2.8
